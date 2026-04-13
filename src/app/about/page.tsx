@@ -93,7 +93,7 @@ export default function AboutPage() {
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 <Link href="/estimate" className="btn-gold">Get a Free Estimate</Link>
-                <Link href="/contact" className="btn-outline-gold">Contact Jenson</Link>
+                <Link href="/contact" className="btn-outline-gold">Contact Us</Link>
               </div>
             </AnimatedSection>
           </div>
@@ -110,14 +110,14 @@ export default function AboutPage() {
             </div>
             <p className="text-gold font-jakarta font-semibold text-sm tracking-widest uppercase mb-4">Our Promise to You</p>
             <h2 className="font-jakarta font-bold text-4xl md:text-6xl text-cream mb-6 leading-tight">
-              The 5-Year<br /><span className="gold-shimmer">No-Leak Promise</span>
+              <span className="gold-shimmer">No-Leak Promise</span>
             </h2>
             <GoldDivider />
             <p className="text-cream/65 text-lg max-w-2xl mx-auto mt-6 leading-relaxed">
               Every roof Midas installs is backed by our exclusive 5-Year No-Leak Promise. If your roof develops any leak within five years of installation due to our workmanship, we&apos;ll come back and fix it — completely free of charge, no questions asked.
             </p>
             <p className="text-cream/50 text-base max-w-xl mx-auto mt-4 leading-relaxed">
-              This isn&apos;t a manufacturer warranty. This is Jenson&apos;s personal promise, backed by Midas Roofing&apos;s reputation. We only make this promise because we know our work is good enough to keep it.
+              This isn&apos;t a manufacturer warranty. It&apos;s a company promise backed by Midas Roofing&apos;s reputation. We only make this promise because we know our work is good enough to keep it.
             </p>
           </AnimatedSection>
 

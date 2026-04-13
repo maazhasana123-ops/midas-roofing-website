@@ -19,7 +19,7 @@ const chapters = [
   {
     label: 'The Craft',
     headline: '47 nails per square.\u00a0Not\u00a0one\u00a0fewer.',
-    body: 'Florida code requires it. Jenson requires it twice. Every shingle hand-laid, every flashing sealed, every ridge cap set plumb.',
+    body: 'Florida code requires it. Our crew requires it twice. Every shingle hand-laid, every flashing sealed, every ridge cap set plumb.',
     range: [0.28, 0.34, 0.50, 0.56] as const,
   },
   {
@@ -31,7 +31,7 @@ const chapters = [
   {
     label: 'The Promise',
     headline: '5\u00a0years. Not a\u00a0single\u00a0leak.',
-    body: 'Or we come back free. No deductible. No argument. That\u2019s not a marketing line — that\u2019s Jenson\u2019s word on every roof Midas touches.',
+    body: 'Or we come back free. No deductible. No argument. That\u2019s not a marketing line — that\u2019s a company promise on every roof Midas touches.',
     range: [0.78, 0.84, 0.94, 0.98] as const,
   },
 ]

@@ -24,7 +24,7 @@ export default function ContactForm() {
                 <div className="text-5xl mb-6">✓</div>
                 <h2 className="font-jakarta font-bold text-3xl text-gold mb-4">Message Sent!</h2>
                 <p className="text-cream/60 leading-relaxed">
-                  Thanks for reaching out. Jenson or a member of our team will contact you within 24 hours. If it&apos;s urgent, call us directly.
+                  Thanks for reaching out. A member of our team will contact you within 24 hours. If it&apos;s urgent, call us directly.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }}

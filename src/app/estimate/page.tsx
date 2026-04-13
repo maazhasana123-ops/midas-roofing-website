@@ -40,7 +40,7 @@ export default function EstimatePage() {
             {[
               { step: '01', label: 'Enter Your Address', desc: 'Our system pulls satellite data for your exact property.' },
               { step: '02', label: 'Review Your Roof', desc: 'See measurements, pitch, and material options.' },
-              { step: '03', label: 'Get Your Estimate', desc: 'Instant pricing — or connect with Jenson directly.' },
+              { step: '03', label: 'Get Your Estimate', desc: 'Instant pricing — or connect with our team directly.' },
             ].map((s) => (
               <div key={s.step} className="bg-dark-card border border-white/5 rounded-sm p-6">
                 <div className="text-gold/40 font-jakarta font-bold text-2xl mb-3">{s.step}</div>

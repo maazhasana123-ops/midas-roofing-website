@@ -78,14 +78,14 @@ const reviews = [
     name: 'Marcus T.',
     location: 'Tavares, FL',
     stars: 5,
-    text: 'Midas replaced our entire roof after Hurricane Ian damage. Jenson personally walked us through every step. The crew was professional, fast, and the workmanship is immaculate. Three months later — zero leaks.',
+    text: 'Midas replaced our entire roof after Hurricane Ian damage. The crew personally walked us through every step. Professional, fast, and the workmanship is immaculate. Three months later — zero leaks.',
     initials: 'MT',
   },
   {
     name: 'Sandra R.',
     location: 'Leesburg, FL',
     stars: 5,
-    text: "I got quotes from four contractors. Midas wasn't the cheapest, but Jenson explained exactly what needed to be done and why. Best investment we've made in our home. The roof looks incredible.",
+    text: "I got quotes from four contractors. Midas wasn't the cheapest, but our project manager explained exactly what needed to be done and why. Best investment we've made in our home. The roof looks incredible.",
     initials: 'SR',
   },
   {
@@ -525,7 +525,7 @@ export default function HomePage() {
               <span className="gold-shimmer">No-Leak Promise</span>
             </h2>
             <p className="text-cream/55 text-base max-w-xl mx-auto leading-relaxed mb-8">
-              Every roof we install is backed by Jenson&apos;s personal guarantee. If it
+              Every roof we install is backed by our exclusive 5-Year No-Leak Promise. If it
               leaks within 5 years — we fix it free, no questions asked.
             </p>
             <Link href="/about" className="btn-outline-gold text-sm">
@@ -564,7 +564,7 @@ export default function HomePage() {
                 Get Instant Estimate
               </Link>
               <Link href="/contact" id="final-cta-secondary" className="btn-outline-gold text-sm px-10 py-4 tracking-wide">
-                Talk to Jenson
+                Contact Us
               </Link>
             </div>
 
