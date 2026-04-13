@@ -1,0 +1,168 @@
+'use client'
+
+import { useState } from 'react'
+import AnimatedSection from './AnimatedSection'
+import GoldDivider from './GoldDivider'
+
+export default function ContactForm() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitted(true)
+  }
+
+  return (
+    <section className="section-pad bg-dark">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Form */}
+          <AnimatedSection>
+            {submitted ? (
+              <div className="bg-dark-card border border-gold/30 rounded-sm p-10 text-center">
+                <div className="text-5xl mb-6">✓</div>
+                <h2 className="font-jakarta font-bold text-3xl text-gold mb-4">Message Sent!</h2>
+                <p className="text-cream/60 leading-relaxed">
+                  Thanks for reaching out. Jenson or a member of our team will contact you within 24 hours. If it&apos;s urgent, call us directly.
+                </p>
+                <button
+                  onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }}
+                  className="btn-outline-gold mt-8"
+                >
+                  Send Another Message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-cream/60 text-sm font-jakarta mb-2">Full Name *</label>
+                    <input
+                      required
+                      type="text"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder="John Smith"
+                      className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-cream/60 text-sm font-jakarta mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      value={form.phone}
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      placeholder="(407) 555-0100"
+                      className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-cream/60 text-sm font-jakarta mb-2">Email Address *</label>
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="john@example.com"
+                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-cream/60 text-sm font-jakarta mb-2">Service Needed</label>
+                  <select
+                    value={form.service}
+                    onChange={(e) => setForm({ ...form, service: e.target.value })}
+                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  >
+                    <option value="">Select a service...</option>
+                    <option>Shingle Roofing</option>
+                    <option>Metal Roofing</option>
+                    <option>Tile Roofing</option>
+                    <option>TPO Roofing</option>
+                    <option>Roof Coatings</option>
+                    <option>Residential Roofing</option>
+                    <option>Commercial Roofing</option>
+                    <option>Storm Damage / Insurance Claim</option>
+                    <option>General Inquiry</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-cream/60 text-sm font-jakarta mb-2">Message *</label>
+                  <textarea
+                    required
+                    rows={5}
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="Tell us about your project — address, roof type, any issues you're experiencing..."
+                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20 resize-none"
+                  />
+                </div>
+                <button type="submit" className="btn-gold w-full">
+                  Send Message
+                </button>
+                <p className="text-cream/30 text-xs text-center">We respond within 24 hours. Your info is never shared.</p>
+              </form>
+            )}
+          </AnimatedSection>
+
+          {/* Info */}
+          <AnimatedSection delay={0.15}>
+            <div className="space-y-6">
+              <div>
+                <p className="text-gold font-jakarta font-semibold text-sm tracking-widest uppercase mb-4">Contact Info</p>
+                <h2 className="font-jakarta font-bold text-3xl text-cream mb-2">We&apos;re Here to Help</h2>
+                <GoldDivider />
+                <p className="text-cream/60 mt-4 leading-relaxed">
+                  Whether you need an emergency repair or want to plan a full roof replacement, Midas Roofing is ready to help. Reach out and someone from our team will get back to you fast.
+                </p>
+              </div>
+
+              {[
+                {
+                  icon: '📍',
+                  title: 'Our Office',
+                  lines: ['4051 Bannock Ave', 'Tavares, Florida 32778'],
+                  link: undefined,
+                },
+                {
+                  icon: '🗺️',
+                  title: 'Service Area',
+                  lines: ['All of Central Florida', 'Tavares · Orlando · Lake County', 'Mount Dora · Leesburg · The Villages'],
+                  link: undefined,
+                },
+                {
+                  icon: '📸',
+                  title: 'Follow Our Work',
+                  lines: ['@midas_roofing_fl on Instagram'],
+                  link: 'https://instagram.com/midas_roofing_fl',
+                },
+                {
+                  icon: '🏛️',
+                  title: 'License',
+                  lines: ['Florida Contractor License', 'CCC1334831'],
+                  link: undefined,
+                },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-4 bg-dark-card border border-white/5 rounded-sm p-6 hover:border-gold/20 transition-colors">
+                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                  <div>
+                    <div className="font-jakarta font-semibold text-cream text-sm mb-1">{item.title}</div>
+                    {item.lines.map((line) =>
+                      item.link ? (
+                        <a key={line} href={item.link} target="_blank" rel="noopener noreferrer" className="block text-gold text-sm hover:underline">{line}</a>
+                      ) : (
+                        <div key={line} className="text-cream/50 text-sm">{line}</div>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AnimatedSection>
+        </div>
+      </div>
+    </section>
+  )
+}

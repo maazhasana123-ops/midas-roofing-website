@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-dark text-cream font-inter;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .gold-shimmer {
+    background: linear-gradient(
+      90deg,
+      #C9A84C 0%,
+      #E8C46A 40%,
+      #C9A84C 60%,
+      #A8852E 100%
+
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .btn-gold {
+    @apply relative inline-flex items-center justify-center px-8 py-4 font-jakarta font-semibold text-dark rounded-sm overflow-hidden transition-all duration-300;
+    background: linear-gradient(135deg, #C9A84C, #E8C46A, #C9A84C);
+    background-size: 200% auto;
+  }
+  .btn-gold:hover {
+    background-position: right center;
+    box-shadow: 0 0 24px rgba(201, 168, 76, 0.5);
+    transform: translateY(-1px);
+  }
+  .btn-gold:active { transform: translateY(0); }
+
+  .btn-outline-gold {
+    @apply relative inline-flex items-center justify-center px-8 py-4 font-jakarta font-semibold text-gold rounded-sm border border-gold overflow-hidden transition-all duration-300;
+  }
+  .btn-outline-gold:hover {
+    @apply bg-gold text-dark;
+    box-shadow: 0 0 24px rgba(201, 168, 76, 0.4);
+  }
+
+  .glass-nav {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  }
+
+  .section-pad { @apply py-20 md:py-28; }
+}
