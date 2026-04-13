@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
+import ScrollVideo from '@/components/ScrollVideo'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -238,6 +239,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ─────────────────── SCROLL VIDEO ──────────────────────────────────────── */}
+      <ScrollVideo />
 
       {/* ─────────────────────────── STATS STRIP ──────────────────────────────── */}
       <section className="relative py-0 bg-dark overflow-hidden">
