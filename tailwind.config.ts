@@ -21,7 +21,7 @@ const config: Config = {
           card: '#101010',
           elevated: '#181818',
           border: '#252525',
-          subtle: '#0D0D0D',
+          subtle: '#0C0C0C',
         },
         cream: '#F5F0E8',
       },
@@ -92,6 +92,8 @@ const config: Config = {
         'gold-gradient': 'linear-gradient(135deg, #C9A84C 0%, #E8C46A 50%, #C9A84C 100%)',
         'gold-radial': 'radial-gradient(ellipse at center, rgba(201,168,76,0.15) 0%, transparent 70%)',
         'dark-gradient': 'linear-gradient(180deg, #080808 0%, #101010 100%)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       transitionTimingFunction: {
         'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',

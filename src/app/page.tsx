@@ -170,7 +170,7 @@ export default function HomePage() {
         <div className="absolute inset-0 grid-pattern opacity-30" />
 
         {/* Gold glow at bottom */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-gradient-radial from-gold/10 via-gold/5 to-transparent blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.1)_0%,_transparent_70%)] blur-3xl" />
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -263,7 +263,7 @@ export default function HomePage() {
       {/* ─────────────────────────── SERVICES ─────────────────────────────────── */}
       <section className="section-pad bg-dark relative overflow-hidden">
         {/* Subtle background orb */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-radial from-gold/5 to-transparent -translate-y-1/4 translate-x-1/4 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_top_right,_rgba(201,168,76,0.06)_0%,_transparent_70%)] -translate-y-1/4 translate-x-1/4 blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 relative">
           <AnimatedSection className="text-center mb-16">
@@ -297,7 +297,7 @@ export default function HomePage() {
                   </span>
 
                   {/* Icon */}
-                  <div className="w-11 h-11 rounded-sm bg-gold/8 border border-gold/15 flex items-center justify-center text-gold mb-5 transition-all duration-300 group-hover:bg-gold/15 group-hover:border-gold/30 group-hover:shadow-gold flex-shrink-0">
+                  <div className="w-11 h-11 rounded-sm bg-gold/[0.08] border border-gold/[0.15] flex items-center justify-center text-gold mb-5 transition-all duration-300 group-hover:bg-gold/[0.15] group-hover:border-gold/30 group-hover:shadow-gold flex-shrink-0">
                     {s.icon}
                   </div>
 
@@ -360,8 +360,8 @@ export default function HomePage() {
       </div>
 
       {/* ────────────────────────── WHY MIDAS ─────────────────────────────────── */}
-      <section className="section-pad bg-dark-subtle relative overflow-hidden">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-gradient-radial from-gold/6 to-transparent blur-3xl pointer-events-none" />
+      <section className="section-pad bg-dark-card relative overflow-hidden">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-[radial-gradient(ellipse_at_left,_rgba(201,168,76,0.06)_0%,_transparent_70%)] blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 relative">
           <AnimatedSection className="text-center mb-16">
@@ -383,7 +383,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Icon */}
-                  <div className="w-10 h-10 rounded-sm bg-gold/8 border border-gold/15 flex items-center justify-center text-gold mb-6">
+                  <div className="w-10 h-10 rounded-sm bg-gold/[0.08] border border-gold/[0.15] flex items-center justify-center text-gold mb-6">
                     {p.icon}
                   </div>
 
@@ -508,7 +508,7 @@ export default function HomePage() {
 
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <AnimatedSection>
-            <div className="inline-flex items-center justify-center w-16 h-16 border border-gold/30 rounded-full mb-7 bg-gold/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 border border-gold/30 rounded-full mb-7 bg-gold/[0.05]">
               <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 text-gold" stroke="currentColor" strokeWidth="1.5">
                 <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>

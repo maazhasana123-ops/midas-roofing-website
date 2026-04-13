@@ -24,7 +24,7 @@ export default function Footer() {
     <footer className="bg-dark-card border-t border-gold/10 relative overflow-hidden">
       {/* Subtle top glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-12 bg-gold/3 blur-2xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-12 bg-gold/[0.03] blur-2xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
@@ -54,7 +54,7 @@ export default function Footer() {
             </p>
 
             {/* License badge */}
-            <div className="inline-flex items-center gap-2 bg-gold/8 border border-gold/18 rounded px-3 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-gold/[0.08] border border-gold/20 rounded px-3 py-2 mb-6">
               <div className="w-1.5 h-1.5 rounded-full bg-gold" />
               <span className="text-gold text-xs font-jakarta font-semibold tracking-widest">
                 LIC# CCC1334831
@@ -150,7 +150,7 @@ export default function Footer() {
         </div>
 
         {/* ── Bottom Bar ── */}
-        <div className="mt-14 pt-7 border-t border-gold/8 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div className="mt-14 pt-7 border-t border-gold/[0.08] flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-cream/25 text-xs font-inter">
             © {new Date().getFullYear()} Midas Roofing & Construction. All rights reserved.
           </p>
