@@ -5,12 +5,13 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const galleryImages = [
-  { src: '/images/6.png', alt: 'Dark tile roof installation', category: 'Tile', size: 'tall' },
-  { src: '/images/midas-team-photo.png', alt: 'Midas Roofing team at work', category: 'Team', size: 'wide' },
-  { src: '/images/6.png', alt: 'Completed roofing project', category: 'Residential', size: 'normal' },
-  { src: '/images/midas-team-photo.png', alt: 'Professional crew on site', category: 'Commercial', size: 'tall' },
-  { src: '/images/6.png', alt: 'Premium tile installation', category: 'Tile', size: 'normal' },
-  { src: '/images/midas-team-photo.png', alt: 'Central Florida project', category: 'Residential', size: 'wide' },
+  { src: '/images/6.png', alt: 'Premium tile roof — Lake County, FL', category: 'Tile', size: 'wide' },
+  { src: '/images/midas-team-photo.png', alt: 'Midas Roofing crew on a residential project', category: 'Team', size: 'normal' },
+  { src: '/images/gallery/post-1.png', alt: 'Completed roofing project — Central Florida', category: 'Residential', size: 'normal' },
+  { src: '/images/gallery/post-2.png', alt: 'Shingle roof replacement — Tavares, FL', category: 'Residential', size: 'normal' },
+  { src: '/images/gallery/post-3.png', alt: 'Commercial roofing installation', category: 'Commercial', size: 'normal' },
+  { src: '/images/gallery/post-4.png', alt: 'Metal roofing system — Mount Dora, FL', category: 'Metal', size: 'normal' },
+  { src: '/images/gallery/post-5.png', alt: 'Roof repair and coating project', category: 'Residential', size: 'normal' },
 ]
 
 const categories = ['All', 'Residential', 'Commercial', 'Tile', 'Metal', 'Team']

@@ -160,6 +160,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Recent Work Photo Strip */}
+      <section className="py-4 bg-dark overflow-hidden">
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide px-6 pb-2">
+          {[
+            { src: '/images/gallery/post-1.png', label: 'Residential Roof' },
+            { src: '/images/gallery/post-2.png', label: 'Shingle Replacement' },
+            { src: '/images/6.png', label: 'Tile Roofing' },
+            { src: '/images/gallery/post-3.png', label: 'Commercial Project' },
+            { src: '/images/gallery/post-4.png', label: 'Metal Roofing' },
+            { src: '/images/gallery/post-5.png', label: 'Roof Coating' },
+            { src: '/images/midas-team-photo.png', label: 'Our Team' },
+          ].map((img, i) => (
+            <div key={i} className="relative flex-shrink-0 w-56 h-56 rounded-sm overflow-hidden border border-white/5 group">
+              <Image src={img.src} alt={img.label} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-dark/40 group-hover:bg-dark/20 transition-colors duration-300" />
+              <span className="absolute bottom-3 left-3 text-xs font-jakarta font-semibold text-cream/80 bg-dark/60 px-2 py-1 rounded-sm">{img.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Why Midas */}
       <section className="section-pad bg-dark-card">
         <div className="max-w-7xl mx-auto px-6">
