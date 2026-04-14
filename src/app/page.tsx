@@ -163,12 +163,11 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Multi-layer overlay for cinematic depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/45 to-dark/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-dark/50 via-transparent to-dark/20" />
-
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 grid-pattern opacity-30" />
+        {/* Overlays — light touch so the team photo reads clearly */}
+        {/* Top dark fade so navbar area has contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/20 to-dark/65" />
+        {/* Subtle left tint for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-dark/30 via-transparent to-transparent" />
 
         {/* Gold glow at bottom */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.1)_0%,_transparent_70%)] blur-3xl" />
