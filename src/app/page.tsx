@@ -154,7 +154,7 @@ export default function HomePage() {
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/midas-team-photo.png"
+            src="/images/heroimage.jpg"
             alt="Midas Roofing & Construction team with branded vehicles"
             fill
             className="object-cover object-[center_65%]"
