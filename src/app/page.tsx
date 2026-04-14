@@ -155,17 +155,17 @@ export default function HomePage() {
         <div className="absolute inset-0">
           <Image
             src="/images/midas-team-photo.png"
-            alt="Midas Roofing team at work"
+            alt="Midas Roofing & Construction team with branded vehicles"
             fill
-            className="object-cover object-center scale-105"
+            className="object-cover object-[center_65%]"
             priority
-            quality={90}
+            quality={95}
           />
         </div>
 
         {/* Multi-layer overlay for cinematic depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-dark/75 via-dark/55 to-dark/95" />
-        <div className="absolute inset-0 bg-gradient-to-r from-dark/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/45 to-dark/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark/50 via-transparent to-dark/20" />
 
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 grid-pattern opacity-30" />
