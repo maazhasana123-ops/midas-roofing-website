@@ -8,41 +8,118 @@ import {
   useMotionValueEvent,
 } from 'framer-motion'
 
-// ─── Chapters that scroll OVER the video ────────────────────────────────────
+// ─── Chapters — bold text that fades through as you scroll ──────────────────
 const chapters = [
   {
     number: '01',
     label: 'The Process',
-    headline: 'This is what a real roof job looks like.',
-    body: 'No stock footage. No time-lapse magic. Scroll to watch our crew work — teardown to final inspection.',
-    align: 'left' as const,
+    words: [
+      { text: 'This is what a ', highlight: false },
+      { text: 'real roof job', highlight: true },
+      { text: ' looks like.', highlight: false },
+    ],
+    body: 'No stock footage. No time-lapse magic. Watch our crew work — teardown to final inspection.',
     range: [0.02, 0.08, 0.22, 0.28] as const,
   },
   {
     number: '02',
     label: 'The Craft',
-    headline: '47 nails per square.\u00a0Not\u00a0one\u00a0fewer.',
+    words: [
+      { text: '47 nails per square. ', highlight: false },
+      { text: 'Not\u00a0one\u00a0fewer.', highlight: true },
+    ],
     body: 'Florida code requires it. Our crew requires it twice. Every shingle hand-laid, every flashing sealed, every ridge cap set plumb.',
-    align: 'right' as const,
     range: [0.26, 0.32, 0.46, 0.52] as const,
   },
   {
     number: '03',
     label: 'The Standard',
-    headline: 'Done in a day.\u00a0Cleaned before we leave.',
-    body: "Our crews don\u2019t stop at sundown and come back tomorrow. One job, one day \u2014 from morning until it\u2019s right.",
-    align: 'left' as const,
+    words: [
+      { text: 'Done in a day. ', highlight: false },
+      { text: 'Cleaned', highlight: true },
+      { text: ' before we leave.', highlight: false },
+    ],
+    body: "Our crews don\u2019t stop at sundown and come back tomorrow. One job, one day — from morning until it\u2019s right.",
     range: [0.50, 0.56, 0.70, 0.76] as const,
   },
   {
     number: '04',
     label: 'The Promise',
-    headline: '5\u00a0years. Not a\u00a0single\u00a0leak.',
-    body: 'Or we come back free. No deductible. No argument. That\u2019s not a marketing line \u2014 that\u2019s a company promise on every roof Midas touches.',
-    align: 'right' as const,
+    words: [
+      { text: '5\u00a0years. ', highlight: false },
+      { text: 'Not a single leak.', highlight: true },
+    ],
+    body: 'Or we come back free. No deductible. No argument. That\u2019s a company promise on every roof Midas touches.',
     range: [0.74, 0.80, 0.92, 0.96] as const,
   },
 ]
+
+function ChapterText({
+  chapter,
+  scrollYProgress,
+}: {
+  chapter: typeof chapters[number]
+  scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
+}) {
+  const opacity = useTransform(
+    scrollYProgress,
+    [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
+    [0, 1, 1, 0]
+  )
+  const y = useTransform(
+    scrollYProgress,
+    [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
+    ['40px', '0px', '0px', '-30px']
+  )
+
+  return (
+    <motion.div
+      style={{ opacity, y }}
+      className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+    >
+      {/* Chapter number / label line */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="h-px w-10" style={{ background: 'rgba(201,168,76,0.4)' }} />
+        <span
+          className="font-jakarta font-bold text-[11px] tracking-[0.25em] uppercase"
+          style={{ color: '#C9A84C' }}
+        >
+          {chapter.number} — {chapter.label}
+        </span>
+        <div className="h-px w-10" style={{ background: 'rgba(201,168,76,0.4)' }} />
+      </div>
+
+      {/* Big headline with color highlights */}
+      <h3
+        className="font-jakarta font-bold leading-[1.15] tracking-tight max-w-[680px]"
+        style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)' }}
+      >
+        {chapter.words.map((w, j) => (
+          <span
+            key={j}
+            style={{
+              color: w.highlight ? '#C9A84C' : '#111111',
+              transition: 'color 0.3s ease',
+            }}
+          >
+            {w.text}
+          </span>
+        ))}
+      </h3>
+
+      {/* Body copy */}
+      <p
+        className="font-inter leading-relaxed max-w-[480px] mt-4"
+        style={{
+          fontSize: 'clamp(0.85rem, 1.5vw, 1rem)',
+          color: 'rgba(0,0,0,0.45)',
+        }}
+      >
+        {chapter.body}
+      </p>
+    </motion.div>
+  )
+}
 
 export default function ScrollVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -70,11 +147,16 @@ export default function ScrollVideo() {
     video.load()
   }, [])
 
-  // Progress bar
+  // Progress / intro
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+  const introOpacity = useTransform(scrollYProgress, [0, 0.03], [1, 0])
 
-  // Intro text fade
-  const introOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
+  // Active chapter indicator
+  const ch1Active = useTransform(scrollYProgress, [0.06, 0.10, 0.24, 0.28], [0.3, 1, 1, 0.3])
+  const ch2Active = useTransform(scrollYProgress, [0.30, 0.34, 0.48, 0.52], [0.3, 1, 1, 0.3])
+  const ch3Active = useTransform(scrollYProgress, [0.54, 0.58, 0.72, 0.76], [0.3, 1, 1, 0.3])
+  const ch4Active = useTransform(scrollYProgress, [0.78, 0.82, 0.94, 0.96], [0.3, 1, 1, 0.3])
+  const chapterOpacities = [ch1Active, ch2Active, ch3Active, ch4Active]
 
   return (
     <section
@@ -83,176 +165,103 @@ export default function ScrollVideo() {
       style={{ height: '600vh' }}
       aria-label="Watch a roof replacement in action"
     >
-      {/* ── Sticky viewport ── */}
+      {/* ══ Sticky viewport ══ */}
       <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ background: '#fafaf8' }}>
 
-        {/* ── Video layer — centered, blended into background ── */}
+        {/* ── Video — full background, blended into section ── */}
         <div className="absolute inset-0 flex items-center justify-center">
-          {/* Fuzzy edge blending — all four sides */}
-          <div className="relative w-[min(900px,92vw)]" style={{ aspectRatio: '16 / 9' }}>
+          <div
+            className="relative w-full h-full"
+            style={{
+              maskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 30%, transparent 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 30%, transparent 100%)',
+            }}
+          >
             <video
               ref={videoRef}
               src="/animated-roof.mp4"
               className="w-full h-full object-cover"
-              style={{ borderRadius: '6px' }}
               muted
               playsInline
               preload="auto"
               autoPlay={false}
             />
-
-            {/* Left edge blur */}
-            <div
-              className="absolute inset-y-0 left-0 w-24 pointer-events-none"
-              style={{ background: 'linear-gradient(to right, #fafaf8, rgba(250,250,248,0.6) 40%, transparent)' }}
-            />
-            {/* Right edge blur */}
-            <div
-              className="absolute inset-y-0 right-0 w-24 pointer-events-none"
-              style={{ background: 'linear-gradient(to left, #fafaf8, rgba(250,250,248,0.6) 40%, transparent)' }}
-            />
-            {/* Top edge blur */}
-            <div
-              className="absolute top-0 inset-x-0 h-20 pointer-events-none"
-              style={{ background: 'linear-gradient(to bottom, #fafaf8, rgba(250,250,248,0.4) 50%, transparent)' }}
-            />
-            {/* Bottom edge blur */}
-            <div
-              className="absolute bottom-0 inset-x-0 h-20 pointer-events-none"
-              style={{ background: 'linear-gradient(to top, #fafaf8, rgba(250,250,248,0.4) 50%, transparent)' }}
-            />
-
-            {/* Corner blurs — extra soft corners */}
-            <div className="absolute top-0 left-0 w-32 h-24 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse at top left, #fafaf8 20%, transparent 70%)' }} />
-            <div className="absolute top-0 right-0 w-32 h-24 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse at top right, #fafaf8 20%, transparent 70%)' }} />
-            <div className="absolute bottom-0 left-0 w-32 h-24 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse at bottom left, #fafaf8 20%, transparent 70%)' }} />
-            <div className="absolute bottom-0 right-0 w-32 h-24 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse at bottom right, #fafaf8 20%, transparent 70%)' }} />
           </div>
         </div>
 
-        {/* ── Ambient warm glow behind video area ── */}
+        {/* ── Warm ambient glow under video ── */}
         <div className="absolute inset-0 pointer-events-none">
           <div style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '55%', height: '45%',
-            background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 60%)',
-            filter: 'blur(60px)',
+            width: '60%', height: '50%',
+            background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.05) 0%, transparent 65%)',
+            filter: 'blur(50px)',
           }} />
         </div>
 
-        {/* ── Intro prompt — fades out immediately ── */}
+        {/* ── Slight overlay to help text readability ── */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 70% 65% at 50% 50%, rgba(250,250,248,0.35) 0%, rgba(250,250,248,0.85) 55%, #fafaf8 80%)',
+          }}
+        />
+
+        {/* ── Intro scroll prompt ── */}
         <motion.div
           style={{ opacity: introOpacity }}
-          className="absolute top-8 left-1/2 -translate-x-1/2 z-30 text-center pointer-events-none"
+          className="absolute top-10 left-1/2 -translate-x-1/2 z-30 text-center pointer-events-none"
         >
-          <p className="font-jakarta font-semibold text-[11px] tracking-[0.2em] uppercase" style={{ color: '#C9A84C' }}>
+          <p className="font-jakarta font-semibold text-[11px] tracking-[0.22em] uppercase" style={{ color: '#C9A84C' }}>
             See The Process
           </p>
-          <p className="text-[12px] font-inter mt-1" style={{ color: '#bbb' }}>
+          <p className="text-[12px] font-inter mt-1.5" style={{ color: '#bbb' }}>
             Scroll to watch the transformation
           </p>
-          <div className="mt-2.5 flex justify-center">
+          <div className="mt-3 flex justify-center">
             <motion.div
-              animate={{ y: [0, 5, 0] }}
+              animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="#C9A84C" strokeWidth="1.5" strokeOpacity="0.6">
+              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="#C9A84C" strokeWidth="1.5" strokeOpacity="0.5">
                 <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* ── Text chapters — overlay ON the video ── */}
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="w-full max-w-[1000px] px-8 relative">
-            {chapters.map((ch, i) => {
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const opacity = useTransform(
-                scrollYProgress,
-                [ch.range[0], ch.range[1], ch.range[2], ch.range[3]],
-                [0, 1, 1, 0]
-              )
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const y = useTransform(
-                scrollYProgress,
-                [ch.range[0], ch.range[1], ch.range[2], ch.range[3]],
-                ['30px', '0px', '0px', '-20px']
-              )
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const cardScale = useTransform(
-                scrollYProgress,
-                [ch.range[0], ch.range[1]],
-                [0.96, 1]
-              )
-
-              const alignClass = ch.align === 'left'
-                ? 'items-start text-left self-start'
-                : 'items-end text-right self-end'
-
-              return (
-                <motion.div
-                  key={i}
-                  style={{ opacity, y, scale: cardScale }}
-                  className={`absolute inset-0 flex flex-col justify-center ${alignClass}`}
-                >
-                  <div
-                    className="max-w-[380px] px-7 py-6 rounded-2xl backdrop-blur-xl"
-                    style={{
-                      background: 'rgba(255,255,255,0.82)',
-                      border: '1px solid rgba(201,168,76,0.15)',
-                      boxShadow: '0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04)',
-                    }}
-                  >
-                    {/* Chapter number + label */}
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center font-jakarta font-bold text-[10px]"
-                        style={{ background: 'rgba(201,168,76,0.12)', color: '#C9A84C' }}
-                      >
-                        {ch.number}
-                      </div>
-                      <div
-                        className="h-px flex-1"
-                        style={{ background: 'rgba(201,168,76,0.25)' }}
-                      />
-                      <span
-                        className="font-jakarta font-semibold text-[9px] tracking-[0.18em] uppercase"
-                        style={{ color: '#C9A84C' }}
-                      >
-                        {ch.label}
-                      </span>
-                    </div>
-
-                    {/* Headline */}
-                    <h3
-                      className="font-jakarta font-bold leading-snug tracking-tight mb-2"
-                      style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.5rem)', color: '#111' }}
-                    >
-                      {ch.headline}
-                    </h3>
-
-                    {/* Body */}
-                    <p
-                      className="font-inter leading-relaxed"
-                      style={{ fontSize: 'clamp(0.78rem, 1.2vw, 0.88rem)', color: '#666' }}
-                    >
-                      {ch.body}
-                    </p>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
+        {/* ── Chapter text overlays ── */}
+        <div className="absolute inset-0 z-20 pointer-events-none">
+          {chapters.map((ch, i) => (
+            <ChapterText key={i} chapter={ch} scrollYProgress={scrollYProgress} />
+          ))}
         </div>
 
-        {/* ── Progress bar — bottom ── */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[400px] px-6">
+        {/* ── Left side: vertical chapter indicator ── */}
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-center gap-3 pointer-events-none">
+          {chapters.map((ch, i) => (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <motion.div
+                style={{ opacity: chapterOpacities[i] }}
+                className="flex items-center gap-2"
+              >
+                <div
+                  className="w-5 h-5 rounded-full flex items-center justify-center font-jakarta font-bold text-[8px]"
+                  style={{ border: '1px solid rgba(201,168,76,0.4)', color: '#C9A84C' }}
+                >
+                  {ch.number}
+                </div>
+              </motion.div>
+              {i < chapters.length - 1 && (
+                <div className="w-px h-5" style={{ background: 'rgba(0,0,0,0.06)' }} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* ── Bottom progress bar ── */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 w-full max-w-[340px] px-6">
           <div
             className="relative rounded-full overflow-hidden"
             style={{ height: '2px', background: 'rgba(0,0,0,0.06)' }}
@@ -265,20 +274,23 @@ export default function ScrollVideo() {
               }}
             />
           </div>
-          <div className="flex justify-between mt-2">
-            <span className="text-[9px] font-jakarta tracking-widest uppercase" style={{ color: '#ccc' }}>Before</span>
-            <span className="text-[9px] font-jakarta font-semibold tracking-widest uppercase" style={{ color: '#C9A84C' }}>Roof Replacement</span>
-            <span className="text-[9px] font-jakarta tracking-widest uppercase" style={{ color: '#ccc' }}>After</span>
+          <div className="flex justify-between mt-2.5">
+            <span className="text-[9px] font-jakarta tracking-[0.15em] uppercase" style={{ color: '#ccc' }}>
+              Before
+            </span>
+            <span className="text-[9px] font-jakarta tracking-[0.15em] uppercase" style={{ color: '#ccc' }}>
+              After
+            </span>
           </div>
         </div>
 
-        {/* ── Section top/bottom white fades for seamless transition ── */}
+        {/* ── Section edge fades ── */}
         <div
-          className="absolute top-0 inset-x-0 h-12 pointer-events-none z-10"
+          className="absolute top-0 inset-x-0 h-14 pointer-events-none z-10"
           style={{ background: 'linear-gradient(to bottom, #fafaf8, transparent)' }}
         />
         <div
-          className="absolute bottom-0 inset-x-0 h-12 pointer-events-none z-10"
+          className="absolute bottom-0 inset-x-0 h-14 pointer-events-none z-10"
           style={{ background: 'linear-gradient(to top, #fafaf8, transparent)' }}
         />
       </div>
