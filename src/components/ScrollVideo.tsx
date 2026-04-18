@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
   useScroll,
   useTransform,
@@ -8,58 +9,67 @@ import {
   useMotionValueEvent,
 } from 'framer-motion'
 
-// ─── Chapters — bold text that fades through as you scroll ──────────────────
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Chapter data — each chapter scrolls over the video with image + text
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const chapters = [
   {
     number: '01',
-    label: 'The Process',
-    words: [
-      { text: 'This is what a ', highlight: false },
-      { text: 'real roof job', highlight: true },
-      { text: ' looks like.', highlight: false },
-    ],
-    body: 'No stock footage. No time-lapse magic. Watch our crew work — teardown to final inspection.',
-    range: [0.02, 0.08, 0.22, 0.28] as const,
+    label: 'Inspect & Plan',
+    headline: 'Every Great Roof Starts With a Plan',
+    body: 'Our licensed crew arrives on-site, performs a complete aerial and ground-level inspection, and maps every measurement before a single shingle is touched.',
+    stat: '100%',
+    statLabel: 'Licensed & Insured',
+    image: '/images/house roof1.jpg',
+    imageAlt: 'Aerial view of a completed shingle roof by Midas Roofing',
+    range: [0.02, 0.08, 0.20, 0.26] as const,
   },
   {
     number: '02',
-    label: 'The Craft',
-    words: [
-      { text: '47 nails per square. ', highlight: false },
-      { text: 'Not\u00a0one\u00a0fewer.', highlight: true },
-    ],
-    body: 'Florida code requires it. Our crew requires it twice. Every shingle hand-laid, every flashing sealed, every ridge cap set plumb.',
-    range: [0.26, 0.32, 0.46, 0.52] as const,
+    label: 'Teardown & Prep',
+    headline: 'Strip It Down. Build It Right.',
+    body: 'Old shingles are removed, decking is inspected board-by-board, and new underlayment is installed with CertainTeed premium materials for maximum protection.',
+    stat: '47',
+    statLabel: 'Nails Per Square',
+    image: '/images/house roof-working crew.jpg',
+    imageAlt: 'Midas Roofing crew working on a residential roof replacement',
+    range: [0.24, 0.30, 0.44, 0.50] as const,
   },
   {
     number: '03',
-    label: 'The Standard',
-    words: [
-      { text: 'Done in a day. ', highlight: false },
-      { text: 'Cleaned', highlight: true },
-      { text: ' before we leave.', highlight: false },
-    ],
-    body: "Our crews don\u2019t stop at sundown and come back tomorrow. One job, one day — from morning until it\u2019s right.",
-    range: [0.50, 0.56, 0.70, 0.76] as const,
+    label: 'Install & Seal',
+    headline: 'Florida-Grade Craftsmanship',
+    body: 'Hand-laid shingles, sealed flashings, and ridge caps set plumb — every detail engineered for Florida hurricanes, heat, and everything in between.',
+    stat: '20+',
+    statLabel: 'Years Experience',
+    image: '/images/house roof-working crew2.jpg',
+    imageAlt: 'Workers installing new CertainTeed shingles on a Florida home',
+    range: [0.48, 0.54, 0.68, 0.74] as const,
   },
   {
     number: '04',
-    label: 'The Promise',
-    words: [
-      { text: '5\u00a0years. ', highlight: false },
-      { text: 'Not a single leak.', highlight: true },
-    ],
-    body: 'Or we come back free. No deductible. No argument. That\u2019s a company promise on every roof Midas touches.',
-    range: [0.74, 0.80, 0.92, 0.96] as const,
+    label: 'Final Walkthrough',
+    headline: 'Done in a Day. Guaranteed for Five.',
+    body: 'Final inspection, full cleanup, and our exclusive 5-Year No-Leak Promise delivered on the spot. If it leaks — we come back, no charge, no questions.',
+    stat: '5yr',
+    statLabel: 'No-Leak Promise',
+    image: '/images/house roof5-after.jpg',
+    imageAlt: 'Completed dark shingle roof installed by Midas Roofing',
+    range: [0.72, 0.78, 0.92, 0.97] as const,
   },
 ]
 
-function ChapterText({
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ChapterCard — scrolls in over the video with image + info
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function ChapterCard({
   chapter,
   scrollYProgress,
+  side,
 }: {
-  chapter: typeof chapters[number]
+  chapter: (typeof chapters)[number]
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
+  side: 'left' | 'right'
 }) {
   const opacity = useTransform(
     scrollYProgress,
@@ -69,58 +79,132 @@ function ChapterText({
   const y = useTransform(
     scrollYProgress,
     [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
-    ['40px', '0px', '0px', '-30px']
+    ['50px', '0px', '0px', '-30px']
+  )
+  const scale = useTransform(
+    scrollYProgress,
+    [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
+    [0.95, 1, 1, 0.97]
   )
 
   return (
     <motion.div
-      style={{ opacity, y }}
-      className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+      style={{ opacity, y, scale }}
+      className="absolute inset-0 flex items-center pointer-events-none"
     >
-      {/* Chapter number / label line */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-px w-10" style={{ background: 'rgba(201,168,76,0.4)' }} />
-        <span
-          className="font-jakarta font-bold text-[11px] tracking-[0.25em] uppercase"
-          style={{ color: '#C9A84C' }}
+      <div className="w-full max-w-[1200px] mx-auto px-6 md:px-12">
+        <div
+          className={`flex ${side === 'right' ? 'justify-end' : 'justify-start'}`}
         >
-          {chapter.number} — {chapter.label}
-        </span>
-        <div className="h-px w-10" style={{ background: 'rgba(201,168,76,0.4)' }} />
-      </div>
-
-      {/* Big headline with color highlights */}
-      <h3
-        className="font-jakarta font-bold leading-[1.15] tracking-tight max-w-[680px]"
-        style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)' }}
-      >
-        {chapter.words.map((w, j) => (
-          <span
-            key={j}
+          {/* ── Glass card ── */}
+          <div
+            className="w-full max-w-[480px] rounded-2xl overflow-hidden"
             style={{
-              color: w.highlight ? '#C9A84C' : '#111111',
-              transition: 'color 0.3s ease',
+              background: 'rgba(10, 10, 10, 0.82)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              border: '1px solid rgba(201, 168, 76, 0.15)',
+              boxShadow:
+                '0 25px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset',
             }}
           >
-            {w.text}
-          </span>
-        ))}
-      </h3>
+            {/* Card image */}
+            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+              <Image
+                src={chapter.image}
+                alt={chapter.imageAlt}
+                fill
+                className="object-cover"
+                quality={85}
+                sizes="480px"
+              />
+              {/* Image bottom gradient */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.9) 100%)',
+                }}
+              />
+              {/* Step badge on image */}
+              <div className="absolute bottom-4 left-5 flex items-center gap-2.5">
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center font-jakarta font-bold text-[9px]"
+                  style={{
+                    background: 'rgba(201,168,76,0.15)',
+                    border: '1px solid rgba(201,168,76,0.4)',
+                    color: '#C9A84C',
+                  }}
+                >
+                  {chapter.number}
+                </div>
+                <span
+                  className="font-jakarta font-semibold text-[9px] tracking-[0.2em] uppercase"
+                  style={{ color: 'rgba(201,168,76,0.8)' }}
+                >
+                  {chapter.label}
+                </span>
+              </div>
+            </div>
 
-      {/* Body copy */}
-      <p
-        className="font-inter leading-relaxed max-w-[480px] mt-4"
-        style={{
-          fontSize: 'clamp(0.85rem, 1.5vw, 1rem)',
-          color: 'rgba(0,0,0,0.45)',
-        }}
-      >
-        {chapter.body}
-      </p>
+            {/* Card content */}
+            <div className="p-6 pt-5">
+              <h3
+                className="font-jakarta font-bold leading-[1.15] tracking-tight mb-3"
+                style={{
+                  fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)',
+                  color: '#f5f0e8',
+                }}
+              >
+                {chapter.headline}
+              </h3>
+
+              <p
+                className="font-inter leading-relaxed mb-5"
+                style={{
+                  fontSize: 'clamp(0.8rem, 1.1vw, 0.92rem)',
+                  color: 'rgba(255,255,255,0.45)',
+                }}
+              >
+                {chapter.body}
+              </p>
+
+              {/* Divider + stat */}
+              <div
+                className="h-px w-full mb-4"
+                style={{
+                  background:
+                    'linear-gradient(90deg, rgba(201,168,76,0.3), transparent)',
+                }}
+              />
+              <div className="flex items-baseline gap-3">
+                <span
+                  className="font-jakarta font-bold tracking-tight"
+                  style={{
+                    fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)',
+                    color: '#C9A84C',
+                  }}
+                >
+                  {chapter.stat}
+                </span>
+                <span
+                  className="font-jakarta font-medium text-[10px] tracking-[0.15em] uppercase"
+                  style={{ color: 'rgba(255,255,255,0.25)' }}
+                >
+                  {chapter.statLabel}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   )
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ScrollVideo — video background + scrolling chapter cards
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function ScrollVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -147,16 +231,18 @@ export default function ScrollVideo() {
     video.load()
   }, [])
 
-  // Progress / intro
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const introOpacity = useTransform(scrollYProgress, [0, 0.03], [1, 0])
+  const introOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
 
-  // Active chapter indicator
-  const ch1Active = useTransform(scrollYProgress, [0.06, 0.10, 0.24, 0.28], [0.3, 1, 1, 0.3])
-  const ch2Active = useTransform(scrollYProgress, [0.30, 0.34, 0.48, 0.52], [0.3, 1, 1, 0.3])
-  const ch3Active = useTransform(scrollYProgress, [0.54, 0.58, 0.72, 0.76], [0.3, 1, 1, 0.3])
-  const ch4Active = useTransform(scrollYProgress, [0.78, 0.82, 0.94, 0.96], [0.3, 1, 1, 0.3])
+  // Chapter nav indicators
+  const ch1Active = useTransform(scrollYProgress, [0.06, 0.10, 0.22, 0.26], [0.2, 1, 1, 0.2])
+  const ch2Active = useTransform(scrollYProgress, [0.28, 0.32, 0.46, 0.50], [0.2, 1, 1, 0.2])
+  const ch3Active = useTransform(scrollYProgress, [0.52, 0.56, 0.70, 0.74], [0.2, 1, 1, 0.2])
+  const ch4Active = useTransform(scrollYProgress, [0.76, 0.80, 0.94, 0.97], [0.2, 1, 1, 0.2])
   const chapterOpacities = [ch1Active, ch2Active, ch3Active, ch4Active]
+
+  // Alternating card positions
+  const cardSides: ('left' | 'right')[] = ['left', 'right', 'left', 'right']
 
   return (
     <section
@@ -165,16 +251,18 @@ export default function ScrollVideo() {
       style={{ height: '600vh' }}
       aria-label="Watch a roof replacement in action"
     >
-      {/* ══ Sticky viewport ══ */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ background: '#fafaf8' }}>
+      {/* ══════ Sticky viewport ══════ */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ background: '#0a0a0a' }}>
 
-        {/* ── Video — full background, blended into section ── */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        {/* ── Video — contained with white space, blended edges ── */}
+        <div className="absolute inset-0 flex items-center justify-center p-8 md:p-14">
           <div
-            className="relative w-full h-full"
+            className="relative w-full h-full max-w-[1400px] rounded-xl overflow-hidden"
             style={{
-              maskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 30%, transparent 100%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 30%, transparent 100%)',
+              maskImage:
+                'radial-gradient(ellipse 85% 85% at 50% 50%, black 40%, transparent 100%)',
+              WebkitMaskImage:
+                'radial-gradient(ellipse 85% 85% at 50% 50%, black 40%, transparent 100%)',
             }}
           >
             <video
@@ -186,85 +274,165 @@ export default function ScrollVideo() {
               preload="auto"
               autoPlay={false}
             />
+            {/* Darken video so cards are readable */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse 70% 70% at 50% 50%, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%)',
+              }}
+            />
           </div>
         </div>
 
-        {/* ── Warm ambient glow under video ── */}
+        {/* ── Fuzzy gradient borders blending video into dark background ── */}
         <div className="absolute inset-0 pointer-events-none">
-          <div style={{
-            position: 'absolute', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '60%', height: '50%',
-            background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.05) 0%, transparent 65%)',
-            filter: 'blur(50px)',
-          }} />
+          {/* Top fade */}
+          <div
+            className="absolute top-0 inset-x-0 h-32"
+            style={{ background: 'linear-gradient(to bottom, #0a0a0a, transparent)' }}
+          />
+          {/* Bottom fade */}
+          <div
+            className="absolute bottom-0 inset-x-0 h-32"
+            style={{ background: 'linear-gradient(to top, #0a0a0a, transparent)' }}
+          />
+          {/* Left fade */}
+          <div
+            className="absolute inset-y-0 left-0 w-24"
+            style={{ background: 'linear-gradient(to right, #0a0a0a, transparent)' }}
+          />
+          {/* Right fade */}
+          <div
+            className="absolute inset-y-0 right-0 w-24"
+            style={{ background: 'linear-gradient(to left, #0a0a0a, transparent)' }}
+          />
         </div>
 
-        {/* ── Slight overlay to help text readability ── */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse 70% 65% at 50% 50%, rgba(250,250,248,0.35) 0%, rgba(250,250,248,0.85) 55%, #fafaf8 80%)',
-          }}
-        />
+        {/* ── Subtle ambient gold glow ── */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '55%',
+              height: '45%',
+              background:
+                'radial-gradient(ellipse at center, rgba(201,168,76,0.04) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+            }}
+          />
+        </div>
 
         {/* ── Intro scroll prompt ── */}
         <motion.div
           style={{ opacity: introOpacity }}
-          className="absolute top-10 left-1/2 -translate-x-1/2 z-30 text-center pointer-events-none"
+          className="absolute inset-0 z-30 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
         >
-          <p className="font-jakarta font-semibold text-[11px] tracking-[0.22em] uppercase" style={{ color: '#C9A84C' }}>
-            See The Process
-          </p>
-          <p className="text-[12px] font-inter mt-1.5" style={{ color: '#bbb' }}>
-            Scroll to watch the transformation
-          </p>
-          <div className="mt-3 flex justify-center">
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="h-px w-12" style={{ background: 'rgba(201,168,76,0.35)' }} />
+            <span
+              className="font-jakarta font-semibold text-[10px] tracking-[0.25em] uppercase"
+              style={{ color: '#C9A84C' }}
             >
-              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="#C9A84C" strokeWidth="1.5" strokeOpacity="0.5">
-                <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </motion.div>
+              Our Process
+            </span>
+            <div className="h-px w-12" style={{ background: 'rgba(201,168,76,0.35)' }} />
           </div>
+
+          <h2
+            className="font-jakarta font-bold tracking-tight mb-3"
+            style={{
+              fontSize: 'clamp(2rem, 4.5vw, 3.5rem)',
+              color: '#f5f0e8',
+            }}
+          >
+            Watch Us <span style={{ color: '#C9A84C' }}>Build</span>
+          </h2>
+
+          <p
+            className="font-inter max-w-md mb-7"
+            style={{
+              fontSize: 'clamp(0.85rem, 1.2vw, 1rem)',
+              color: 'rgba(255,255,255,0.35)',
+            }}
+          >
+            Scroll to see a full roof replacement — from first inspection to final
+            walkthrough.
+          </p>
+
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-5 h-5"
+              stroke="#C9A84C"
+              strokeWidth="1.5"
+              strokeOpacity="0.6"
+            >
+              <path
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
         </motion.div>
 
-        {/* ── Chapter text overlays ── */}
-        <div className="absolute inset-0 z-20 pointer-events-none">
+        {/* ── Chapter cards overlaying the video ── */}
+        <div className="absolute inset-0 z-20">
           {chapters.map((ch, i) => (
-            <ChapterText key={i} chapter={ch} scrollYProgress={scrollYProgress} />
+            <ChapterCard
+              key={i}
+              chapter={ch}
+              scrollYProgress={scrollYProgress}
+              side={cardSides[i]}
+            />
           ))}
         </div>
 
-        {/* ── Left side: vertical chapter indicator ── */}
-        <div className="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-center gap-3 pointer-events-none">
+        {/* ── Right side: vertical chapter nav ── */}
+        <div className="absolute right-5 lg:right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-end gap-3.5 pointer-events-none">
           {chapters.map((ch, i) => (
-            <div key={i} className="flex flex-col items-center gap-1">
+            <div key={i} className="flex flex-col items-end gap-1.5">
               <motion.div
                 style={{ opacity: chapterOpacities[i] }}
                 className="flex items-center gap-2"
               >
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center font-jakarta font-bold text-[8px]"
-                  style={{ border: '1px solid rgba(201,168,76,0.4)', color: '#C9A84C' }}
+                <span
+                  className="font-jakarta font-semibold text-[8px] tracking-[0.15em] uppercase"
+                  style={{ color: 'rgba(201,168,76,0.7)' }}
                 >
-                  {ch.number}
-                </div>
+                  {ch.label}
+                </span>
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: '#C9A84C',
+                    boxShadow: '0 0 6px rgba(201,168,76,0.3)',
+                  }}
+                />
               </motion.div>
               {i < chapters.length - 1 && (
-                <div className="w-px h-5" style={{ background: 'rgba(0,0,0,0.06)' }} />
+                <div
+                  className="w-px h-5 mr-[3px]"
+                  style={{ background: 'rgba(201,168,76,0.1)' }}
+                />
               )}
             </div>
           ))}
         </div>
 
         {/* ── Bottom progress bar ── */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 w-full max-w-[340px] px-6">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[320px] px-6">
           <div
             className="relative rounded-full overflow-hidden"
-            style={{ height: '2px', background: 'rgba(0,0,0,0.06)' }}
+            style={{ height: '2px', background: 'rgba(255,255,255,0.06)' }}
           >
             <motion.div
               className="absolute inset-y-0 left-0 rounded-full"
@@ -274,25 +442,21 @@ export default function ScrollVideo() {
               }}
             />
           </div>
-          <div className="flex justify-between mt-2.5">
-            <span className="text-[9px] font-jakarta tracking-[0.15em] uppercase" style={{ color: '#ccc' }}>
+          <div className="flex justify-between mt-2">
+            <span
+              className="text-[8px] font-jakarta tracking-[0.15em] uppercase"
+              style={{ color: 'rgba(255,255,255,0.15)' }}
+            >
               Before
             </span>
-            <span className="text-[9px] font-jakarta tracking-[0.15em] uppercase" style={{ color: '#ccc' }}>
+            <span
+              className="text-[8px] font-jakarta tracking-[0.15em] uppercase"
+              style={{ color: 'rgba(255,255,255,0.15)' }}
+            >
               After
             </span>
           </div>
         </div>
-
-        {/* ── Section edge fades ── */}
-        <div
-          className="absolute top-0 inset-x-0 h-14 pointer-events-none z-10"
-          style={{ background: 'linear-gradient(to bottom, #fafaf8, transparent)' }}
-        />
-        <div
-          className="absolute bottom-0 inset-x-0 h-14 pointer-events-none z-10"
-          style={{ background: 'linear-gradient(to top, #fafaf8, transparent)' }}
-        />
       </div>
     </section>
   )
