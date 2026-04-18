@@ -38,9 +38,9 @@ export default function Navbar() {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="relative w-9 h-9 overflow-hidden rounded-sm">
+          <div className="relative w-10 h-10 overflow-hidden rounded-sm">
             <Image
-              src="/logos/midas-logos-discord.png"
+              src="/logos/logo_gold.png"
               alt="Midas Roofing Logo"
               fill
               className="object-contain transition-transform duration-500 group-hover:scale-110"
