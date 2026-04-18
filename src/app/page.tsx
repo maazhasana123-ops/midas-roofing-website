@@ -4,11 +4,12 @@ import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
 import ScrollVideo from '@/components/ScrollVideo'
 import TestimonialV2 from '@/components/ui/testimonial-v2'
+import { LocationMap } from '@/components/ui/expand-map'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Midas Roofing & Construction | Central Florida\'s #1 Roofing Experts',
-  description: 'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. 5-Year No-Leak Promise. License CCC1334831. Tavares, FL.',
+  description: 'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. License CCC1334831. Tavares, FL.',
 }
 
 const services = [
@@ -93,7 +94,7 @@ const reviews = [
     name: 'David & Amy K.',
     location: 'Mount Dora, FL',
     stars: 5,
-    text: "We went with the metal roof option and couldn't be happier. The team finished ahead of schedule, cleaned up everything, and the 5-Year No-Leak Promise gave us total peace of mind. 10/10 recommend.",
+    text: "We went with the metal roof option and couldn't be happier. The team finished ahead of schedule, cleaned up everything, and the No-Leak Promise gave us total peace of mind. 10/10 recommend.",
     initials: 'DK',
   },
 ]
@@ -101,7 +102,7 @@ const reviews = [
 const pillars = [
   {
     number: '01',
-    title: '5-Year No-Leak Promise',
+    title: 'No-Leak Promise',
     desc: 'Every roof we install comes backed by our industry-leading guarantee. If it leaks — we fix it, no questions asked.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth="1.5">
@@ -133,7 +134,7 @@ const pillars = [
 
 const trustBadges = [
   '20+ Years Experience',
-  '5-Year No-Leak Promise',
+  'No-Leak Promise',
   'Licensed & Insured',
   'Central Florida Native',
   '500+ Roofs Installed',
@@ -142,7 +143,7 @@ const trustBadges = [
 const statsData = [
   { value: '500+', label: 'Roofs Installed' },
   { value: '20+', label: 'Years Experience' },
-  { value: '5yr', label: 'No-Leak Promise' },
+  { value: '✓', label: 'No-Leak Promise' },
   { value: '100%', label: 'Licensed & Insured' },
 ]
 
@@ -200,7 +201,7 @@ export default function HomePage() {
           <AnimatedSection delay={0.2}>
             <p className="text-cream/65 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-inter leading-relaxed">
               From shingles to metal, tile to TPO — Midas Roofing delivers premium
-              craftsmanship backed by our exclusive 5-Year No-Leak Promise.
+              craftsmanship backed by our exclusive No-Leak Promise.
             </p>
           </AnimatedSection>
 
@@ -344,7 +345,7 @@ export default function HomePage() {
               {[
                 'Licensed & Insured',
                 'CCC1334831',
-                '5-Year No-Leak Promise',
+                'No-Leak Promise',
                 'Central Florida Native',
                 'Shingle • Metal • Tile • TPO',
                 '20+ Years Experience',
@@ -464,13 +465,61 @@ export default function HomePage() {
               <span className="gold-shimmer">No-Leak Promise</span>
             </h2>
             <p className="text-cream/55 text-base max-w-xl mx-auto leading-relaxed mb-8">
-              Every roof we install is backed by our exclusive 5-Year No-Leak Promise. If it
-              leaks within 5 years — we fix it free, no questions asked.
+              Every roof we install is backed by our exclusive No-Leak Promise. If it
+              leaks — we fix it free, no questions asked.
             </p>
             <Link href="/about" className="btn-outline-gold text-sm">
               Learn About Our Promise
             </Link>
           </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ─────────────────────── SERVICE AREA ───────────────────────────────── */}
+      <section className="section-pad bg-dark relative overflow-hidden">
+        {/* Gold glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.06)_0%,_transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+
+        <div className="relative max-w-7xl mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            {/* Text content */}
+            <AnimatedSection className="flex-1 text-center lg:text-left" from="left">
+              <p className="text-gold font-jakarta font-semibold text-xs tracking-[0.2em] uppercase mb-4">
+                Service Area
+              </p>
+              <h2 className="font-jakarta font-bold text-4xl md:text-5xl text-cream mb-5 tracking-tight">
+                Proudly Serving{' '}
+                <span className="gold-shimmer">Orlando</span>
+              </h2>
+              <p className="text-cream/50 text-base leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
+                Midas Roofing &amp; Construction serves the greater Orlando metro
+                and all of Central Florida. From residential neighborhoods to
+                commercial districts — we&apos;re your local roofing experts.
+              </p>
+
+              {/* Service area cities */}
+              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                {['Orlando', 'Kissimmee', 'Tavares', 'Leesburg', 'Mount Dora', 'Clermont', 'Sanford', 'Winter Park'].map((city) => (
+                  <span
+                    key={city}
+                    className="px-3 py-1.5 text-xs font-jakarta font-medium text-cream/50 bg-white/[0.03] border border-white/5 rounded-full hover:border-gold/30 hover:text-gold transition-all duration-200"
+                  >
+                    {city}
+                  </span>
+                ))}
+              </div>
+            </AnimatedSection>
+
+            {/* Interactive Map */}
+            <AnimatedSection className="flex-shrink-0 flex flex-col items-center gap-8">
+              <p className="text-cream/30 text-xs font-jakarta font-medium tracking-[0.2em] uppercase">Current Location</p>
+              <LocationMap
+                location="Orlando, FL"
+                coordinates="28.5383° N, 81.3792° W"
+              />
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 

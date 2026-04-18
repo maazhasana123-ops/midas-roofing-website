@@ -27,7 +27,7 @@ const testimonials: Testimonial[] = [
     stars: 5,
   },
   {
-    text: "We went with the metal roof option and couldn't be happier. Finished ahead of schedule, cleaned everything up, and the 5-Year No-Leak Promise gave us total peace of mind. 10/10.",
+    text: "We went with the metal roof option and couldn't be happier. Finished ahead of schedule, cleaned everything up, and the No-Leak Promise gave us total peace of mind. 10/10.",
     image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150",
     name: "David K.",
     role: "Mount Dora, FL",

@@ -12,7 +12,7 @@ const services = [
     tagline: 'The most versatile roofing choice for Florida homes.',
     description: `Asphalt shingles remain the most popular roofing material in Florida for good reason — they're cost-effective, durable, and come in dozens of styles and colors. At Midas, we install premium architectural shingles from top manufacturers, engineered to withstand Florida's intense UV exposure, heavy rainfall, and hurricane-force winds.
 
-Whether you're building new or replacing an aging roof, our shingle installations come with manufacturer warranties plus our own 5-Year No-Leak Promise.`,
+Whether you're building new or replacing an aging roof, our shingle installations come with manufacturer warranties plus our own No-Leak Promise.`,
     specs: ['Architectural & 3-tab options', 'Wind ratings up to 130 mph', 'Class A fire rating', 'Energy-efficient cool roof options'],
   },
   {

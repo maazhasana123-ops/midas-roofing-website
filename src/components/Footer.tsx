@@ -50,7 +50,7 @@ export default function Footer() {
 
             <p className="text-cream/40 text-sm leading-relaxed max-w-xs font-inter mb-6">
               Central Florida&apos;s trusted roofing contractor. Quality craftsmanship,
-              honest pricing, and a 5-Year No-Leak Promise on every project.
+              honest pricing, and a No-Leak Promise on every project.
             </p>
 
             {/* License badge */}

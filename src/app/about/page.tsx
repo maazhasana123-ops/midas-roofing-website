@@ -6,7 +6,7 @@ import GoldDivider from '@/components/GoldDivider'
 
 export const metadata: Metadata = {
   title: 'About Midas Roofing | Jenson Perazada | Central Florida',
-  description: 'Meet Jenson Perazada and the Midas Roofing team. 20+ years serving Central Florida. Licensed contractor CCC1334831. 5-Year No-Leak Promise.',
+  description: 'Meet Jenson Perazada and the Midas Roofing team. 20+ years serving Central Florida. Licensed contractor CCC1334831. No-Leak Promise.',
 }
 
 const stats = [
@@ -100,7 +100,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5-Year No-Leak Promise */}
+      {/* No-Leak Promise */}
       <section className="section-pad bg-dark-card relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.06)_0%,_transparent_70%)]" />
         <div className="max-w-5xl mx-auto px-6 relative">
@@ -114,7 +114,7 @@ export default function AboutPage() {
             </h2>
             <GoldDivider />
             <p className="text-cream/65 text-lg max-w-2xl mx-auto mt-6 leading-relaxed">
-              Every roof Midas installs is backed by our exclusive 5-Year No-Leak Promise. If your roof develops any leak within five years of installation due to our workmanship, we&apos;ll come back and fix it — completely free of charge, no questions asked.
+              Every roof Midas installs is backed by our exclusive No-Leak Promise. If your roof develops any leak due to our workmanship, we&apos;ll come back and fix it — completely free of charge, no questions asked.
             </p>
             <p className="text-cream/50 text-base max-w-xl mx-auto mt-4 leading-relaxed">
               This isn&apos;t a manufacturer warranty. It&apos;s a company promise backed by Midas Roofing&apos;s reputation. We only make this promise because we know our work is good enough to keep it.

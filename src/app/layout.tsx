@@ -20,7 +20,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Midas Roofing & Construction | Central Florida Roofing Experts',
   description:
-    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. 5-Year No-Leak Promise. License CCC1334831.',
+    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. License CCC1334831.',
   keywords:
     'roofing contractor Central Florida, roofing company Tavares FL, metal roofing Florida, tile roof replacement Florida',
   openGraph: {
