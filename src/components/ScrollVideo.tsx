@@ -8,36 +8,41 @@ import {
   useMotionValueEvent,
 } from 'framer-motion'
 
-// ─── Copy — four chapters that unfold as the video plays ───────────────────
+// ─── Chapters that scroll OVER the video ────────────────────────────────────
 const chapters = [
   {
+    number: '01',
     label: 'The Process',
     headline: 'This is what a real roof job looks like.',
-    body: 'No stock footage. No time-lapse magic. Scroll to watch our crew work start to finish — teardown to final inspection.',
-    range: [0, 0.06, 0.24, 0.30] as const,
+    body: 'No stock footage. No time-lapse magic. Scroll to watch our crew work — teardown to final inspection.',
+    align: 'left' as const,
+    range: [0.02, 0.08, 0.22, 0.28] as const,
   },
   {
+    number: '02',
     label: 'The Craft',
     headline: '47 nails per square.\u00a0Not\u00a0one\u00a0fewer.',
     body: 'Florida code requires it. Our crew requires it twice. Every shingle hand-laid, every flashing sealed, every ridge cap set plumb.',
-    range: [0.28, 0.34, 0.50, 0.56] as const,
+    align: 'right' as const,
+    range: [0.26, 0.32, 0.46, 0.52] as const,
   },
   {
+    number: '03',
     label: 'The Standard',
     headline: 'Done in a day.\u00a0Cleaned before we leave.',
-    body: "Our crews don\u2019t stop at sundown and come back tomorrow. One job, one day — from morning until it\u2019s right.",
-    range: [0.54, 0.60, 0.74, 0.80] as const,
+    body: "Our crews don\u2019t stop at sundown and come back tomorrow. One job, one day \u2014 from morning until it\u2019s right.",
+    align: 'left' as const,
+    range: [0.50, 0.56, 0.70, 0.76] as const,
   },
   {
+    number: '04',
     label: 'The Promise',
     headline: '5\u00a0years. Not a\u00a0single\u00a0leak.',
-    body: 'Or we come back free. No deductible. No argument. That\u2019s not a marketing line — that\u2019s a company promise on every roof Midas touches.',
-    range: [0.78, 0.84, 0.94, 0.98] as const,
+    body: 'Or we come back free. No deductible. No argument. That\u2019s not a marketing line \u2014 that\u2019s a company promise on every roof Midas touches.',
+    align: 'right' as const,
+    range: [0.74, 0.80, 0.92, 0.96] as const,
   },
 ]
-
-// ── Chapter number pills ───────────────────────────────────────────────────
-const chapterNumbers = ['01', '02', '03', '04']
 
 export default function ScrollVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -48,7 +53,7 @@ export default function ScrollVideo() {
     offset: ['start start', 'end end'],
   })
 
-  // Scrub video
+  // Scrub video currentTime based on scroll
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     const video = videoRef.current
     if (!video || !video.duration) return
@@ -65,62 +70,107 @@ export default function ScrollVideo() {
     video.load()
   }, [])
 
+  // Progress bar
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const completionOpacity = useTransform(scrollYProgress, [0.88, 1], [0, 1])
-  const completionScale = useTransform(scrollYProgress, [0.88, 1], [0.92, 1])
+
+  // Intro text fade
+  const introOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
 
   return (
     <section
       ref={containerRef}
       className="relative"
-      style={{ height: '500vh' }}
+      style={{ height: '600vh' }}
       aria-label="Watch a roof replacement in action"
     >
-      <div
-        className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden"
-        style={{ backgroundColor: '#ffffff' }}
-      >
+      {/* ── Sticky viewport ── */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ background: '#fafaf8' }}>
 
-        {/* ── Ambient fuzzy glow — warm whites matching footage ── */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* ── Video layer — centered, blended into background ── */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Fuzzy edge blending — all four sides */}
+          <div className="relative w-[min(900px,92vw)]" style={{ aspectRatio: '16 / 9' }}>
+            <video
+              ref={videoRef}
+              src="/animated-roof.mp4"
+              className="w-full h-full object-cover"
+              style={{ borderRadius: '6px' }}
+              muted
+              playsInline
+              preload="auto"
+              autoPlay={false}
+            />
+
+            {/* Left edge blur */}
+            <div
+              className="absolute inset-y-0 left-0 w-24 pointer-events-none"
+              style={{ background: 'linear-gradient(to right, #fafaf8, rgba(250,250,248,0.6) 40%, transparent)' }}
+            />
+            {/* Right edge blur */}
+            <div
+              className="absolute inset-y-0 right-0 w-24 pointer-events-none"
+              style={{ background: 'linear-gradient(to left, #fafaf8, rgba(250,250,248,0.6) 40%, transparent)' }}
+            />
+            {/* Top edge blur */}
+            <div
+              className="absolute top-0 inset-x-0 h-20 pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, #fafaf8, rgba(250,250,248,0.4) 50%, transparent)' }}
+            />
+            {/* Bottom edge blur */}
+            <div
+              className="absolute bottom-0 inset-x-0 h-20 pointer-events-none"
+              style={{ background: 'linear-gradient(to top, #fafaf8, rgba(250,250,248,0.4) 50%, transparent)' }}
+            />
+
+            {/* Corner blurs — extra soft corners */}
+            <div className="absolute top-0 left-0 w-32 h-24 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at top left, #fafaf8 20%, transparent 70%)' }} />
+            <div className="absolute top-0 right-0 w-32 h-24 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at top right, #fafaf8 20%, transparent 70%)' }} />
+            <div className="absolute bottom-0 left-0 w-32 h-24 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at bottom left, #fafaf8 20%, transparent 70%)' }} />
+            <div className="absolute bottom-0 right-0 w-32 h-24 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at bottom right, #fafaf8 20%, transparent 70%)' }} />
+          </div>
+        </div>
+
+        {/* ── Ambient warm glow behind video area ── */}
+        <div className="absolute inset-0 pointer-events-none">
           <div style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '70%', height: '65%',
-            background: 'radial-gradient(ellipse at center, rgba(255,252,245,1) 0%, rgba(245,238,220,0.85) 35%, rgba(255,255,255,0) 75%)',
-            filter: 'blur(36px)',
-          }} />
-          <div style={{
-            position: 'absolute', top: '10%', left: '8%',
-            width: '340px', height: '260px',
-            background: 'radial-gradient(ellipse at center, rgba(235,215,175,0.45) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(52px)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: '8%', right: '8%',
-            width: '380px', height: '300px',
-            background: 'radial-gradient(ellipse at center, rgba(225,208,178,0.40) 0%, rgba(255,255,255,0) 70%)',
+            width: '55%', height: '45%',
+            background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 60%)',
             filter: 'blur(60px)',
-          }} />
-          <div style={{
-            position: 'absolute', top: '6%', right: '6%',
-            width: '260px', height: '220px',
-            background: 'radial-gradient(ellipse at center, rgba(248,244,236,0.55) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(40px)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: '10%', left: '6%',
-            width: '300px', height: '240px',
-            background: 'radial-gradient(ellipse at center, rgba(232,220,195,0.38) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(52px)',
           }} />
         </div>
 
-        {/* ── Main layout: text + video stacked ── */}
-        <div className="relative z-10 w-full flex flex-col items-center gap-5 px-6">
+        {/* ── Intro prompt — fades out immediately ── */}
+        <motion.div
+          style={{ opacity: introOpacity }}
+          className="absolute top-8 left-1/2 -translate-x-1/2 z-30 text-center pointer-events-none"
+        >
+          <p className="font-jakarta font-semibold text-[11px] tracking-[0.2em] uppercase" style={{ color: '#C9A84C' }}>
+            See The Process
+          </p>
+          <p className="text-[12px] font-inter mt-1" style={{ color: '#bbb' }}>
+            Scroll to watch the transformation
+          </p>
+          <div className="mt-2.5 flex justify-center">
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" stroke="#C9A84C" strokeWidth="1.5" strokeOpacity="0.6">
+                <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
+          </div>
+        </motion.div>
 
-          {/* ── Text area — four chapters overlap here, each fades in/out ── */}
-          <div className="relative h-[116px] w-full max-w-[820px] flex items-end justify-center">
+        {/* ── Text chapters — overlay ON the video ── */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+          <div className="w-full max-w-[1000px] px-8 relative">
             {chapters.map((ch, i) => {
               // eslint-disable-next-line react-hooks/rules-of-hooks
               const opacity = useTransform(
@@ -131,179 +181,105 @@ export default function ScrollVideo() {
               // eslint-disable-next-line react-hooks/rules-of-hooks
               const y = useTransform(
                 scrollYProgress,
-                [ch.range[0], ch.range[1]],
-                ['10px', '0px']
+                [ch.range[0], ch.range[1], ch.range[2], ch.range[3]],
+                ['30px', '0px', '0px', '-20px']
               )
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              const cardScale = useTransform(
+                scrollYProgress,
+                [ch.range[0], ch.range[1]],
+                [0.96, 1]
+              )
+
+              const alignClass = ch.align === 'left'
+                ? 'items-start text-left self-start'
+                : 'items-end text-right self-end'
 
               return (
                 <motion.div
                   key={i}
-                  style={{ opacity, y }}
-                  className="absolute inset-0 flex flex-col items-center justify-end text-center gap-2 pb-1"
+                  style={{ opacity, y, scale: cardScale }}
+                  className={`absolute inset-0 flex flex-col justify-center ${alignClass}`}
                 >
-                  {/* Chapter pill */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <div
-                      className="h-px w-8"
-                      style={{ background: 'rgba(201,168,76,0.5)' }}
-                    />
-                    <span
-                      className="font-jakarta font-semibold text-[10px] tracking-[0.22em] uppercase"
-                      style={{ color: '#C9A84C' }}
-                    >
-                      {chapterNumbers[i]} — {ch.label}
-                    </span>
-                    <div
-                      className="h-px w-8"
-                      style={{ background: 'rgba(201,168,76,0.5)' }}
-                    />
-                  </div>
-
-                  {/* Headline */}
-                  <h3
-                    className="font-jakarta font-bold leading-tight tracking-tight"
+                  <div
+                    className="max-w-[380px] px-7 py-6 rounded-2xl backdrop-blur-xl"
                     style={{
-                      fontSize: 'clamp(1.35rem, 2.8vw, 2rem)',
-                      color: '#111111',
+                      background: 'rgba(255,255,255,0.82)',
+                      border: '1px solid rgba(201,168,76,0.15)',
+                      boxShadow: '0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04)',
                     }}
                   >
-                    {ch.headline}
-                  </h3>
+                    {/* Chapter number + label */}
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center font-jakarta font-bold text-[10px]"
+                        style={{ background: 'rgba(201,168,76,0.12)', color: '#C9A84C' }}
+                      >
+                        {ch.number}
+                      </div>
+                      <div
+                        className="h-px flex-1"
+                        style={{ background: 'rgba(201,168,76,0.25)' }}
+                      />
+                      <span
+                        className="font-jakarta font-semibold text-[9px] tracking-[0.18em] uppercase"
+                        style={{ color: '#C9A84C' }}
+                      >
+                        {ch.label}
+                      </span>
+                    </div>
 
-                  {/* Body */}
-                  <p
-                    className="font-inter leading-snug max-w-[560px]"
-                    style={{ fontSize: 'clamp(0.78rem, 1.4vw, 0.9rem)', color: '#888' }}
-                  >
-                    {ch.body}
-                  </p>
+                    {/* Headline */}
+                    <h3
+                      className="font-jakarta font-bold leading-snug tracking-tight mb-2"
+                      style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.5rem)', color: '#111' }}
+                    >
+                      {ch.headline}
+                    </h3>
+
+                    {/* Body */}
+                    <p
+                      className="font-inter leading-relaxed"
+                      style={{ fontSize: 'clamp(0.78rem, 1.2vw, 0.88rem)', color: '#666' }}
+                    >
+                      {ch.body}
+                    </p>
+                  </div>
                 </motion.div>
               )
             })}
           </div>
+        </div>
 
-          {/* ── Video frame ── */}
+        {/* ── Progress bar — bottom ── */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[400px] px-6">
           <div
-            className="relative w-full overflow-hidden"
-            style={{
-              maxWidth: '820px',
-              borderRadius: '14px',
-              aspectRatio: '16 / 9',
-              boxShadow:
-                '0 2px 8px rgba(0,0,0,0.06), 0 10px 40px rgba(0,0,0,0.11), 0 32px 72px rgba(0,0,0,0.10)',
-            }}
+            className="relative rounded-full overflow-hidden"
+            style={{ height: '2px', background: 'rgba(0,0,0,0.06)' }}
           >
-            {/* Side edge fades */}
-            <div className="absolute inset-y-0 left-0 w-10 z-10 pointer-events-none"
-              style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.14), transparent)' }} />
-            <div className="absolute inset-y-0 right-0 w-10 z-10 pointer-events-none"
-              style={{ background: 'linear-gradient(to left, rgba(255,255,255,0.14), transparent)' }} />
-
-            <video
-              ref={videoRef}
-              src="/animated-roof.mp4"
-              className="w-full h-full object-cover"
-              muted
-              playsInline
-              preload="auto"
-              autoPlay={false}
-            />
-
-            {/* Completion overlay */}
             <motion.div
-              style={{ opacity: completionOpacity }}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none backdrop-blur-[6px]"
-            >
-              <motion.div
-                style={{
-                  scale: completionScale,
-                  background: 'rgba(255,255,255,0.92)',
-                  border: '1px solid rgba(201,168,76,0.35)',
-                  boxShadow: '0 8px 40px rgba(0,0,0,0.10)',
-                }}
-                className="flex flex-col items-center gap-2.5 text-center px-10 py-7 rounded-xl"
-              >
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center mb-1"
-                  style={{ background: 'rgba(201,168,76,0.10)', border: '1px solid rgba(201,168,76,0.35)' }}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" stroke="#C9A84C" strokeWidth="1.8">
-                    <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <p className="font-jakarta font-bold text-[1.1rem]" style={{ color: '#111' }}>
-                  Transformation complete.
-                </p>
-                <p className="font-inter text-[0.82rem]" style={{ color: '#999' }}>
-                  This is the Midas difference — start to finish.
-                </p>
-              </motion.div>
-            </motion.div>
+              className="absolute inset-y-0 left-0 rounded-full"
+              style={{
+                width: progressWidth,
+                background: 'linear-gradient(90deg, #C9A84C, #E8C46A)',
+              }}
+            />
           </div>
-
-          {/* ── Progress bar ── */}
-          <div className="w-full max-w-[520px]">
-            <div
-              className="relative rounded-full overflow-hidden"
-              style={{ height: '2px', background: 'rgba(0,0,0,0.07)' }}
-            >
-              <motion.div
-                className="absolute inset-y-0 left-0 rounded-full"
-                style={{
-                  width: progressWidth,
-                  background: 'linear-gradient(90deg, #C9A84C, #E8C46A)',
-                }}
-              />
-            </div>
-
-            {/* Chapter dots */}
-            <div className="flex justify-between items-center mt-3">
-              {chapters.map((ch, i) => {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                const dotProgress = useTransform(
-                  scrollYProgress,
-                  [ch.range[0], ch.range[1]],
-                  [0, 1]
-                )
-                return (
-                  <div key={i} className="flex flex-col items-center gap-1.5">
-                    <motion.div
-                      style={{
-                        scale: dotProgress,
-                        opacity: dotProgress,
-                        background: '#C9A84C',
-                      }}
-                      className="w-1 h-1 rounded-full"
-                    />
-                    <span
-                      className="text-[9px] font-jakarta tracking-widest uppercase hidden sm:block"
-                      style={{ color: '#ccc' }}
-                    >
-                      {ch.label}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
+          <div className="flex justify-between mt-2">
+            <span className="text-[9px] font-jakarta tracking-widest uppercase" style={{ color: '#ccc' }}>Before</span>
+            <span className="text-[9px] font-jakarta font-semibold tracking-widest uppercase" style={{ color: '#C9A84C' }}>Roof Replacement</span>
+            <span className="text-[9px] font-jakarta tracking-widest uppercase" style={{ color: '#ccc' }}>After</span>
           </div>
         </div>
 
-        {/* White edge vignette */}
+        {/* ── Section top/bottom white fades for seamless transition ── */}
         <div
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 95% 95% at 50% 50%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.9) 100%)',
-          }}
+          className="absolute top-0 inset-x-0 h-12 pointer-events-none z-10"
+          style={{ background: 'linear-gradient(to bottom, #fafaf8, transparent)' }}
         />
         <div
-          className="absolute top-0 inset-x-0 h-16 pointer-events-none z-10"
-          style={{ background: 'linear-gradient(to bottom, #ffffff, rgba(255,255,255,0))' }}
-        />
-        <div
-          className="absolute bottom-0 inset-x-0 h-16 pointer-events-none z-10"
-          style={{ background: 'linear-gradient(to top, #ffffff, rgba(255,255,255,0))' }}
+          className="absolute bottom-0 inset-x-0 h-12 pointer-events-none z-10"
+          style={{ background: 'linear-gradient(to top, #fafaf8, transparent)' }}
         />
       </div>
     </section>
