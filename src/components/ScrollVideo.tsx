@@ -22,7 +22,7 @@ const chapters = [
     statLabel: 'Licensed & Insured',
     image: '/images/house roof1.jpg',
     imageAlt: 'Aerial view of a completed shingle roof by Midas Roofing',
-    range: [0.03, 0.08, 0.22, 0.26] as const,
+    range: [0.0, 0.05, 0.20, 0.25] as const,
   },
   {
     number: '02',
@@ -33,7 +33,7 @@ const chapters = [
     statLabel: 'Nails Per Square',
     image: '/images/house roof-working crew.jpg',
     imageAlt: 'Midas Roofing crew working on a residential roof replacement',
-    range: [0.27, 0.32, 0.46, 0.50] as const,
+    range: [0.25, 0.30, 0.45, 0.50] as const,
   },
   {
     number: '03',
@@ -44,7 +44,7 @@ const chapters = [
     statLabel: 'Years Experience',
     image: '/images/house roof-working crew2.jpg',
     imageAlt: 'Workers installing new CertainTeed shingles on a Florida home',
-    range: [0.51, 0.56, 0.70, 0.74] as const,
+    range: [0.50, 0.55, 0.70, 0.75] as const,
   },
   {
     number: '04',
@@ -55,7 +55,7 @@ const chapters = [
     statLabel: 'No-Leak Promise',
     image: '/images/house roof5-after.jpg',
     imageAlt: 'Completed dark shingle roof installed by Midas Roofing',
-    range: [0.75, 0.80, 0.94, 0.98] as const,
+    range: [0.75, 0.80, 0.95, 1.0] as const,
   },
 ]
 
@@ -94,7 +94,7 @@ function ChapterCard({
     >
       <div className="w-full max-w-[1200px] mx-auto px-6 md:px-12">
         <div
-          className={`flex ${side === 'right' ? 'justify-end' : 'justify-start'}`}
+          className={`flex justify-center ${side === 'right' ? 'lg:justify-end' : 'lg:justify-start'}`}
         >
           {/* ── Glass card ── */}
           <div
@@ -232,8 +232,6 @@ export default function ScrollVideo() {
   }, [])
 
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const introOpacity = useTransform(scrollYProgress, [0, 0.02], [1, 0])
-  const introY = useTransform(scrollYProgress, [0, 0.02], ['0px', '-20px'])
 
   // Chapter nav indicators
   const ch1Active = useTransform(scrollYProgress, [0.03, 0.08, 0.22, 0.26], [0.2, 1, 1, 0.2])
@@ -249,7 +247,7 @@ export default function ScrollVideo() {
     <section
       ref={containerRef}
       className="relative"
-      style={{ height: '800vh' }}
+      style={{ height: '600vh' }}
       aria-label="Watch a roof replacement in action"
     >
       {/* ══════ Sticky viewport ══════ */}
@@ -327,63 +325,7 @@ export default function ScrollVideo() {
           />
         </div>
 
-        {/* ── Intro scroll prompt ── */}
-        <motion.div
-          style={{ opacity: introOpacity, y: introY }}
-          className="absolute inset-0 z-30 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
-        >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-px w-12" style={{ background: 'rgba(201,168,76,0.35)' }} />
-            <span
-              className="font-jakarta font-semibold text-[10px] tracking-[0.25em] uppercase"
-              style={{ color: '#C9A84C' }}
-            >
-              Our Process
-            </span>
-            <div className="h-px w-12" style={{ background: 'rgba(201,168,76,0.35)' }} />
-          </div>
-
-          <h2
-            className="font-jakarta font-bold tracking-tight mb-3"
-            style={{
-              fontSize: 'clamp(2rem, 4.5vw, 3.5rem)',
-              color: '#f5f0e8',
-            }}
-          >
-            Watch Us <span style={{ color: '#C9A84C' }}>Build</span>
-          </h2>
-
-          <p
-            className="font-inter max-w-md mb-7"
-            style={{
-              fontSize: 'clamp(0.85rem, 1.2vw, 1rem)',
-              color: 'rgba(255,255,255,0.35)',
-            }}
-          >
-            Scroll to see a full roof replacement — from first inspection to final
-            walkthrough.
-          </p>
-
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              className="w-5 h-5"
-              stroke="#C9A84C"
-              strokeWidth="1.5"
-              strokeOpacity="0.6"
-            >
-              <path
-                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </motion.div>
-        </motion.div>
+        {/* ── Intro text removed entirely ── */}
 
         {/* ── Chapter cards overlaying the video ── */}
         <div className="absolute inset-0 z-20">
