@@ -4,6 +4,8 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import VapiWidget from '@/components/VapiWidget'
+import PreloaderWrapper from '@/components/PreloaderWrapper'
+import { cn } from "@/lib/utils";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -36,8 +38,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable}`}>
+    <html lang="en" className={cn(jakarta.variable, inter.variable, "font-sans")}>
       <body className="bg-dark text-cream font-inter antialiased">
+        <PreloaderWrapper />
         <Navbar />
         <main>{children}</main>
         <Footer />
