@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const stats = [
   { value: '20+', label: 'Years in Florida' },
   { value: '500+', label: 'Roofs Installed' },
-  { value: '5-Year', label: 'No-Leak Promise' },
+  { value: '✓', label: 'No-Leak Promise' },
   { value: '#1', label: 'Rated in Lake County' },
 ]
 

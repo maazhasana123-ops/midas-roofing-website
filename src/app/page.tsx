@@ -461,7 +461,7 @@ export default function HomePage() {
               Our Guarantee
             </p>
             <h2 className="font-jakarta font-bold text-4xl md:text-5xl text-cream mb-5 leading-tight tracking-tight">
-              The 5-Year{' '}
+              The{' '}
               <span className="gold-shimmer">No-Leak Promise</span>
             </h2>
             <p className="text-cream/55 text-base max-w-xl mx-auto leading-relaxed mb-8">
