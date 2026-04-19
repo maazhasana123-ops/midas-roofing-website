@@ -13,10 +13,9 @@ const IMAGES = [
 
 interface LayoutPreloaderProps {
   onComplete?: () => void
-  duration?: number // total animation duration in seconds
 }
 
-export function LayoutPreloader({ onComplete, duration = 3.2 }: LayoutPreloaderProps) {
+export function LayoutPreloader({ onComplete }: LayoutPreloaderProps) {
   const overlayRef   = useRef<HTMLDivElement>(null)
   const gridRef      = useRef<HTMLDivElement>(null)
   const grainRef     = useRef<HTMLDivElement>(null)
@@ -249,7 +248,7 @@ export function LayoutPreloader({ onComplete, duration = 3.2 }: LayoutPreloaderP
         <div ref={taglineRef} className="flex items-center gap-3">
           <div className="h-px w-10 bg-gradient-to-r from-transparent to-[rgba(201,168,76,0.5)]" />
           <span className="font-inter text-[10px] font-medium uppercase tracking-[0.28em] text-[rgba(245,240,232,0.45)]">
-            Central Florida's Roofing Experts
+            Central Florida&apos;s Roofing Experts
           </span>
           <div className="h-px w-10 bg-gradient-to-l from-transparent to-[rgba(201,168,76,0.5)]" />
         </div>
