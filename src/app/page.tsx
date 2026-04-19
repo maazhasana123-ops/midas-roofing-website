@@ -500,7 +500,7 @@ export default function HomePage() {
 
               {/* Service area cities */}
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                {['Orlando', 'Kissimmee', 'Tavares', 'Leesburg', 'Mount Dora', 'Clermont', 'Sanford', 'Winter Park'].map((city) => (
+                {['Orlando', 'Windermere', 'Dr. Phillips', 'Winter Park', 'Longwood', 'Lake Mary', 'Lake Nona', 'Winter Garden', 'Baldwin Park', 'College Park'].map((city) => (
                   <span
                     key={city}
                     className="px-3 py-1.5 text-xs font-jakarta font-medium text-cream/50 bg-white/[0.03] border border-white/5 rounded-full hover:border-gold/30 hover:text-gold transition-all duration-200"
