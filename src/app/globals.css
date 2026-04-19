@@ -49,47 +49,79 @@
     animation: shimmer 3.5s linear infinite;
   }
 
-  /* ─── Buttons ─── */
+  /* ─── Buttons — Shiny Gold ─── */
   .btn-gold {
-    @apply relative inline-flex items-center justify-center px-8 py-4 font-jakarta font-semibold text-dark rounded-sm overflow-hidden;
-    background: linear-gradient(135deg, #C9A84C 0%, #E8C46A 50%, #C9A84C 100%);
-    background-size: 200% auto;
-    transition: background-position 400ms var(--ease-out-expo),
-                box-shadow 300ms var(--ease-out-expo),
-                transform 160ms var(--ease-out-expo);
-    will-change: transform;
-  }
-  .btn-gold:hover {
-    background-position: right center;
-    box-shadow: 0 0 32px rgba(201, 168, 76, 0.55), 0 8px 24px rgba(0,0,0,0.3);
-    transform: translateY(-2px);
+    @apply relative inline-flex items-center justify-center gap-2 px-8 py-4
+           font-jakarta font-semibold text-sm text-dark rounded-sm overflow-hidden
+           select-none cursor-pointer whitespace-nowrap;
+    background: linear-gradient(325deg, #B8912A 0%, #F0D070 45%, #E8C46A 55%, #B8912A 90%);
+    background-size: 280% auto;
+    background-position: left center;
+    box-shadow:
+      0px 0px 18px rgba(201,168,76,0.35),
+      0px 4px 8px -2px rgba(0,0,0,0.4),
+      inset 3px 3px 8px rgba(240,208,112,0.45),
+      inset -3px -3px 8px rgba(140,100,20,0.3);
+    transition:
+      background-position 700ms var(--ease-out-expo),
+      box-shadow 200ms var(--ease-out-expo),
+      transform 150ms var(--ease-out-expo);
+    will-change: transform, background-position;
   }
   @media (hover: hover) and (pointer: fine) {
-    .btn-gold:hover { transform: translateY(-2px); }
+    .btn-gold:hover {
+      background-position: right center;
+      box-shadow:
+        0px 0px 32px rgba(201,168,76,0.65),
+        0px 8px 24px -4px rgba(0,0,0,0.45),
+        inset 3px 3px 8px rgba(240,208,112,0.45),
+        inset -3px -3px 8px rgba(140,100,20,0.3);
+      transform: translateY(-2px);
+    }
   }
   .btn-gold:active {
     transform: scale(0.97);
-    transition: transform 100ms var(--ease-out-expo);
+    transition-duration: 100ms;
+  }
+  .btn-gold:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #080808, 0 0 0 4px rgba(201,168,76,0.6);
   }
 
   .btn-outline-gold {
-    @apply relative inline-flex items-center justify-center px-8 py-4 font-jakarta font-semibold text-gold rounded-sm border border-gold overflow-hidden;
-    transition: background 300ms var(--ease-out-expo),
-                color 300ms var(--ease-out-expo),
-                box-shadow 300ms var(--ease-out-expo),
-                transform 160ms var(--ease-out-expo);
-    will-change: transform;
+    @apply relative inline-flex items-center justify-center gap-2 px-8 py-4
+           font-jakarta font-semibold text-sm text-gold rounded-sm border border-gold overflow-hidden
+           select-none cursor-pointer whitespace-nowrap;
+    background: linear-gradient(325deg, #B8912A 0%, #F0D070 45%, #E8C46A 55%, #B8912A 90%);
+    background-size: 280% auto;
+    background-position: 200% center;
+    box-shadow: inset 0 0 0 1px rgba(201,168,76,0.5);
+    transition:
+      background-position 700ms var(--ease-out-expo),
+      color 300ms var(--ease-out-expo),
+      box-shadow 200ms var(--ease-out-expo),
+      transform 150ms var(--ease-out-expo);
+    will-change: transform, background-position;
   }
   @media (hover: hover) and (pointer: fine) {
     .btn-outline-gold:hover {
-      @apply bg-gold text-dark;
-      box-shadow: 0 0 28px rgba(201, 168, 76, 0.45);
+      @apply text-dark;
+      background-position: right center;
+      box-shadow:
+        0px 0px 28px rgba(201,168,76,0.5),
+        0px 6px 20px -4px rgba(0,0,0,0.4),
+        inset 3px 3px 6px rgba(240,208,112,0.35),
+        inset -3px -3px 6px rgba(140,100,20,0.25);
       transform: translateY(-2px);
     }
   }
   .btn-outline-gold:active {
     transform: scale(0.97);
-    transition: transform 100ms var(--ease-out-expo);
+    transition-duration: 100ms;
+  }
+  .btn-outline-gold:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #080808, 0 0 0 4px rgba(201,168,76,0.6);
   }
 
   /* ─── Glass Nav ─── */
