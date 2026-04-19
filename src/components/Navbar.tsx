@@ -38,19 +38,13 @@ export default function Navbar() {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="relative w-10 h-10 overflow-hidden rounded-sm">
+          <div className="relative w-40 h-10 sm:w-48 sm:h-12 overflow-hidden rounded-sm">
             <Image
               src="/logos/logo_gold.png"
               alt="Midas Roofing Logo"
               fill
-              className="object-contain transition-transform duration-500 group-hover:scale-110"
+              className="object-contain object-left transition-transform duration-500 group-hover:scale-105"
             />
-          </div>
-          <div className="font-jakarta font-bold leading-tight">
-            <div className="text-gold text-sm tracking-widest">MIDAS</div>
-            <div className="text-cream/60 text-[9px] tracking-[0.2em] font-medium uppercase">
-              Roofing & Construction
-            </div>
           </div>
         </Link>
 

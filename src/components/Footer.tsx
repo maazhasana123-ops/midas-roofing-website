@@ -32,19 +32,13 @@ export default function Footer() {
           {/* ── Brand ── */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-5 group w-fit">
-              <div className="relative w-9 h-9">
+              <div className="relative w-40 h-10 sm:w-48 sm:h-12 overflow-hidden">
                 <Image
-                  src="/logos/midas-logos-discord.png"
-                  alt="Midas Roofing"
+                  src="/logos/logo_gold.png"
+                  alt="Midas Roofing Logo"
                   fill
-                  className="object-contain"
+                  className="object-contain object-left"
                 />
-              </div>
-              <div className="font-jakarta font-bold">
-                <div className="text-gold text-sm tracking-widest">MIDAS</div>
-                <div className="text-cream/50 text-[9px] tracking-[0.18em] font-medium">
-                  ROOFING & CONSTRUCTION
-                </div>
               </div>
             </Link>
 
