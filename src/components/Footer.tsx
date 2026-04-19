@@ -1,158 +1,269 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
 
 const navLinks = [
-  ['/','Home'],
-  ['/services','Services'],
-  ['/about','About'],
-  ['/gallery','Gallery'],
-  ['/estimate','Free Estimate'],
-  ['/contact','Contact'],
+  ['/', 'Home'],
+  ['/services', 'Services'],
+  ['/about', 'About'],
+  ['/gallery', 'Gallery'],
+  ['/estimate', 'Free Estimate'],
+  ['/contact', 'Contact'],
 ]
 
 const services = [
-  ['/services','Shingle Roofing'],
-  ['/services','Metal Roofing'],
-  ['/services','Tile Roofing'],
-  ['/services','TPO Roofing'],
-  ['/services','Roof Coatings'],
-  ['/services','Commercial'],
+  ['/services', 'Shingle Roofing'],
+  ['/services', 'Metal Roofing'],
+  ['/services', 'Tile Roofing'],
+  ['/services', 'TPO Roofing'],
+  ['/services', 'Roof Coatings'],
+  ['/services', 'Commercial'],
 ]
 
-export default function Footer() {
+const contactDetails = [
+  {
+    label: 'Address',
+    lines: ['4051 Bannock Ave', 'Tavares, FL 32778'],
+  },
+  {
+    label: 'Service Area',
+    lines: ['All of Central Florida'],
+  },
+]
+
+/* ─── Animated nav link ─── */
+function FooterLink({ href, label, delay = 0 }: { href: string; label: string; delay?: number }) {
   return (
-    <footer className="bg-dark-card border-t border-gold/10 relative overflow-hidden">
-      {/* Subtle top glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-12 bg-gold/[0.03] blur-2xl pointer-events-none" />
+    <motion.div
+      initial={{ opacity: 0, x: -8 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <Link
+        href={href}
+        className="group flex items-center gap-2 text-cream/40 text-sm hover:text-gold transition-colors duration-200 font-inter w-fit"
+      >
+        <span className="w-0 h-px bg-gold transition-all duration-300 group-hover:w-3 flex-shrink-0" />
+        {label}
+      </Link>
+    </motion.div>
+  )
+}
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+/* ─── Flickering dot grid background ─── */
+function FlickerGrid() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      aria-hidden
+    >
+      {/* Dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(201,168,76,1) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+      {/* Top-center radial glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.07)_0%,_transparent_70%)] blur-2xl" />
+      {/* Bottom-left corner accent */}
+      <div className="absolute bottom-0 left-0 w-[400px] h-[200px] bg-[radial-gradient(ellipse_at_bottom_left,_rgba(201,168,76,0.04)_0%,_transparent_70%)]" />
+    </div>
+  )
+}
 
-          {/* ── Brand ── */}
-          <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-5 group w-fit">
+export default function Footer() {
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  return (
+    <footer ref={ref} className="relative bg-dark-card border-t border-gold/[0.08] overflow-hidden">
+      <FlickerGrid />
+
+      {/* Top shimmer line */}
+      <div className="absolute top-0 left-0 right-0 h-px">
+        <motion.div
+          className="h-full bg-gradient-to-r from-transparent via-gold/40 to-transparent"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+
+          {/* ── Brand column ── */}
+          <motion.div
+            className="md:col-span-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Link href="/" className="flex items-center gap-3 mb-5 w-fit group">
               <div className="relative w-40 h-10 sm:w-48 sm:h-12 overflow-hidden">
                 <Image
                   src="/logos/logo_gold.png"
                   alt="Midas Roofing Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left transition-opacity duration-300 group-hover:opacity-80"
                 />
               </div>
             </Link>
 
-            <p className="text-cream/40 text-sm leading-relaxed max-w-xs font-inter mb-6">
-              Central Florida&apos;s trusted roofing contractor. Quality craftsmanship,
+            <p className="text-cream/35 text-sm leading-relaxed max-w-xs font-inter mb-6">
+              Central Florida&apos;s trusted roofing contractor since 2004. Quality craftsmanship,
               honest pricing, and a No-Leak Promise on every project.
             </p>
 
             {/* License badge */}
-            <div className="inline-flex items-center gap-2 bg-gold/[0.08] border border-gold/20 rounded px-3 py-2 mb-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-              <span className="text-gold text-xs font-jakarta font-semibold tracking-widest">
+            <div className="inline-flex items-center gap-2.5 bg-gold/[0.07] border border-gold/[0.18] rounded-full px-4 py-2 mb-7 group hover:bg-gold/[0.12] hover:border-gold/30 transition-all duration-300 cursor-default">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse flex-shrink-0" />
+              <span className="text-gold text-[11px] font-jakarta font-semibold tracking-[0.14em]">
                 LIC# CCC1334831
               </span>
             </div>
 
-            {/* Social */}
-            <a
-              href="https://instagram.com/midas_roofing_fl"
-              target="_blank"
-              rel="noopener noreferrer"
-              id="footer-instagram"
-              className="inline-flex items-center gap-2 text-cream/35 hover:text-gold transition-colors duration-200 text-sm font-inter group"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 transition-transform duration-200 group-hover:scale-110">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-              @midas_roofing_fl
-            </a>
-          </div>
+            {/* Social links */}
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://instagram.com/midas_roofing_fl"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="footer-instagram"
+                className="group inline-flex items-center gap-2.5 text-cream/35 hover:text-gold transition-colors duration-200 text-sm font-inter w-fit"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-gold/[0.1] group-hover:border-gold/20 transition-all duration-300">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </div>
+                <span>@midas_roofing_fl</span>
+              </a>
 
-          {/* ── Quick Links ── */}
-          <div>
-            <h3 className="font-jakarta font-semibold text-cream/80 text-xs tracking-[0.15em] uppercase mb-5">
+              <a
+                href="https://www.facebook.com/MidasRoofingPros/"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="footer-facebook"
+                className="group inline-flex items-center gap-2.5 text-cream/35 hover:text-gold transition-colors duration-200 text-sm font-inter w-fit"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-gold/[0.1] group-hover:border-gold/20 transition-all duration-300">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                  </svg>
+                </div>
+                <span>Midas Roofing on Facebook</span>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* ── Navigate ── */}
+          <motion.div
+            className="md:col-span-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h3 className="font-jakarta font-semibold text-cream/50 text-[10px] tracking-[0.2em] uppercase mb-6">
               Navigate
             </h3>
-            <nav className="flex flex-col gap-2.5">
-              {navLinks.map(([href, label]) => (
-                <Link
-                  key={href + label}
-                  href={href}
-                  className="text-cream/40 text-sm hover:text-gold transition-colors duration-150 font-inter hover:translate-x-0.5 transition-transform"
-                >
-                  {label}
-                </Link>
+            <nav className="flex flex-col gap-3">
+              {navLinks.map(([href, label], i) => (
+                <FooterLink key={href + label} href={href} label={label} delay={0.1 + i * 0.04} />
               ))}
             </nav>
-          </div>
+          </motion.div>
 
           {/* ── Services ── */}
-          <div>
-            <h3 className="font-jakarta font-semibold text-cream/80 text-xs tracking-[0.15em] uppercase mb-5">
+          <motion.div
+            className="md:col-span-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h3 className="font-jakarta font-semibold text-cream/50 text-[10px] tracking-[0.2em] uppercase mb-6">
               Services
             </h3>
-            <nav className="flex flex-col gap-2.5">
-              {services.map(([href, label]) => (
-                <Link
-                  key={label}
-                  href={href}
-                  className="text-cream/40 text-sm hover:text-gold transition-colors duration-150 font-inter"
-                >
-                  {label}
-                </Link>
+            <nav className="flex flex-col gap-3">
+              {services.map(([href, label], i) => (
+                <FooterLink key={label} href={href} label={label} delay={0.15 + i * 0.04} />
               ))}
             </nav>
-          </div>
+          </motion.div>
 
           {/* ── Contact ── */}
-          <div>
-            <h3 className="font-jakarta font-semibold text-cream/80 text-xs tracking-[0.15em] uppercase mb-5">
+          <motion.div
+            className="md:col-span-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h3 className="font-jakarta font-semibold text-cream/50 text-[10px] tracking-[0.2em] uppercase mb-6">
               Contact
             </h3>
-            <div className="flex flex-col gap-5 text-sm">
-              <div>
-                <div className="text-gold font-jakarta font-semibold text-[10px] tracking-[0.15em] uppercase mb-1.5">
-                  Address
+            <div className="flex flex-col gap-5">
+              {contactDetails.map((item) => (
+                <div key={item.label}>
+                  <div className="text-gold/60 font-jakarta font-semibold text-[10px] tracking-[0.18em] uppercase mb-1.5">
+                    {item.label}
+                  </div>
+                  {item.lines.map((line) => (
+                    <p key={line} className="text-cream/35 text-sm font-inter leading-relaxed">{line}</p>
+                  ))}
                 </div>
-                <p className="text-cream/40 font-inter leading-relaxed">
-                  4051 Bannock Ave<br />
-                  Tavares, FL 32778
-                </p>
-              </div>
-              <div>
-                <div className="text-gold font-jakarta font-semibold text-[10px] tracking-[0.15em] uppercase mb-1.5">
-                  Service Area
-                </div>
-                <p className="text-cream/40 font-inter">All of Central Florida</p>
-              </div>
-              <div>
-                <Link
-                  href="/estimate"
-                  id="footer-estimate-cta"
-                  className="inline-flex items-center gap-2 text-gold text-xs font-jakarta font-semibold tracking-wide hover:gap-3 transition-all duration-200"
-                >
+              ))}
+
+              {/* CTA */}
+              <Link
+                href="/estimate"
+                id="footer-estimate-cta"
+                className="group inline-flex items-center gap-2 mt-1 w-fit"
+              >
+                <span className="relative text-gold text-xs font-jakarta font-bold tracking-wide">
                   Get Free Estimate
-                  <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3" stroke="currentColor" strokeWidth="2">
+                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
+                </span>
+                <div className="w-5 h-5 rounded-full border border-gold/30 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300 group-hover:translate-x-1">
+                  <svg viewBox="0 0 16 16" fill="none" className="w-2.5 h-2.5 text-gold" stroke="currentColor" strokeWidth="2">
                     <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* ── Bottom Bar ── */}
-        <div className="mt-14 pt-7 border-t border-gold/[0.08] flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-cream/25 text-xs font-inter">
-            © {new Date().getFullYear()} Midas Roofing & Construction. All rights reserved.
+        {/* ── Divider ── */}
+        <motion.div
+          className="mt-14 h-px bg-gradient-to-r from-transparent via-gold/[0.15] to-transparent"
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        />
+
+        {/* ── Bottom bar ── */}
+        <motion.div
+          className="mt-7 flex flex-col sm:flex-row justify-between items-center gap-3"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <p className="text-cream/20 text-xs font-inter">
+            © {new Date().getFullYear()} Midas Roofing &amp; Construction. All rights reserved.
           </p>
-          <p className="text-cream/18 text-xs font-inter">
+          <p className="text-cream/15 text-xs font-inter">
             Crafted by{' '}
-            <span className="text-gold/50 font-jakarta font-medium">Nouxel Agency</span>
+            <span className="text-gold/40 font-jakarta font-medium hover:text-gold/70 transition-colors duration-200 cursor-default">
+              Nouxel Agency
+            </span>
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   )

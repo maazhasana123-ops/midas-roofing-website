@@ -89,50 +89,75 @@ export default function ServicesGrid() {
             return (
               <AnimatedSection key={s.id} delay={i * 0.05}>
                 <div
-                  className={`border rounded-sm overflow-hidden transition-all duration-300 cursor-pointer ${
-                    isOpen ? 'border-gold/40 bg-dark-card' : 'border-white/5 bg-dark-card hover:border-gold/20'
-                  }`}
+                  className={`group relative rounded-2xl overflow-hidden transition-all duration-400 cursor-pointer`}
+                  style={{ isolation: 'isolate' }}
                   onClick={() => setActiveId(isOpen ? null : s.id)}
                 >
-                  <div className="flex items-center justify-between p-6 md:p-8">
+                  {/* Background layer */}
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-400 ${
+                    isOpen
+                      ? 'border border-gold/35 bg-dark-card'
+                      : 'border border-white/[0.05] bg-dark-card group-hover:border-gold/20'
+                  }`} />
+                  {/* Hover / open glow */}
+                  <div className={`absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                    style={{ background: 'radial-gradient(ellipse 60% 80% at 0% 50%, rgba(201,168,76,0.05) 0%, transparent 100%)' }} />
+                  {/* Top shimmer on hover/open */}
+                  <div className={`absolute top-0 left-0 h-px transition-all duration-600 ${isOpen ? 'w-full bg-gradient-to-r from-transparent via-gold/50 to-transparent' : 'w-0 group-hover:w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent'}`} />
+
+                  {/* Header row */}
+                  <div className="relative z-10 flex items-center justify-between p-6 md:p-8">
                     <div className="flex items-center gap-6">
-                      <span className="text-gold/40 font-jakarta font-bold text-sm tracking-wider hidden sm:block">
-                        0{i + 1}
+                      <span className="text-gold/30 font-jakarta font-bold text-sm tracking-wider hidden sm:block group-hover:text-gold/50 transition-colors duration-200">
+                        {String(i + 1).padStart(2, '0')}
                       </span>
                       <div>
-                        <h3 className={`font-jakarta font-bold text-xl md:text-2xl transition-colors ${isOpen ? 'text-gold' : 'text-cream'}`}>
+                        <h3 className={`font-jakarta font-bold text-xl md:text-2xl transition-colors duration-200 ${isOpen ? 'text-gold' : 'text-cream group-hover:text-gold/80'}`}>
                           {s.title}
                         </h3>
-                        <p className="text-cream/40 text-sm mt-0.5">{s.subtitle}</p>
+                        <p className="text-cream/35 text-sm mt-0.5 font-inter">{s.subtitle}</p>
                       </div>
                     </div>
-                    <div className={`w-8 h-8 border rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'border-gold bg-gold/10 rotate-45' : 'border-white/20'}`}>
-                      <span className={`text-lg leading-none transition-colors ${isOpen ? 'text-gold' : 'text-cream/50'}`}>+</span>
+
+                    {/* Toggle button */}
+                    <div className={`w-9 h-9 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                      isOpen
+                        ? 'border-gold bg-gold/10 rotate-45 shadow-[0_0_16px_rgba(201,168,76,0.2)]'
+                        : 'border-white/15 group-hover:border-gold/30'
+                    }`}>
+                      <span className={`text-lg leading-none font-light transition-colors duration-200 ${isOpen ? 'text-gold' : 'text-cream/40 group-hover:text-gold/60'}`}>+</span>
                     </div>
                   </div>
 
+                  {/* Expanded content */}
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="px-6 md:px-8 pb-8 border-t border-white/5">
-                          <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="relative z-10 px-6 md:px-8 pb-8 border-t border-gold/[0.1]">
+                          <div className="pt-7 grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                               <p className="text-gold font-jakarta font-semibold text-base mb-3">{s.tagline}</p>
-                              <p className="text-cream/60 text-sm leading-relaxed whitespace-pre-line">{s.description}</p>
+                              <p className="text-cream/60 text-sm leading-relaxed whitespace-pre-line font-inter">{s.description}</p>
                             </div>
                             <div>
-                              <p className="text-cream/80 font-jakarta font-semibold text-sm uppercase tracking-wider mb-4">Key Features</p>
+                              <p className="text-cream/70 font-jakarta font-semibold text-xs uppercase tracking-[0.15em] mb-5">Key Features</p>
                               <ul className="space-y-3">
-                                {s.specs.map((spec) => (
-                                  <li key={spec} className="flex items-start gap-3 text-sm text-cream/60">
-                                    <span className="text-gold mt-0.5 flex-shrink-0">✓</span>
+                                {s.specs.map((spec, si) => (
+                                  <motion.li
+                                    key={spec}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.25, delay: si * 0.06 }}
+                                    className="flex items-start gap-3 text-sm text-cream/60"
+                                  >
+                                    <span className="text-gold mt-0.5 flex-shrink-0 font-semibold">✓</span>
                                     {spec}
-                                  </li>
+                                  </motion.li>
                                 ))}
                               </ul>
                             </div>

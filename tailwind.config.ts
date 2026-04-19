@@ -100,6 +100,12 @@ const config: Config = {
         'in-out-expo': 'cubic-bezier(0.77, 0, 0.175, 1)',
         'out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
+      transitionDuration: {
+        '400': '400ms',
+        '600': '600ms',
+        '700': '700ms',
+        '800': '800ms',
+      },
     },
   },
   plugins: [],

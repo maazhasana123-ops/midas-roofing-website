@@ -1,8 +1,42 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import AnimatedSection from './AnimatedSection'
 import GoldDivider from './GoldDivider'
+
+const contactItems = [
+  {
+    icon: '📍',
+    title: 'Our Office',
+    lines: ['4051 Bannock Ave', 'Tavares, Florida 32778'],
+    link: undefined,
+  },
+  {
+    icon: '🗺️',
+    title: 'Service Area',
+    lines: ['All of Central Florida', 'Tavares · Orlando · Lake County', 'Mount Dora · Leesburg · The Villages'],
+    link: undefined,
+  },
+  {
+    icon: '📸',
+    title: 'Follow Our Work',
+    lines: ['@midas_roofing_fl on Instagram'],
+    link: 'https://instagram.com/midas_roofing_fl',
+  },
+  {
+    icon: '📘',
+    title: 'Connect With Us',
+    lines: ['Midas Roofing on Facebook'],
+    link: 'https://www.facebook.com/MidasRoofingPros/',
+  },
+  {
+    icon: '🏛️',
+    title: 'License',
+    lines: ['Florida Contractor License', 'CCC1334831'],
+    link: undefined,
+  },
+]
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
@@ -20,8 +54,16 @@ export default function ContactForm() {
           {/* Form */}
           <AnimatedSection>
             {submitted ? (
-              <div className="bg-dark-card border border-gold/30 rounded-sm p-10 text-center">
-                <div className="text-5xl mb-6">✓</div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="rounded-2xl p-10 text-center border border-gold/25"
+                style={{ background: 'rgba(16,16,16,0.95)', backdropFilter: 'blur(16px)' }}
+              >
+                <div className="w-16 h-16 rounded-full border border-gold/30 bg-gold/[0.05] flex items-center justify-center mx-auto mb-6">
+                  <span className="text-gold text-2xl font-bold">✓</span>
+                </div>
                 <h2 className="font-jakarta font-bold text-3xl text-gold mb-4">Message Sent!</h2>
                 <p className="text-cream/60 leading-relaxed">
                   Thanks for reaching out. A member of our team will contact you within 24 hours. If it&apos;s urgent, call us directly.
@@ -32,7 +74,7 @@ export default function ContactForm() {
                 >
                   Send Another Message
                 </button>
-              </div>
+              </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -44,7 +86,7 @@ export default function ContactForm() {
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder="John Smith"
-                      className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                      className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200 placeholder:text-cream/20"
                     />
                   </div>
                   <div>
@@ -54,7 +96,7 @@ export default function ContactForm() {
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       placeholder="(407) 555-0100"
-                      className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                      className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200 placeholder:text-cream/20"
                     />
                   </div>
                 </div>
@@ -66,7 +108,7 @@ export default function ContactForm() {
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="john@example.com"
-                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20"
+                    className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200 placeholder:text-cream/20"
                   />
                 </div>
                 <div>
@@ -74,7 +116,7 @@ export default function ContactForm() {
                   <select
                     value={form.service}
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
-                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                    className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200"
                   >
                     <option value="">Select a service...</option>
                     <option>Shingle Roofing</option>
@@ -96,7 +138,7 @@ export default function ContactForm() {
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder="Tell us about your project — address, roof type, any issues you're experiencing..."
-                    className="w-full bg-dark-card border border-white/10 rounded-sm px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-cream/20 resize-none"
+                    className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200 placeholder:text-cream/20 resize-none"
                   />
                 </div>
                 <button type="submit" className="btn-gold w-full">
@@ -109,8 +151,8 @@ export default function ContactForm() {
 
           {/* Info */}
           <AnimatedSection delay={0.15}>
-            <div className="space-y-6">
-              <div>
+            <div className="space-y-5">
+              <div className="mb-8">
                 <p className="text-gold font-jakarta font-semibold text-sm tracking-widest uppercase mb-4">Contact Info</p>
                 <h2 className="font-jakarta font-bold text-3xl text-cream mb-2">We&apos;re Here to Help</h2>
                 <GoldDivider />
@@ -119,45 +161,40 @@ export default function ContactForm() {
                 </p>
               </div>
 
-              {[
-                {
-                  icon: '📍',
-                  title: 'Our Office',
-                  lines: ['4051 Bannock Ave', 'Tavares, Florida 32778'],
-                  link: undefined,
-                },
-                {
-                  icon: '🗺️',
-                  title: 'Service Area',
-                  lines: ['All of Central Florida', 'Tavares · Orlando · Lake County', 'Mount Dora · Leesburg · The Villages'],
-                  link: undefined,
-                },
-                {
-                  icon: '📸',
-                  title: 'Follow Our Work',
-                  lines: ['@midas_roofing_fl on Instagram'],
-                  link: 'https://instagram.com/midas_roofing_fl',
-                },
-                {
-                  icon: '🏛️',
-                  title: 'License',
-                  lines: ['Florida Contractor License', 'CCC1334831'],
-                  link: undefined,
-                },
-              ].map((item) => (
-                <div key={item.title} className="flex gap-4 bg-dark-card border border-white/5 rounded-sm p-6 hover:border-gold/20 transition-colors">
-                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                  <div>
-                    <div className="font-jakarta font-semibold text-cream text-sm mb-1">{item.title}</div>
-                    {item.lines.map((line) =>
-                      item.link ? (
-                        <a key={line} href={item.link} target="_blank" rel="noopener noreferrer" className="block text-gold text-sm hover:underline">{line}</a>
-                      ) : (
-                        <div key={line} className="text-cream/50 text-sm">{line}</div>
-                      )
-                    )}
+              {contactItems.map((item, i) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-30px' }}
+                  transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="group relative flex gap-4 rounded-2xl p-5 border border-white/[0.05] overflow-hidden cursor-default hover:border-gold/20 transition-colors duration-300"
+                    style={{ background: 'rgba(16,16,16,0.6)' }}>
+                    {/* Hover glow */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none rounded-2xl"
+                      style={{ background: 'radial-gradient(ellipse 80% 80% at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 100%)' }} />
+
+                    {/* Icon container */}
+                    <div className="relative z-10 w-10 h-10 rounded-xl bg-gold/[0.06] border border-gold/[0.1] flex items-center justify-center flex-shrink-0 group-hover:bg-gold/[0.12] group-hover:border-gold/25 transition-all duration-300">
+                      <span className="text-base leading-none">{item.icon}</span>
+                    </div>
+
+                    <div className="relative z-10">
+                      <div className="font-jakarta font-semibold text-cream/80 text-sm mb-1 group-hover:text-cream transition-colors duration-200">{item.title}</div>
+                      {item.lines.map((line) =>
+                        item.link ? (
+                          <a key={line} href={item.link} target="_blank" rel="noopener noreferrer"
+                            className="block text-gold text-sm hover:text-gold-light transition-colors duration-200">
+                            {line}
+                          </a>
+                        ) : (
+                          <div key={line} className="text-cream/45 text-sm leading-snug">{line}</div>
+                        )
+                      )}
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </AnimatedSection>
