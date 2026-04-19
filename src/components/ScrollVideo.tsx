@@ -247,7 +247,7 @@ export default function ScrollVideo() {
     <section
       ref={containerRef}
       className="relative"
-      style={{ height: '600vh' }}
+      style={{ height: '1200vh' }}
       aria-label="Watch a roof replacement in action"
     >
       {/* ══════ Sticky viewport ══════ */}
