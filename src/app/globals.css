@@ -186,6 +186,15 @@
   .text-balance { text-wrap: balance; }
 }
 
+/* ─── Dark select dropdown ─── */
+select {
+  color-scheme: dark;
+}
+select option {
+  background-color: #141414;
+  color: #f5f0e8;
+}
+
 /* ─── Keyframes ─── */
 @keyframes shimmer {
   0% { background-position: -200% center; }

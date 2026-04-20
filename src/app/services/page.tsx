@@ -3,6 +3,7 @@ import Link from 'next/link'
 import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
 import ServicesGrid from '@/components/ServicesGrid'
+import TalkToMidasButton from '@/components/TalkToMidasButton'
 
 export const metadata: Metadata = {
   title: 'Roofing Services | Midas Roofing & Construction',
@@ -40,7 +41,7 @@ export default function ServicesPage() {
             <p className="text-cream/60 mb-8 leading-relaxed">Our team will assess your property, budget, and preferences to recommend the perfect roofing system.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/estimate" className="btn-gold">Get Free Estimate</Link>
-              <Link href="/contact" className="btn-outline-gold">Ask a Question</Link>
+              <TalkToMidasButton />
             </div>
           </AnimatedSection>
         </div>

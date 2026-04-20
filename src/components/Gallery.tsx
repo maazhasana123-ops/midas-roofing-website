@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const galleryImages = [
-  { src: '/images/6.png', alt: 'Premium tile roof — Lake County, FL', category: 'Tile', size: 'wide' },
+  { src: '/images/6.png', alt: 'Premium tile roof — Orlando, FL', category: 'Tile', size: 'wide' },
   { src: '/images/midas-team-photo.png', alt: 'Midas Roofing crew on a residential project', category: 'Team', size: 'normal' },
   { src: '/images/gallery/post-1.png', alt: 'Completed roofing project — Central Florida', category: 'Residential', size: 'normal' },
   { src: '/images/gallery/post-2.png', alt: 'Shingle roof replacement — Tavares, FL', category: 'Residential', size: 'normal' },

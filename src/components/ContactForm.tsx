@@ -15,19 +15,19 @@ const contactItems = [
   {
     icon: '🗺️',
     title: 'Service Area',
-    lines: ['All of Central Florida', 'Tavares · Orlando · Lake County', 'Mount Dora · Leesburg · The Villages'],
+    lines: ['All of Central Florida', 'Tavares · Orlando · Mount Dora', 'Leesburg · The Villages'],
     link: undefined,
   },
   {
     icon: '📸',
-    title: 'Follow Our Work',
-    lines: ['@midas_roofing_fl on Instagram'],
+    title: 'Follow Our Work on Instagram',
+    lines: ['Follow Our Work on Instagram'],
     link: 'https://instagram.com/midas_roofing_fl',
   },
   {
     icon: '📘',
-    title: 'Connect With Us',
-    lines: ['Midas Roofing on Facebook'],
+    title: 'Follow Our Work on Facebook',
+    lines: ['Follow Our Work on Facebook'],
     link: 'https://www.facebook.com/MidasRoofingPros/',
   },
   {
@@ -116,18 +116,19 @@ export default function ContactForm() {
                   <select
                     value={form.service}
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
-                    className="w-full bg-dark-card border border-white/[0.08] rounded-xl px-4 py-3 text-cream text-sm focus:outline-none focus:border-gold/50 focus:bg-gold/[0.02] transition-all duration-200"
+                    style={{ colorScheme: 'dark', backgroundColor: 'rgba(20,20,20,0.95)', color: '#f5f0e8' }}
+                    className="w-full border border-white/[0.08] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold/50 transition-all duration-200 cursor-pointer"
                   >
-                    <option value="">Select a service...</option>
-                    <option>Shingle Roofing</option>
-                    <option>Metal Roofing</option>
-                    <option>Tile Roofing</option>
-                    <option>TPO Roofing</option>
-                    <option>Roof Coatings</option>
-                    <option>Residential Roofing</option>
-                    <option>Commercial Roofing</option>
-                    <option>Storm Damage / Insurance Claim</option>
-                    <option>General Inquiry</option>
+                    <option value="" style={{ background: '#141414', color: '#f5f0e8' }}>Select a service...</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Shingle Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Metal Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Tile Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>TPO Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Roof Coatings</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Residential Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Commercial Roofing</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>Storm Damage / Insurance Claim</option>
+                    <option style={{ background: '#141414', color: '#f5f0e8' }}>General Inquiry</option>
                   </select>
                 </div>
                 <div>

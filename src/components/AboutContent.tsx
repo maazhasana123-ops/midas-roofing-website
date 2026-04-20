@@ -28,7 +28,7 @@ const stats = [
   { value: 20, suffix: '+', label: 'Years in Florida' },
   { value: 500, suffix: '+', label: 'Roofs Installed' },
   { value: 100, suffix: '%', label: 'No-Leak Promise' },
-  { value: 1, suffix: '#1', label: 'Rated in Lake County', raw: true },
+  { value: 1, suffix: '#1', label: 'Rated in Orlando', raw: true },
 ]
 
 function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
@@ -57,7 +57,6 @@ function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
 const promiseItems = [
   { title: 'Covers All Our Work', desc: 'Any leak caused by our installation or materials is covered — period.' },
   { title: 'No Fine Print', desc: 'One simple promise: we fix it for free. No deductibles, no arguments.' },
-  { title: 'Transferable', desc: 'Selling your home? The promise transfers to the new owner.' },
 ]
 
 const credItems = [
@@ -128,13 +127,13 @@ export default function AboutContent() {
                   Jenson Perazada didn&apos;t start Midas Roofing to build a company — he started it to build better roofs than the ones that were letting Florida homeowners down.
                 </p>
                 <p>
-                  With over 20 years of hands-on experience in Florida&apos;s demanding roofing market, Jenson has personally overseen hundreds of installs across Central Florida. He knows every roof type, every building code in Lake County, and exactly what it takes to make a roof that survives Florida&apos;s brutal summers and hurricane seasons.
+                  With over 20 years of hands-on experience in Florida&apos;s demanding roofing market, Jenson has personally overseen hundreds of installs across Central Florida. He knows every roof type, every building code across Central Florida, and exactly what it takes to make a roof that survives Florida&apos;s brutal summers and hurricane seasons.
                 </p>
                 <p>
-                  &quot;Most contractors are in a hurry to get to the next job. We&apos;re in a hurry to get your job right,&quot; Jenson says. That philosophy is baked into every project Midas takes on — from the initial estimate to the final walkthrough.
+                  &quot;Most contractors are in a hurry to get to the next job. We&apos;re in a hurry to get your job right,&quot; Jenson says. That philosophy is baked into every project Midas takes on, from the initial estimate to the final walkthrough.
                 </p>
                 <p>
-                  Today, Midas Roofing &amp; Construction serves homeowners and businesses across all of Central Florida, from Tavares and Mount Dora to the greater Orlando area. Every project carries Jenson&apos;s personal commitment to quality — and his name on the license.
+                  From Tavares to Orlando and surrounding counties, every project carries Jenson&apos;s personal commitment to quality and his name on the license.
                 </p>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">

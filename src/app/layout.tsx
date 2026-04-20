@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. License CCC1334831.',
   keywords:
     'roofing contractor Central Florida, roofing company Tavares FL, metal roofing Florida, tile roof replacement Florida',
+  icons: {
+    icon: '/logos/logo_gold.png',
+    shortcut: '/logos/logo_gold.png',
+    apple: '/logos/logo_gold.png',
+  },
   openGraph: {
     title: 'Midas Roofing & Construction',
     description: "Central Florida's trusted roofing contractor since day one.",

@@ -268,7 +268,7 @@ export default function HomePage() {
               Your Roof. <span className="gold-shimmer">Our Promise.</span>
             </h2>
             <p className="text-cream/50 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
-              Get a free, no-obligation instant estimate in minutes — powered by Roofr&apos;s satellite measurement technology.
+              Get a free, no-obligation instant estimate in minutes using satellite measurement technology.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/estimate" id="final-cta-primary" className="btn-gold text-sm px-10 py-4 tracking-wide">Get Instant Estimate</Link>

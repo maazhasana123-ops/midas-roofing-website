@@ -20,7 +20,7 @@ export default function EstimateContent() {
               Know Your Roof Cost <span className="gold-shimmer">Instantly</span>
             </h1>
             <p className="text-cream/60 max-w-xl mx-auto text-lg leading-relaxed">
-              Our Roofr-powered estimator uses satellite imagery to measure your roof and generate an accurate estimate — no salesperson visit required.
+              Our estimator uses satellite imagery to measure your roof and generate an accurate estimate. No salesperson visit required.
             </p>
           </AnimatedSection>
         </div>

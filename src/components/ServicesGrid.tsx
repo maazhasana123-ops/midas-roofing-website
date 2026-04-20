@@ -62,7 +62,7 @@ Roof coatings are especially popular on commercial metal roofs and flat TPO or m
     tagline: 'Your home deserves the Midas treatment.',
     description: `Your home is your most valuable asset — protect it with a Midas residential installation. We handle everything from complete tear-off and replacement to repairs and insurance-claim coordination.
 
-Our residential team works around your schedule, maintains a clean job site, and treats your property with the respect it deserves. We've built our reputation one satisfied homeowner at a time across Tavares, Leesburg, Mount Dora, and all of Lake County.`,
+Our residential team works around your schedule, maintains a clean job site, and treats your property with the respect it deserves. We've built our reputation one satisfied homeowner at a time across Tavares, Leesburg, Mount Dora, and the greater Orlando area.`,
     specs: ['Full tear-off and replacement', 'Storm damage assessment & repair', 'Insurance claim assistance', 'Weekend appointments available'],
   },
   {
