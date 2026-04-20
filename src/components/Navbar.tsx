@@ -38,7 +38,7 @@ export default function Navbar() {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="relative w-40 h-10 sm:w-48 sm:h-12 overflow-hidden rounded-sm">
+          <div className="relative w-40 h-10 sm:w-48 sm:h-12">
             <Image
               src="/logos/logo_gold.png"
               alt="Midas Roofing Logo"
