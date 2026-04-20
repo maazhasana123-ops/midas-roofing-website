@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
 import ScrollVideo from '@/components/ScrollVideo'
@@ -26,6 +27,8 @@ const trustBadges = [
 export default function HomePage() {
   return (
     <>
+      <Script src="https://fast.wistia.net/assets/external/E-v1.js" strategy="afterInteractive" />
+
       {/* ───────────────────────────────── HERO ───────────────────────────────── */}
       <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
@@ -142,6 +145,19 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* ────────────────────────── VIDEO SECTION ─────────────────────────────── */}
+      <section className="py-16 bg-dark">
+        <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection className="text-center mb-10">
+            <h2 className="font-jakarta font-bold text-3xl md:text-4xl text-gold">Why Florida Homeowners Trust Midas Roofing?</h2>
+          </AnimatedSection>
+          <AnimatedSection className="max-w-[900px] mx-auto w-full aspect-video rounded-sm overflow-hidden shadow-2xl relative bg-black/20">
+            {/* @ts-expect-error - Custom Wistia web component */}
+            <wistia-player media-id="0pr2x9lbx9" className="w-full h-full object-cover"></wistia-player>
+          </AnimatedSection>
+        </div>
+      </section>
 
       {/* ────────────────────────── WHY MIDAS ─────────────────────────────────── */}
       <section className="section-pad bg-dark-card relative overflow-hidden">
