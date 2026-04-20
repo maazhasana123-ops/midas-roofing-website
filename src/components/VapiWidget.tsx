@@ -2,16 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Script from 'next/script'
+import type Vapi from '@vapi-ai/web'
 
 type CallState = 'idle' | 'loading' | 'active'
-
-type VapiWidgetEl = HTMLElement & {
-  start?: () => void
-  startCall?: () => void
-  stop?: () => void
-  endCall?: () => void
-}
 
 function SoundWave({ active }: { active: boolean }) {
   const bars = [0.3, 0.6, 1, 0.75, 0.45, 0.85, 1, 0.55, 0.35]
@@ -48,54 +41,45 @@ export default function VapiWidget() {
   const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
   const [isOpen, setIsOpen] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
-  const widgetRef = useRef<VapiWidgetEl | null>(null)
+  const vapiRef = useRef<Vapi | null>(null)
 
-  // Listen for external open trigger (from services page button, etc.)
   useEffect(() => {
     const handleOpen = () => setIsOpen(true)
     window.addEventListener('openVapiModal', handleOpen)
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
-  const onScriptLoad = useCallback(() => {
-    // Give the web component time to upgrade after script loads
-    setTimeout(() => {
-      const el = document.getElementById('vapi-engine') as VapiWidgetEl | null
-      if (!el) return
-      widgetRef.current = el
-      el.addEventListener('call-start', () => setCallState('active'))
-      el.addEventListener('call-end', () => setCallState('idle'))
-      el.addEventListener('error', () => setCallState('idle'))
-    }, 600)
-  }, [])
+  // Lazily initialize the Vapi SDK instance in the browser
+  const getVapi = useCallback(async (): Promise<Vapi | null> => {
+    if (!publicKey) return null
+    if (vapiRef.current) return vapiRef.current
 
-  const startCall = useCallback(() => {
-    const widget = widgetRef.current
-    if (!widget) return
+    const { default: VapiSDK } = await import('@vapi-ai/web')
+    const instance = new VapiSDK(publicKey)
+
+    instance.on('call-start', () => setCallState('active'))
+    instance.on('call-end', () => setCallState('idle'))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    instance.on('error' as any, () => setCallState('idle'))
+
+    vapiRef.current = instance
+    return instance
+  }, [publicKey])
+
+  const startCall = useCallback(async () => {
+    if (!assistantId) return
     setCallState('loading')
-    if (typeof widget.start === 'function') {
-      widget.start()
-    } else if (typeof widget.startCall === 'function') {
-      widget.startCall()
-    } else {
-      // Fallback: click the button in shadow DOM
-      const btn = widget.shadowRoot?.querySelector('button') as HTMLButtonElement | null
-      btn?.click()
+    try {
+      const vapi = await getVapi()
+      if (!vapi) { setCallState('idle'); return }
+      await vapi.start(assistantId)
+    } catch {
+      setCallState('idle')
     }
-  }, [])
+  }, [assistantId, getVapi])
 
   const endCall = useCallback(() => {
-    const widget = widgetRef.current
-    if (widget) {
-      if (typeof widget.stop === 'function') {
-        widget.stop()
-      } else if (typeof widget.endCall === 'function') {
-        widget.endCall()
-      } else {
-        const btn = widget.shadowRoot?.querySelector('button') as HTMLButtonElement | null
-        btn?.click()
-      }
-    }
+    vapiRef.current?.stop()
     setCallState('idle')
   }, [])
 
@@ -108,32 +92,6 @@ export default function VapiWidget() {
 
   return (
     <>
-      <Script
-        src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js"
-        strategy="lazyOnload"
-        onLoad={onScriptLoad}
-      />
-
-      {/* Hidden Vapi engine — positioned off-screen */}
-      {/* @ts-expect-error - vapi-widget is a custom web component */}
-      <vapi-widget
-        id="vapi-engine"
-        public-key={publicKey}
-        assistant-id={assistantId}
-        mode="voice"
-        theme="dark"
-        base-color="#0a0a0a"
-        accent-color="#C9A84C"
-        style={{
-          position: 'fixed',
-          bottom: '-9999px',
-          right: 0,
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: -1,
-        }}
-      />
-
       {/* Custom floating trigger button */}
       <motion.button
         onClick={() => setIsOpen(true)}

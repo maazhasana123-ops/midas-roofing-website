@@ -166,7 +166,7 @@ export default function AboutContent() {
             </p>
           </AnimatedSection>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {promiseItems.map((item, i) => (
               <motion.div
                 key={item.title}
