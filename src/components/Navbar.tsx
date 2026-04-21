@@ -79,7 +79,7 @@ export default function Navbar() {
             id="navbar-cta"
             className="btn-gold text-sm px-5 py-2.5 tracking-wide"
           >
-            Free Estimate
+            Get Instant Estimate
           </Link>
         </nav>
 
@@ -149,7 +149,7 @@ export default function Navbar() {
                     href="/estimate"
                     className="btn-gold w-full text-center text-sm py-3"
                   >
-                    Get Free Estimate
+                    Get Instant Estimate
                   </Link>
                 </motion.div>
               </nav>

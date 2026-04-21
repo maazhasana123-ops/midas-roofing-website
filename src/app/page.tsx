@@ -72,7 +72,7 @@ export default function HomePage() {
           <AnimatedSection delay={0.28}>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/estimate" id="hero-primary-cta" className="btn-gold text-sm px-8 py-4 tracking-wide">
-                Get Your Free Estimate
+                Get Instant Estimate
               </Link>
               <Link href="/gallery" id="hero-secondary-cta" className="btn-outline-gold text-sm px-8 py-4 tracking-wide">
                 View Our Work
@@ -192,7 +192,7 @@ export default function HomePage() {
               <p className="text-cream/60 text-base leading-relaxed mb-8 max-w-sm">
                 Every Midas roof is engineered for Florida&apos;s climate — hurricanes, heat, and everything in between.
               </p>
-              <Link href="/estimate" className="btn-gold text-sm">Get Free Estimate</Link>
+              <Link href="/estimate" className="btn-gold text-sm">Get Instant Estimate</Link>
             </AnimatedSection>
           </div>
         </div>

@@ -55,7 +55,7 @@ const chapters = [
     statLabel: 'No-Leak Promise',
     image: '/images/house roof5-after.jpg',
     imageAlt: 'Completed dark shingle roof installed by Midas Roofing',
-    range: [0.75, 0.80, 0.95, 1.0] as const,
+    range: [0.75, 0.82, 1.0, 1.0] as const,
   },
 ]
 
@@ -71,20 +71,21 @@ function ChapterCard({
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
   side: 'left' | 'right'
 }) {
+  const noFadeOut = chapter.range[2] === chapter.range[3]
   const opacity = useTransform(
     scrollYProgress,
     [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
-    [0, 1, 1, 0]
+    noFadeOut ? [0, 1, 1, 1] : [0, 1, 1, 0]
   )
   const y = useTransform(
     scrollYProgress,
     [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
-    ['50px', '0px', '0px', '-30px']
+    noFadeOut ? ['50px', '0px', '0px', '0px'] : ['50px', '0px', '0px', '-30px']
   )
   const scale = useTransform(
     scrollYProgress,
     [chapter.range[0], chapter.range[1], chapter.range[2], chapter.range[3]],
-    [0.95, 1, 1, 0.97]
+    noFadeOut ? [0.95, 1, 1, 1] : [0.95, 1, 1, 0.97]
   )
 
   return (
@@ -237,7 +238,7 @@ export default function ScrollVideo() {
   const ch1Active = useTransform(scrollYProgress, [0.03, 0.08, 0.22, 0.26], [0.2, 1, 1, 0.2])
   const ch2Active = useTransform(scrollYProgress, [0.27, 0.32, 0.46, 0.50], [0.2, 1, 1, 0.2])
   const ch3Active = useTransform(scrollYProgress, [0.51, 0.56, 0.70, 0.74], [0.2, 1, 1, 0.2])
-  const ch4Active = useTransform(scrollYProgress, [0.75, 0.80, 0.94, 0.98], [0.2, 1, 1, 0.2])
+  const ch4Active = useTransform(scrollYProgress, [0.75, 0.82, 1.0, 1.0], [0.2, 1, 1, 1])
   const chapterOpacities = [ch1Active, ch2Active, ch3Active, ch4Active]
 
   // Alternating card positions

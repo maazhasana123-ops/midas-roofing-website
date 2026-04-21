@@ -32,7 +32,7 @@ export default function GalleryPage() {
 
           <AnimatedSection className="text-center mt-16">
             <p className="text-cream/50 text-sm mb-6">Ready to add your home to this portfolio?</p>
-            <Link href="/estimate" className="btn-gold">Get a Free Estimate</Link>
+            <Link href="/estimate" className="btn-gold">Get Instant Estimate</Link>
           </AnimatedSection>
         </div>
       </section>

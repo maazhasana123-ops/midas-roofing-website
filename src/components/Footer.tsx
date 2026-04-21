@@ -10,7 +10,7 @@ const navLinks = [
   ['/services', 'Services'],
   ['/about', 'About'],
   ['/gallery', 'Gallery'],
-  ['/estimate', 'Free Estimate'],
+  ['/estimate', 'Get Instant Estimate'],
   ['/contact', 'Contact'],
 ]
 
@@ -226,7 +226,7 @@ export default function Footer() {
                 className="group inline-flex items-center gap-2 mt-1 w-fit"
               >
                 <span className="relative text-gold text-xs font-jakarta font-bold tracking-wide">
-                  Get Free Estimate
+                  Get Instant Estimate
                   <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
                 </span>
                 <div className="w-5 h-5 rounded-full border border-gold/30 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300 group-hover:translate-x-1">

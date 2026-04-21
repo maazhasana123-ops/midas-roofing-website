@@ -40,7 +40,7 @@ export default function ServicesPage() {
             <h2 className="font-jakarta font-bold text-4xl text-cream mb-4">Not Sure Which Roof Is Right for You?</h2>
             <p className="text-cream/60 mb-8 leading-relaxed">Our team will assess your property, budget, and preferences to recommend the perfect roofing system.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/estimate" className="btn-gold">Get Free Estimate</Link>
+              <Link href="/estimate" className="btn-gold">Get Instant Estimate</Link>
               <TalkToMidasButton />
             </div>
           </AnimatedSection>

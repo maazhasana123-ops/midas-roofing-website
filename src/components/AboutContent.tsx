@@ -137,7 +137,7 @@ export default function AboutContent() {
                 </p>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Link href="/estimate" className="btn-gold">Get a Free Estimate</Link>
+                <Link href="/estimate" className="btn-gold">Get Instant Estimate</Link>
                 <Link href="/contact" className="btn-outline-gold">Contact Us</Link>
               </div>
             </AnimatedSection>
