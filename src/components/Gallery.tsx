@@ -12,9 +12,20 @@ const galleryImages = [
   { src: '/images/gallery/post-3.png', alt: 'Commercial roofing installation', category: 'Commercial', size: 'normal' },
   { src: '/images/gallery/post-4.png', alt: 'Metal roofing system — Mount Dora, FL', category: 'Metal', size: 'normal' },
   { src: '/images/gallery/post-5.png', alt: 'Roof repair and coating project', category: 'Residential', size: 'normal' },
+  // New batch
+  { src: '/images/gallery/dji_fly_20251106_170602_277_1762608682700_photo.JPG', alt: 'Aerial view — new roof installation', category: 'Aerial', size: 'wide' },
+  { src: '/images/gallery/dji_fly_20251108_082342_289_1762608335459_photo.JPG', alt: 'Drone shot — residential re-roof in progress', category: 'Aerial', size: 'normal' },
+  { src: '/images/gallery/DJI_20251120_102746_509.JPG', alt: 'Bird\'s-eye view — completed shingle roof', category: 'Aerial', size: 'normal' },
+  { src: '/images/gallery/dji_fly_20251120_151446_330_1763912094747_photo.JPG', alt: 'Aerial — neighborhood roofing project', category: 'Aerial', size: 'wide' },
+  { src: '/images/gallery/dji_fly_20251211_102432_349_1765739191079_photo.JPG', alt: 'Overhead view — roof deck and flashing detail', category: 'Aerial', size: 'normal' },
+  { src: '/images/gallery/dji_fly_20251212_155838_361_1765739148009_photo.JPG', alt: 'Aerial — finished residential roof, Central Florida', category: 'Aerial', size: 'normal' },
+  { src: '/images/gallery/dji_fly_20251219_132524_393_1767902709804_photo.JPG', alt: 'Drone perspective — full property re-roof', category: 'Aerial', size: 'wide' },
+  { src: '/images/gallery/RemoteMediaFile_6553673_0_2022_03_28_12_52_32.JPG', alt: 'On-site roofing crew — quality installation', category: 'Residential', size: 'normal' },
+  { src: '/images/gallery/Photo Jan 08 2026, 11 20 23 AM.jpg', alt: 'Close-up — premium shingle layering', category: 'Residential', size: 'normal' },
+  { src: '/images/gallery/Photo Jan 08 2026, 11 20 23 AM (1).jpg', alt: 'Roof inspection — attention to detail', category: 'Residential', size: 'normal' },
 ]
 
-const categories = ['All', 'Residential', 'Commercial', 'Tile', 'Metal', 'Team']
+const categories = ['All', 'Aerial', 'Residential', 'Commercial', 'Tile', 'Metal', 'Team']
 
 export default function Gallery() {
   const [active, setActive] = useState('All')
