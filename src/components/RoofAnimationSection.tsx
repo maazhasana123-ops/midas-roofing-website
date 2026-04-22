@@ -8,24 +8,6 @@ import {
   motion,
 } from 'framer-motion'
 
-/**
- * RoofAnimationSection
- *
- * Scroll-scrubbed roof animation video on a white background.
- *
- * Design intent:
- *  - Section bg is WHITE to match the video's white background — they blend
- *    as one seamless field, no box-around-a-video look.
- *  - The only dark gradients live on the very edges (top/bottom/sides) purely
- *    to mask the hard line where this white section meets the dark sections
- *    above and below. They fade from dark (#0a0a0a) → transparent, and
- *    transparent ends well before the video frame — nothing touches the video.
- *  - No overlay of any kind on the center/video area.
- *  - Very subtle warm radial ring at corners only for depth — does NOT cover
- *    the video playback area.
- *  - As scroll approaches 100%, inner content recedes (scale + opacity) so
- *    the reviews section sliding over feels natural.
- */
 export default function RoofAnimationSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -35,7 +17,6 @@ export default function RoofAnimationSection() {
     offset: ['start start', 'end end'],
   })
 
-  /* ── Scrub video currentTime with scroll ── */
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     const video = videoRef.current
     if (!video || !video.duration) return
@@ -45,7 +26,6 @@ export default function RoofAnimationSection() {
     }
   })
 
-  /* ── Pre-load + park on first frame ── */
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
@@ -56,29 +36,20 @@ export default function RoofAnimationSection() {
     return () => video.removeEventListener('loadedmetadata', setFirstFrame)
   }, [])
 
-  /* ── Recede at end of scroll so reviews slides over cleanly ── */
-  const innerScale   = useTransform(scrollYProgress, [0.72, 1.0], [1,    0.88])
-  const innerOpacity = useTransform(scrollYProgress, [0.75, 1.0], [1,    0.0])
+  const innerScale   = useTransform(scrollYProgress, [0.72, 1.0], [1,   0.88])
+  const innerOpacity = useTransform(scrollYProgress, [0.75, 1.0], [1,   0.0])
 
   return (
     <section
       ref={containerRef}
       aria-label="Animated roof explainer"
-      style={{
-        height: '300vh',
-        /* White — matches the video's own background exactly */
-        background: '#ffffff',
-        position: 'relative',
-        zIndex: 1,
-      }}
+      style={{ height: '300vh', background: '#ffffff', position: 'relative', zIndex: 1 }}
     >
-      {/* ══════ Sticky viewport ══════ */}
       <div
         className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden"
         style={{ background: '#ffffff' }}
       >
-
-        {/* ── Inner content — recede animation on scroll end ── */}
+        {/* Video — lives below the edge mask layer */}
         <motion.div
           className="relative w-full h-full flex items-center justify-center"
           style={{ scale: innerScale, opacity: innerOpacity }}
@@ -101,71 +72,31 @@ export default function RoofAnimationSection() {
         </motion.div>
 
         {/*
-          ══════ EDGE MASKS ONLY ══════
-          These gradients live ONLY on the outer border strips.
-          They go: dark (#0a0a0a) → transparent.
-          The transparent end stops well before the video starts,
-          so zero dark color ever touches the video itself.
-          Their only job: dissolve the hard white-on-dark seam
-          where this section meets the cinematic split above and
-          the reviews section below.
+          Single unified edge mask — NO multiple overlapping divs.
+          One div with a single radial-gradient background:
+            • Center: rgba(10,10,10,0) = fully transparent = video shows through clean
+            • Outer ring: rgba(10,10,10,1) = solid dark = blends with surrounding sections
+          The ellipse shape (wider than tall) matches the widescreen viewport.
+          No stacking, no banding, no corner artifacts — just one smooth vignette.
+          The 55% 50% inner clear zone keeps well away from the video bounds.
         */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-
-          {/* TOP edge — fades dark→transparent, covers ~22% of viewport height.
-              Transparent end is ~22vh from top, video starts ~15vh lower = safe gap. */}
-          <div style={{
+        <div
+          aria-hidden="true"
+          style={{
             position: 'absolute',
-            top: 0, left: 0, right: 0,
-            height: '22%',
-            background: 'linear-gradient(to bottom, #0a0a0a 0%, rgba(10,10,10,0.6) 45%, transparent 100%)',
-          }} />
-
-          {/* BOTTOM edge — fades dark→transparent, matches #0a0a0a of reviews bg */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0, left: 0, right: 0,
-            height: '22%',
-            background: 'linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.6) 45%, transparent 100%)',
-          }} />
-
-          {/* LEFT edge — very thin, just kills the hard vertical seam */}
-          <div style={{
-            position: 'absolute',
-            top: 0, bottom: 0, left: 0,
-            width: '8%',
-            background: 'linear-gradient(to right, rgba(10,10,10,0.25) 0%, transparent 100%)',
-          }} />
-
-          {/* RIGHT edge — same */}
-          <div style={{
-            position: 'absolute',
-            top: 0, bottom: 0, right: 0,
-            width: '8%',
-            background: 'linear-gradient(to left, rgba(10,10,10,0.25) 0%, transparent 100%)',
-          }} />
-
-          {/* CORNER blobs — tiny radial puffs at the four corners only,
-              feather the intersection where top/side/bottom edges meet.
-              These are very small and stop far from the video center. */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, width: '28%', height: '35%',
-            background: 'radial-gradient(ellipse at top left, rgba(10,10,10,0.35) 0%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', top: 0, right: 0, width: '28%', height: '35%',
-            background: 'radial-gradient(ellipse at top right, rgba(10,10,10,0.35) 0%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, width: '28%', height: '35%',
-            background: 'radial-gradient(ellipse at bottom left, rgba(10,10,10,0.35) 0%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, right: 0, width: '28%', height: '35%',
-            background: 'radial-gradient(ellipse at bottom right, rgba(10,10,10,0.35) 0%, transparent 70%)',
-          }} />
-
-        </div>
+            inset: 0,
+            pointerEvents: 'none',
+            background: `radial-gradient(
+              ellipse 55% 50% at 50% 50%,
+              transparent 0%,
+              transparent 55%,
+              rgba(10,10,10,0.15) 68%,
+              rgba(10,10,10,0.55) 80%,
+              rgba(10,10,10,0.85) 90%,
+              #0a0a0a 100%
+            )`,
+          }}
+        />
       </div>
     </section>
   )
