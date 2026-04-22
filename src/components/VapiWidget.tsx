@@ -37,11 +37,13 @@ function SoundWave({ active }: { active: boolean }) {
 }
 
 export default function VapiWidget() {
-  const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY
-  const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
   const [isOpen, setIsOpen] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
   const vapiRef = useRef<Vapi | null>(null)
+  // Credentials are fetched from our server-side proxy — never from NEXT_PUBLIC_ vars
+  const tokenRef = useRef<string | null>(null)
+  const assistantIdRef = useRef<string | null>(null)
+  const [credentialsReady, setCredentialsReady] = useState(false)
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true)
@@ -49,13 +51,30 @@ export default function VapiWidget() {
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
-  // Lazily initialize the Vapi SDK instance in the browser
+  // Fetch the short-lived JWT token + assistant ID from our secure API route.
+  // This runs once on mount — no secrets ever reach the browser bundle.
+  useEffect(() => {
+    fetch('/api/vapi-token')
+      .then((res) => res.json())
+      .then(({ token, assistantId }) => {
+        if (token && assistantId) {
+          tokenRef.current = token
+          assistantIdRef.current = assistantId
+          setCredentialsReady(true)
+        }
+      })
+      .catch(() => {
+        // Silently fail — widget just won't render (same behaviour as before)
+      })
+  }, [])
+
+  // Lazily initialize the Vapi SDK instance in the browser using the JWT token
   const getVapi = useCallback(async (): Promise<Vapi | null> => {
-    if (!publicKey) return null
+    if (!tokenRef.current) return null
     if (vapiRef.current) return vapiRef.current
 
     const { default: VapiSDK } = await import('@vapi-ai/web')
-    const instance = new VapiSDK(publicKey)
+    const instance = new VapiSDK(tokenRef.current)
 
     instance.on('call-start', () => setCallState('active'))
     instance.on('call-end', () => setCallState('idle'))
@@ -64,19 +83,19 @@ export default function VapiWidget() {
 
     vapiRef.current = instance
     return instance
-  }, [publicKey])
+  }, [])
 
   const startCall = useCallback(async () => {
-    if (!assistantId) return
+    if (!assistantIdRef.current) return
     setCallState('loading')
     try {
       const vapi = await getVapi()
       if (!vapi) { setCallState('idle'); return }
-      await vapi.start(assistantId)
+      await vapi.start(assistantIdRef.current)
     } catch {
       setCallState('idle')
     }
-  }, [assistantId, getVapi])
+  }, [getVapi])
 
   const endCall = useCallback(() => {
     vapiRef.current?.stop()
@@ -88,7 +107,8 @@ export default function VapiWidget() {
     setIsOpen(false)
   }, [callState, endCall])
 
-  if (!publicKey || !assistantId) return null
+  // Don't render until credentials are confirmed server-side
+  if (!credentialsReady) return null
 
   return (
     <>

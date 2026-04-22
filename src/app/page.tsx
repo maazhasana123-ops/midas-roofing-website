@@ -10,6 +10,7 @@ import { LocationMap } from '@/components/ui/expand-map'
 import HomeStats from '@/components/HomeStats'
 import ServiceCards from '@/components/ServiceCards'
 import PillarCards from '@/components/PillarCards'
+import RoofAnimationSection from '@/components/RoofAnimationSection'
 
 export const metadata: Metadata = {
   title: "Midas Roofing & Construction | Central Florida's #1 Roofing Experts",
@@ -197,6 +198,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ─────────────── ROOF ANIMATION SCROLL VIDEO ────────────────────── */}
+      <RoofAnimationSection />
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
       <TestimonialV2 />
