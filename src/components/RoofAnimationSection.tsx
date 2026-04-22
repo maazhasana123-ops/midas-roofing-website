@@ -1,32 +1,37 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useScroll, useMotionValueEvent } from 'framer-motion'
+import {
+  useScroll,
+  useMotionValueEvent,
+  useTransform,
+  motion,
+} from 'framer-motion'
 
 /**
  * RoofAnimationSection
  *
- * A scroll-scrubbed video section that sits between the "Cinematic Split"
- * and the Reviews section. The video plays frame-by-frame as the user scrolls.
+ * Scroll-scrubbed roof animation video. Sits between the "Cinematic Split"
+ * (dark section) and the Reviews section.
  *
- * Design goals:
- *  - White background (matches surrounding sections)
- *  - Video stays inside a rounded, centered frame — no zoom / cover scaling
- *  - Feathered/fuzzy gradient overlays on all 4 edges + corners so the
- *    section blends softly into its neighbours
- *  - No chapter cards, no text, no progress bar — pure cinematic moment
- *  - Auto-plays from frame 0 on mount so the first frame is visible
+ * Design:
+ *  - Dark background (#0a0a0a) — blends seamlessly with surrounding dark sections
+ *  - Video is full-bleed-ish, contained with object-contain, no box-shadow
+ *  - Heavy feathered dark gradients on all 4 edges + corner blobs so it dissolves
+ *    into its neighbours with zero visible solid line
+ *  - As scroll nears end the sticky viewport gently scales down + fades, so
+ *    the reviews section appears to "rise over" it like a new layer
  */
 export default function RoofAnimationSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef    = useRef<HTMLVideoElement>(null)
 
-  // Scrub video currentTime based on scroll progress through this section
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
 
+  /* ── Scrub video currentTime with scroll ── */
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     const video = videoRef.current
     if (!video || !video.duration) return
@@ -36,136 +41,118 @@ export default function RoofAnimationSection() {
     }
   })
 
-  // Pre-load + show first frame
+  /* ── Pre-load + park on first frame ── */
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
     video.preload = 'auto'
     video.load()
-    // Seek to frame 0 so the poster frame is visible immediately
-    const onLoaded = () => {
-      video.currentTime = 0
-    }
-    video.addEventListener('loadedmetadata', onLoaded)
-    return () => video.removeEventListener('loadedmetadata', onLoaded)
+    const setFirstFrame = () => { video.currentTime = 0 }
+    video.addEventListener('loadedmetadata', setFirstFrame)
+    return () => video.removeEventListener('loadedmetadata', setFirstFrame)
   }, [])
+
+  /*
+   * ── Parallax recede effect ──
+   * As the user scrolls to the very end of this section, the sticky viewport
+   * gently shrinks and dims so the reviews section feels like it rises ON TOP
+   * of this animation (no z-index juggling needed — natural DOM stacking).
+   */
+  const stickyScale   = useTransform(scrollYProgress, [0.75, 1.0], [1,    0.90])
+  const stickyOpacity = useTransform(scrollYProgress, [0.78, 1.0], [1,    0.4])
+  const stickyY       = useTransform(scrollYProgress, [0.75, 1.0], ['0%', '-4%'])
 
   return (
     <section
       ref={containerRef}
-      className="relative"
-      /* Scroll height — 500vh gives roughly the same pacing as the main ScrollVideo */
-      style={{ height: '500vh', background: '#ffffff' }}
-      aria-label="Roof animation explainer"
+      aria-label="Animated roof explainer"
+      style={{
+        height: '500vh',
+        background: '#0a0a0a',
+        position: 'relative',
+      }}
     >
-      {/* ══════════ Sticky viewport ══════════ */}
-      <div
-        className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
-        style={{ background: '#ffffff' }}
+      {/* ══════ Sticky viewport — recedes as reviews slides up ══════ */}
+      <motion.div
+        className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden"
+        style={{
+          background: '#0a0a0a',
+          scale:   stickyScale,
+          opacity: stickyOpacity,
+          y:       stickyY,
+        }}
       >
-        {/* ── Centered video frame ── */}
+        {/* ── Video — no shadow, no rounding, just the pure animation ── */}
         <div
-          className="relative w-full max-w-5xl mx-auto px-6 md:px-12"
-          style={{ aspectRatio: '16/9' }}
+          className="relative w-full max-w-5xl mx-auto"
+          style={{ aspectRatio: '16/9', padding: '0 3vw' }}
         >
-          {/* Rounded frame container — no overflow zoom, video letterboxed inside */}
-          <div
-            className="relative w-full h-full rounded-2xl overflow-hidden"
-            style={{
-              boxShadow: '0 30px 80px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06)',
-            }}
-          >
-            <video
-              ref={videoRef}
-              src="/roofanimation.mp4"
-              /* contain keeps the full video visible without any cropping */
-              className="w-full h-full object-contain bg-white"
-              muted
-              playsInline
-              preload="auto"
-              autoPlay={false}
-            />
-          </div>
-        </div>
-
-        {/* ══════════ Fuzzy gradient overlays — blends into white ══════════ */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Top fade */}
-          <div
-            className="absolute top-0 inset-x-0"
-            style={{
-              height: '22%',
-              background: 'linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0) 100%)',
-            }}
-          />
-          {/* Bottom fade */}
-          <div
-            className="absolute bottom-0 inset-x-0"
-            style={{
-              height: '22%',
-              background: 'linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)',
-            }}
-          />
-          {/* Left fade */}
-          <div
-            className="absolute inset-y-0 left-0"
-            style={{
-              width: '12%',
-              background: 'linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0) 100%)',
-            }}
-          />
-          {/* Right fade */}
-          <div
-            className="absolute inset-y-0 right-0"
-            style={{
-              width: '12%',
-              background: 'linear-gradient(to left, #ffffff 0%, rgba(255,255,255,0) 100%)',
-            }}
-          />
-
-          {/* Corner blobs — soft radial gradients for extra fuzziness */}
-          <div
-            className="absolute"
-            style={{
-              top: 0,
-              left: 0,
-              width: '35%',
-              height: '35%',
-              background: 'radial-gradient(ellipse at top left, #ffffff 0%, rgba(255,255,255,0) 70%)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: 0,
-              right: 0,
-              width: '35%',
-              height: '35%',
-              background: 'radial-gradient(ellipse at top right, #ffffff 0%, rgba(255,255,255,0) 70%)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              bottom: 0,
-              left: 0,
-              width: '35%',
-              height: '35%',
-              background: 'radial-gradient(ellipse at bottom left, #ffffff 0%, rgba(255,255,255,0) 70%)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              bottom: 0,
-              right: 0,
-              width: '35%',
-              height: '35%',
-              background: 'radial-gradient(ellipse at bottom right, #ffffff 0%, rgba(255,255,255,0) 70%)',
-            }}
+          <video
+            ref={videoRef}
+            src="/roofanimation2.mp4"
+            /* object-contain keeps full frame visible, bg matches dark host */
+            className="w-full h-full object-contain"
+            style={{ background: '#0a0a0a', display: 'block' }}
+            muted
+            playsInline
+            preload="auto"
+            autoPlay={false}
           />
         </div>
-      </div>
+
+        {/* ══════ Fuzzy dark gradient overlays ══════
+            These dissolve the hard edges of the section into the dark bg.
+            Top/bottom are extra-thick to merge with adjacent dark sections.
+        */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+
+          {/* Top — heavy blend into the dark section above */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0,
+            height: '32%',
+            background: 'linear-gradient(to bottom, #0a0a0a 0%, rgba(10,10,10,0.75) 45%, transparent 100%)',
+          }} />
+
+          {/* Bottom — heavy blend into the reviews below */}
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            height: '32%',
+            background: 'linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.75) 45%, transparent 100%)',
+          }} />
+
+          {/* Left */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0, left: 0,
+            width: '18%',
+            background: 'linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.5) 40%, transparent 100%)',
+          }} />
+
+          {/* Right */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0, right: 0,
+            width: '18%',
+            background: 'linear-gradient(to left, #0a0a0a 0%, rgba(10,10,10,0.5) 40%, transparent 100%)',
+          }} />
+
+          {/* Corner radial blobs — extra fuzziness at corners */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '40%', height: '45%',
+            background: 'radial-gradient(ellipse at top left, #0a0a0a 5%, transparent 70%)',
+          }} />
+          <div style={{
+            position: 'absolute', top: 0, right: 0, width: '40%', height: '45%',
+            background: 'radial-gradient(ellipse at top right, #0a0a0a 5%, transparent 70%)',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, width: '40%', height: '45%',
+            background: 'radial-gradient(ellipse at bottom left, #0a0a0a 5%, transparent 70%)',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: 0, right: 0, width: '40%', height: '45%',
+            background: 'radial-gradient(ellipse at bottom right, #0a0a0a 5%, transparent 70%)',
+          }} />
+        </div>
+      </motion.div>
     </section>
   )
 }
