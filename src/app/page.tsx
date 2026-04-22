@@ -200,6 +200,32 @@ export default function HomePage() {
       </section>
 
       {/* ─────────────── ROOF ANIMATION SCROLL VIDEO ────────────────────── */}
+
+      {/*
+        ┌── SEAM BRIDGE ─────────────────────────────────────────────────────────┐
+        │  Sits between the dark cinematic split and the white animation section  │
+        │  marginTop: -120px  → overlaps 120px INTO the cinematic split above     │
+        │  marginBottom: -80px → overlaps 80px INTO the animation section below   │
+        │  zIndex: 20          → floats above both sections                       │
+        │  gradient: transparent → #ffffff                                        │
+        │    • The transparent top shows through the cinematic split's dark bg    │
+        │    • The white bottom blends into the animation section's white bg      │
+        │    → The hard line simply ceases to exist                               │
+        └────────────────────────────────────────────────────────────────────────┘
+      */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'relative',
+          zIndex: 20,
+          height: '200px',
+          marginTop: '-120px',
+          marginBottom: '-80px',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.6) 60%, #ffffff 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* z-index:1 keeps animation behind the reviews layer */}
       <div style={{ position: 'relative', zIndex: 1 }}>
         <RoofAnimationSection />

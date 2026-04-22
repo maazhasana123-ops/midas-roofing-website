@@ -114,11 +114,11 @@ export default function RoofAnimationSection() {
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
 
           {/* ── Edge fades ── */}
-          {/* Top → fades FROM dark (matches cinematic split above) into the white section */}
+          {/* Top → soft white fade so the video doesn't abruptly hit the bridge */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0,
-            height: '55%',
-            background: 'linear-gradient(to bottom, #0a0a0a 0%, rgba(10,10,10,0.75) 18%, rgba(10,10,10,0.35) 40%, rgba(10,10,10,0.08) 60%, transparent 100%)',
+            height: '28%',
+            background: 'linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.85) 40%, transparent 100%)',
           }} />
           {/* Bottom → blends with reviews section below */}
           <div style={{
