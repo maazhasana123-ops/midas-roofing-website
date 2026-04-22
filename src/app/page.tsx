@@ -208,8 +208,13 @@ export default function HomePage() {
       </div>
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
-      {/* Both dark — reviews slides over cleanly at -100vh overlap */}
-      <div style={{ position: 'relative', zIndex: 10, marginTop: '-100vh' }}>
+      {/*
+        The -100vh negative margin is desktop-only: on mobile the RoofAnimationSection
+        renders as a normal-height scrollable section (~800-1000px), so pulling reviews
+        up by 100vh would cover it entirely. On lg+ the section is 300vh sticky so
+        the -100vh overlap works correctly for the scroll-scrub recede effect.
+      */}
+      <div className="relative z-10 lg:-mt-[100vh]">
         <TestimonialV2 />
       </div>
 
