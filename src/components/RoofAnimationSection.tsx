@@ -13,15 +13,16 @@ import {
  *
  * Scroll-scrubbed roof animation video.
  *
- * Design:
- *  - White background (video was recorded on white — matches naturally)
- *  - White fuzzy gradients on ALL edges + corners so the section dissolves
- *    into its neighbours — NO hard line, NO solid block
- *  - Subtle warm radial vignette in the mid-zone for depth
- *  - The video has NO shadow, NO border — it blends raw into the white field
- *  - As scroll nears end, the inner content gently scales back + dims so
- *    the reviews section (which overlaps via negative margin-top in page.tsx)
- *    feels like it rises and consumes the animation
+ * Design intent:
+ *  - Reduced height (300vh) so spacing is tighter — video plays fast and crisply
+ *  - Premium dark-edge treatment: gold-tinted radial glows bloom from the center
+ *    while deep black soft vignettes frame all four edges
+ *  - The white video field is respected in the center, but "bleeds out" into
+ *    warm-dark blur at the periphery → feels luxury, not clinical
+ *  - As scroll approaches end (80–100%), the inner content recedes cleanly so
+ *    the reviews section (dark, z-10) can slide over it without any snap/jump
+ *  - The bottom half of the section fades to #0a0a0a (matches reviews bg)
+ *    so the reviews section appears to emerge from darkness, not crash into white
  */
 export default function RoofAnimationSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -55,49 +56,147 @@ export default function RoofAnimationSection() {
 
   /*
    * ── Inner recede animation ──
-   * Applied to a wrapper INSIDE the sticky div (not the sticky itself).
-   * As scroll approaches 1.0, content gently shrinks + fades so the dark
-   * reviews section sliding up from below (via -25vh margin-top in page.tsx)
-   * feels like it's consuming the animation from below.
+   * Applied to the wrapper INSIDE the sticky div.
+   * At 75% scroll the content starts to shrink+fade, at 100% it's fully gone.
+   * This gives the reviews section (sliding in from below via -30vh in page.tsx)
+   * a clean surface to slide over.
    */
-  const innerScale   = useTransform(scrollYProgress, [0.78, 1.0], [1,   0.92])
-  const innerOpacity = useTransform(scrollYProgress, [0.80, 1.0], [1,   0.55])
+  const innerScale   = useTransform(scrollYProgress, [0.72, 1.0], [1,    0.88])
+  const innerOpacity = useTransform(scrollYProgress, [0.75, 1.0], [1,    0.0])
+
+  /* ── Gold ambient glow pulsing with scroll mid-range ── */
+  const glowOpacity  = useTransform(scrollYProgress, [0.0, 0.4, 0.75, 1.0], [0.3, 0.7, 0.4, 0.0])
 
   return (
     <section
       ref={containerRef}
       aria-label="Animated roof explainer"
       style={{
-        height: '500vh',
-        /* White — matches the video's own background colour */
-        background: '#ffffff',
+        /* 300vh → crisp, fast, no excess whitespace */
+        height: '300vh',
+        /* Start from same dark as surrounding sections, transition through white center */
+        background: '#0a0a0a',
         position: 'relative',
-        /* Low z-index so the reviews layer (z-index:10 in page.tsx) slides over */
         zIndex: 1,
       }}
     >
       {/* ══════ Sticky viewport ══════ */}
       <div
         className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden"
-        style={{ background: '#ffffff' }}
+        style={{ background: '#0a0a0a' }}
       >
 
-        {/* ── Inner content — has the recede animation ── */}
+        {/* ── AMBIENT BACKGROUND: dark → warm-white center → dark again ── */}
+        {/* This creates the "premium spotlight" feel — the video lives in a lit zone */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: `
+              radial-gradient(ellipse 75% 60% at 50% 50%,
+                rgba(255, 252, 240, 0.97) 0%,
+                rgba(255, 248, 230, 0.92) 30%,
+                rgba(245, 235, 210, 0.6)  52%,
+                rgba(201, 168, 76, 0.08)  68%,
+                transparent               80%
+              )
+            `,
+          }}
+        />
+
+        {/* ── GOLD GLOW LAYER — animated, breathes with scroll ── */}
+        <motion.div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            opacity: glowOpacity,
+            background: `
+              radial-gradient(ellipse 60% 45% at 50% 50%,
+                rgba(201, 168, 76, 0.12)  0%,
+                rgba(230, 195, 100, 0.06) 40%,
+                transparent               70%
+              )
+            `,
+            filter: 'blur(40px)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* ── EDGE VIGNETTES — deep black blur on all four sides ── */}
+        {/* These make the white center "float" rather than look like a box */}
+        <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+
+          {/* Top: dark fade from edge into the lit center */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0,
+            height: '35%',
+            background: 'linear-gradient(to bottom, #0a0a0a 0%, rgba(10,10,10,0.85) 35%, rgba(10,10,10,0.4) 65%, transparent 100%)',
+          }} />
+
+          {/* Bottom: dark fade — matches reviews bg color so transition is seamless */}
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            height: '40%',
+            background: 'linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.9) 40%, rgba(10,10,10,0.5) 70%, transparent 100%)',
+          }} />
+
+          {/* Left */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0, left: 0,
+            width: '22%',
+            background: 'linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.75) 40%, rgba(10,10,10,0.2) 75%, transparent 100%)',
+          }} />
+
+          {/* Right */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0, right: 0,
+            width: '22%',
+            background: 'linear-gradient(to left, #0a0a0a 0%, rgba(10,10,10,0.75) 40%, rgba(10,10,10,0.2) 75%, transparent 100%)',
+          }} />
+
+          {/* Corner radial blobs — extra feathering at all four corners */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '45%', height: '50%',
+            background: 'radial-gradient(ellipse at top left, #0a0a0a 0%, transparent 65%)',
+          }} />
+          <div style={{
+            position: 'absolute', top: 0, right: 0, width: '45%', height: '50%',
+            background: 'radial-gradient(ellipse at top right, #0a0a0a 0%, transparent 65%)',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, width: '45%', height: '50%',
+            background: 'radial-gradient(ellipse at bottom left, #0a0a0a 0%, transparent 65%)',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: 0, right: 0, width: '45%', height: '50%',
+            background: 'radial-gradient(ellipse at bottom right, #0a0a0a 0%, transparent 65%)',
+          }} />
+        </div>
+
+        {/* ── Inner content — scales back + fades as reviews approach ── */}
         <motion.div
           className="relative w-full h-full flex items-center justify-center"
           style={{ scale: innerScale, opacity: innerOpacity }}
         >
-          {/* Video — raw, no shadow, no border, no rounding ── */}
+          {/* Video container — no shadow/border; it blends into the white radial behind it */}
           <div
-            className="relative w-full max-w-5xl mx-auto"
-            style={{ aspectRatio: '16/9', padding: '0 4vw' }}
+            className="relative w-full max-w-4xl mx-auto"
+            style={{
+              aspectRatio: '16/9',
+              padding: '0 5vw',
+              /* Mobile: reduce padding */
+            }}
           >
             <video
               ref={videoRef}
               src="/roofanimation2.mp4"
-              /* object-contain keeps full frame — bg white to match video bg */
               className="w-full h-full object-contain"
-              style={{ background: '#ffffff', display: 'block' }}
+              style={{
+                background: 'transparent',
+                display: 'block',
+              }}
               muted
               playsInline
               preload="auto"
@@ -106,64 +205,23 @@ export default function RoofAnimationSection() {
           </div>
         </motion.div>
 
-        {/* ══════ Fuzzy white gradient overlay system ══════
-            Each layer fades from #fff to transparent so the section
-            bleeds into adjacent dark sections without a hard edge.
-            Corner blobs add extra softness at all four corners.
-        */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        {/* ── SUBTLE GOLD BORDER GLOW around the lit zone ── */}
+        {/* A very faint elliptical ring of gold that adds depth/premium feel */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '68%',
+            height: '62%',
+            borderRadius: '50%',
+            boxShadow: '0 0 80px 20px rgba(201, 168, 76, 0.05), inset 0 0 60px 10px rgba(201, 168, 76, 0.03)',
+            pointerEvents: 'none',
+          }}
+        />
 
-          {/* ── Edge fades ── */}
-          {/* Top → soft white fade so the video doesn't abruptly hit the bridge */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0,
-            height: '28%',
-            background: 'linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.85) 40%, transparent 100%)',
-          }} />
-          {/* Bottom → blends with reviews section below */}
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0,
-            height: '30%',
-            background: 'linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0.9) 35%, rgba(255,255,255,0.3) 70%, transparent 100%)',
-          }} />
-          {/* Left */}
-          <div style={{
-            position: 'absolute', top: 0, bottom: 0, left: 0,
-            width: '18%',
-            background: 'linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0.75) 40%, transparent 100%)',
-          }} />
-          {/* Right */}
-          <div style={{
-            position: 'absolute', top: 0, bottom: 0, right: 0,
-            width: '18%',
-            background: 'linear-gradient(to left, #ffffff 0%, rgba(255,255,255,0.75) 40%, transparent 100%)',
-          }} />
-
-          {/* ── Corner radial blobs (extra feathering) ── */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, width: '42%', height: '48%',
-            background: 'radial-gradient(ellipse at top left, #ffffff 10%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', top: 0, right: 0, width: '42%', height: '48%',
-            background: 'radial-gradient(ellipse at top right, #ffffff 10%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, width: '42%', height: '48%',
-            background: 'radial-gradient(ellipse at bottom left, #ffffff 10%, transparent 70%)',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, right: 0, width: '42%', height: '48%',
-            background: 'radial-gradient(ellipse at bottom right, #ffffff 10%, transparent 70%)',
-          }} />
-
-          {/* ── Decorative warm radial vignette (adds visual depth, not a box) ── */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 45%, rgba(210, 180, 120, 0.06) 75%, rgba(230, 200, 150, 0.08) 100%)',
-          }} />
-
-        </div>
       </div>
     </section>
   )

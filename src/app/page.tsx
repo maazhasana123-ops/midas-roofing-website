@@ -203,54 +203,27 @@ export default function HomePage() {
 
       {/*
         ┌── SEAM BRIDGE ─────────────────────────────────────────────────────────┐
-        │  Sits between the dark cinematic split and the white animation section  │
-        │  marginTop: -120px  → overlaps 120px INTO the cinematic split above     │
-        │  marginBottom: -80px → overlaps 80px INTO the animation section below   │
-        │  zIndex: 20          → floats above both sections                       │
-        │  gradient: transparent → #ffffff                                        │
-        │    • The transparent top shows through the cinematic split's dark bg    │
-        │    • The white bottom blends into the animation section's white bg      │
-        │    → The hard line simply ceases to exist                               │
+        │  Both the cinematic split and the animation section are now #0a0a0a    │
+        │  so no white bridge needed — just a subtle overlap to kill any hairline │
         └────────────────────────────────────────────────────────────────────────┘
       */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'relative',
-          zIndex: 20,
-          height: '200px',
-          marginTop: '-120px',
-          marginBottom: '-80px',
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.6) 60%, #ffffff 100%)',
-          pointerEvents: 'none',
-        }}
-      />
 
       {/* z-index:1 keeps animation behind the reviews layer */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'relative', zIndex: 1, marginTop: '-2px' }}>
         <RoofAnimationSection />
       </div>
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
       {/*
-        marginTop: -25vh  → reviews starts 25vh before animation section ends.
-        zIndex: 10        → reviews renders ON TOP of the sticky animation.
-        The gradient shield at the top fades from transparent into bg-dark
-        so the transition is silky, not a sharp seam.
+        marginTop: -100vh → reviews div starts just as the last 100vh of animation
+        plays out (the recede animation runs 75–100% of the 300vh section = last
+        75vh). Sitting the reviews 100vh before the end gives them time to appear
+        while the animation content has already faded to 0.
+        zIndex: 10 → reviews renders ON TOP of the sticky animation.
+        No gradient shield needed because the animation section bottom is already
+        dark (#0a0a0a) and the reviews bg is also dark — they are the same colour.
       */}
-      <div style={{ position: 'relative', zIndex: 10, marginTop: '-25vh' }}>
-        {/* Gradient shield — transparent → dark, covers the overlap zone */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0,
-            height: '140px',
-            background: 'linear-gradient(to bottom, transparent 0%, #0a0a0a 100%)',
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
+      <div style={{ position: 'relative', zIndex: 10, marginTop: '-100vh' }}>
         <TestimonialV2 />
       </div>
 
