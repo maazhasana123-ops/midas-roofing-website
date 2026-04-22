@@ -109,6 +109,6 @@ const config: Config = {
     },
   },
   plugins: [],
-  safelist: ['lg:-mt-[100vh]', '-mt-[40vh]'],
+  safelist: ['lg:-mt-[100vh]', '-mt-[80vh]'],
 }
 export default config
