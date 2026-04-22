@@ -202,10 +202,7 @@ export default function HomePage() {
 
       {/* ─────────────── ROOF ANIMATION SCROLL VIDEO ────────────────────── */}
 
-      {/* Both sections are bg-dark — no bridge needed, -1px kills any hairline */}
-      <div style={{ position: 'relative', zIndex: 1, marginTop: '-1px' }}>
-        <RoofAnimationSection />
-      </div>
+      <RoofAnimationSection />
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
       {/*
