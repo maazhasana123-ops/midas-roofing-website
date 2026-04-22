@@ -211,7 +211,7 @@ export default function HomePage() {
         up by 100vh would cover it entirely. On lg+ the section is 300vh sticky so
         the -100vh overlap works correctly for the scroll-scrub recede effect.
       */}
-      <div className="relative z-10 lg:-mt-[100vh]">
+      <div className="relative z-10 -mt-[40vh] lg:-mt-[100vh]">
         <TestimonialV2 />
       </div>
 

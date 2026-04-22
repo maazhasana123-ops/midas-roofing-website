@@ -74,7 +74,7 @@ export default function RoofAnimationSection() {
           No sticky, no scroll scrub.
           Video autoPlays so user sees the animation.
       ════════════════════════════════════════ */}
-      <section className="lg:hidden bg-dark py-16 px-5">
+      <section className="lg:hidden bg-dark pt-16 pb-[45vh] px-5">
         <div className="flex flex-col gap-8 max-w-xl mx-auto">
 
           {/* Heading */}

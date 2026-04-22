@@ -55,7 +55,7 @@ const chapters = [
     statLabel: 'No-Leak Promise',
     image: '/images/house roof5-after.jpg',
     imageAlt: 'Completed dark shingle roof installed by Midas Roofing',
-    range: [0.61, 0.67, 1.0, 1.0] as const,
+    range: [0.55, 0.62, 1.0, 1.0] as const,
   },
 ]
 
@@ -238,7 +238,7 @@ export default function ScrollVideo() {
   const ch1Active = useTransform(scrollYProgress, [0.02, 0.06, 0.20, 0.25], [0.2, 1, 1, 0.2])
   const ch2Active = useTransform(scrollYProgress, [0.26, 0.30, 0.42, 0.47], [0.2, 1, 1, 0.2])
   const ch3Active = useTransform(scrollYProgress, [0.48, 0.52, 0.62, 0.67], [0.2, 1, 1, 0.2])
-  const ch4Active = useTransform(scrollYProgress, [0.63, 0.68, 1.0, 1.0], [0.2, 1, 1, 1])
+  const ch4Active = useTransform(scrollYProgress, [0.57, 0.64, 1.0, 1.0], [0.2, 1, 1, 1])
   const chapterOpacities = [ch1Active, ch2Active, ch3Active, ch4Active]
 
   // Alternating card positions
