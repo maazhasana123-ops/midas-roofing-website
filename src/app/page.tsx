@@ -11,6 +11,7 @@ import HomeStats from '@/components/HomeStats'
 import ServiceCards from '@/components/ServiceCards'
 import PillarCards from '@/components/PillarCards'
 import RoofAnimationSection from '@/components/RoofAnimationSection'
+import { OwensCorningCard } from '@/components/ui/owens-corning-card'
 
 export const metadata: Metadata = {
   title: "Midas Roofing & Construction | Central Florida's #1 Roofing Experts",
@@ -263,6 +264,27 @@ export default function HomePage() {
               <LocationMap location="Orlando, FL" coordinates="28.5383° N, 81.3792° W" />
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* ──────────────────── OWENS CORNING PREFERRED CONTRACTOR ─────────── */}
+      <section className="section-pad bg-dark-card relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.05)_0%,_transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-6">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-gold font-jakarta font-semibold text-xs tracking-[0.2em] uppercase mb-4">Our Certifications</p>
+            <h2 className="font-jakarta font-bold text-4xl md:text-5xl text-cream mb-5 tracking-tight">
+              Backed by the <span className="gold-shimmer">Best in the Industry</span>
+            </h2>
+            <p className="text-cream/50 max-w-lg mx-auto font-inter text-base leading-relaxed">
+              We partner only with industry-leading manufacturers so every roof we install
+              carries the manufacturer&apos;s backing alongside our own No-Leak Promise.
+            </p>
+          </AnimatedSection>
+          <AnimatedSection className="flex justify-center">
+            <OwensCorningCard />
+          </AnimatedSection>
         </div>
       </section>
 
