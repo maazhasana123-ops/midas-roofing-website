@@ -201,44 +201,14 @@ export default function HomePage() {
 
       {/* ─────────────── ROOF ANIMATION SCROLL VIDEO ────────────────────── */}
 
-      {/*
-        ┌── SEAM BRIDGE ─────────────────────────────────────────────────────────┐
-        │  Cinematic split is dark (#0a0a0a). Animation section is white.        │
-        │  The RoofAnimationSection's own top-edge gradient (dark→transparent)   │
-        │  handles the dark-to-white dissolve from above — no extra bridge div.  │
-        │  A -1px marginTop kills any sub-pixel hairline gap.                    │
-        └────────────────────────────────────────────────────────────────────────┘
-      */}
-
-      {/* z-index:1 keeps animation behind the reviews layer */}
+      {/* Both sections are bg-dark — no bridge needed, -1px kills any hairline */}
       <div style={{ position: 'relative', zIndex: 1, marginTop: '-1px' }}>
         <RoofAnimationSection />
       </div>
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
-      {/*
-        Animation section is white at its bottom. Reviews section is dark (#0a0a0a).
-        The RoofAnimationSection's own bottom-edge gradient (dark→transparent)
-        dissolves the white into dark on the sticky layer.
-        The reviews div sits -100vh before the section ends — by that point the
-        recede animation (75–100% scroll) has already faded the video out to 0,
-        so reviews slide over an empty dark-edged field, never over the video.
-        The gradient shield here fades transparent → #0a0a0a over 200px to
-        ensure the reviews bg seals over any residual white.
-      */}
+      {/* Both dark — reviews slides over cleanly at -100vh overlap */}
       <div style={{ position: 'relative', zIndex: 10, marginTop: '-100vh' }}>
-        {/* Gradient shield: transparent top → dark, seals over white bottom edge */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0,
-            height: '200px',
-            background: 'linear-gradient(to bottom, transparent 0%, #0a0a0a 100%)',
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
         <TestimonialV2 />
       </div>
 
