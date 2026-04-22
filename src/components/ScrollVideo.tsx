@@ -33,7 +33,7 @@ const chapters = [
     statLabel: 'Nails Per Square',
     image: '/images/house roof-working crew.jpg',
     imageAlt: 'Midas Roofing crew working on a residential roof replacement',
-    range: [0.25, 0.29, 0.45, 0.49] as const,
+    range: [0.24, 0.28, 0.42, 0.46] as const,
   },
   {
     number: '03',
@@ -44,7 +44,7 @@ const chapters = [
     statLabel: 'Years Experience',
     image: '/images/house roof-working crew2.jpg',
     imageAlt: 'Workers installing new CertainTeed shingles on a Florida home',
-    range: [0.50, 0.54, 0.70, 0.74] as const,
+    range: [0.46, 0.50, 0.62, 0.66] as const,
   },
   {
     number: '04',
@@ -55,7 +55,7 @@ const chapters = [
     statLabel: 'No-Leak Promise',
     image: '/images/house roof5-after.jpg',
     imageAlt: 'Completed dark shingle roof installed by Midas Roofing',
-    range: [0.75, 0.80, 1.0, 1.0] as const,
+    range: [0.61, 0.66, 0.95, 0.95] as const,
   },
 ]
 
@@ -234,11 +234,11 @@ export default function ScrollVideo() {
 
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
 
-  // Chapter nav indicators
+  // Chapter nav indicators — synced with new ranges
   const ch1Active = useTransform(scrollYProgress, [0.02, 0.06, 0.20, 0.25], [0.2, 1, 1, 0.2])
-  const ch2Active = useTransform(scrollYProgress, [0.27, 0.31, 0.45, 0.50], [0.2, 1, 1, 0.2])
-  const ch3Active = useTransform(scrollYProgress, [0.52, 0.56, 0.70, 0.75], [0.2, 1, 1, 0.2])
-  const ch4Active = useTransform(scrollYProgress, [0.77, 0.82, 1.0, 1.0],  [0.2, 1, 1, 1])
+  const ch2Active = useTransform(scrollYProgress, [0.26, 0.30, 0.42, 0.47], [0.2, 1, 1, 0.2])
+  const ch3Active = useTransform(scrollYProgress, [0.48, 0.52, 0.62, 0.67], [0.2, 1, 1, 0.2])
+  const ch4Active = useTransform(scrollYProgress, [0.63, 0.68, 0.95, 0.95], [0.2, 1, 1, 1])
   const chapterOpacities = [ch1Active, ch2Active, ch3Active, ch4Active]
 
   // Alternating card positions

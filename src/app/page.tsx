@@ -200,10 +200,33 @@ export default function HomePage() {
       </section>
 
       {/* ─────────────── ROOF ANIMATION SCROLL VIDEO ────────────────────── */}
-      <RoofAnimationSection />
+      {/* z-index:1 keeps animation behind the reviews layer */}
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <RoofAnimationSection />
+      </div>
 
       {/* ─────────────────────────── REVIEWS ──────────────────────────────── */}
-      <TestimonialV2 />
+      {/*
+        marginTop: -25vh  → reviews starts 25vh before animation section ends.
+        zIndex: 10        → reviews renders ON TOP of the sticky animation.
+        The gradient shield at the top fades from transparent into bg-dark
+        so the transition is silky, not a sharp seam.
+      */}
+      <div style={{ position: 'relative', zIndex: 10, marginTop: '-25vh' }}>
+        {/* Gradient shield — transparent → dark, covers the overlap zone */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0,
+            height: '140px',
+            background: 'linear-gradient(to bottom, transparent 0%, #0a0a0a 100%)',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+        <TestimonialV2 />
+      </div>
 
       {/* ─────────────────────── PROMISE BANNER ───────────────────────────────── */}
       <section className="relative py-16 md:py-20 overflow-hidden bg-dark-card">
