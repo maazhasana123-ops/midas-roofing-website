@@ -9,7 +9,8 @@ import type Vapi from '@vapi-ai/web'
 type CallState = 'idle' | 'loading' | 'active' | 'error' | 'mic-denied'
 
 // ─── Env vars (NEXT_PUBLIC_ = safe for client bundle) ─────────────────────
-const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
+// NEXT_PUBLIC_VAPI_PUBLIC_KEY is the original working var name — do not rename
+const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY ?? ''
 const VAPI_ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
 
 // ─── ErrorBoundary — prevents VAPI / Daily.js crashes from killing the page ──
