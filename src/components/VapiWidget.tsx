@@ -112,24 +112,40 @@ export default function VapiWidget() {
     setCallState('idle')
   }, [])
 
+  // Minimize: hide modal but keep call alive
+  const minimizeModal = useCallback(() => {
+    setIsMinimized(true)
+    setIsOpen(false)
+  }, [])
+
+  // Hard close: end call and dismiss
   const closeModal = useCallback(() => {
     if (callState === 'active') endCall()
     setIsOpen(false)
+    setIsMinimized(false)
   }, [callState, endCall])
+
+  // Re-open from minimized state
+  const expandModal = useCallback(() => {
+    setIsMinimized(false)
+    setIsOpen(true)
+  }, [])
 
   // Don't render until credentials are confirmed server-side
   if (!credentialsReady) return null
 
   return (
     <>
-      {/* Custom floating trigger button */}
+      {/* Floating trigger / minimized-call button */}
       <motion.button
-        onClick={() => setIsOpen(true)}
+        onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
         className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
         style={{
           background: 'linear-gradient(135deg, #b8922d 0%, #C9A84C 40%, #e8c66a 70%, #C9A84C 100%)',
           backgroundSize: '200% 200%',
-          boxShadow: '0 4px 20px rgba(201,168,76,0.35)',
+          boxShadow: isMinimized && callState === 'active'
+            ? '0 4px 24px rgba(52,211,153,0.4), 0 4px 20px rgba(201,168,76,0.25)'
+            : '0 4px 20px rgba(201,168,76,0.35)',
         }}
         whileHover={{
           scale: 1.04,
@@ -139,8 +155,12 @@ export default function VapiWidget() {
         initial={{ opacity: 0, y: 20, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        aria-label="Talk to Midas"
+        aria-label={isMinimized ? 'Open call' : 'Talk to Midas'}
       >
+        {/* Live indicator dot — only shown when minimized with active call */}
+        {isMinimized && callState === 'active' && (
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0a0a] animate-pulse" />
+        )}
         <svg viewBox="0 0 24 24" fill="#0a0a0a" className="w-4 h-4 flex-shrink-0">
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
           <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z" />
@@ -154,7 +174,7 @@ export default function VapiWidget() {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop — minimize if call active, otherwise close */}
             <motion.div
               key="vapi-backdrop"
               initial={{ opacity: 0 }}
@@ -162,7 +182,7 @@ export default function VapiWidget() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
               className="fixed inset-0 z-50 bg-dark/65 backdrop-blur-sm"
-              onClick={closeModal}
+              onClick={callState === 'active' ? minimizeModal : closeModal}
             />
 
             {/* Panel */}
@@ -184,13 +204,13 @@ export default function VapiWidget() {
                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-64 h-32 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.15)_0%,_transparent_70%)]" />
               </div>
 
-              {/* Close button */}
+              {/* Minimize button — hides modal, keeps call alive */}
               <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 z-10 w-7 h-7 rounded-full border border-white/[0.07] flex items-center justify-center text-cream/25 hover:text-cream/65 hover:border-white/[0.15] transition-all duration-200 text-xs leading-none"
-                aria-label="Close"
+                onClick={minimizeModal}
+                className="absolute top-4 right-4 z-10 w-7 h-7 rounded-full border border-white/[0.07] flex items-center justify-center text-cream/25 hover:text-cream/65 hover:border-white/[0.15] transition-all duration-200"
+                aria-label="Minimize"
               >
-                ✕
+                <MinimizeIcon />
               </button>
 
               {/* Header */}
