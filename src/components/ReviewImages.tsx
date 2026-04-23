@@ -12,7 +12,7 @@ const reviewImages = [
   { src: '/images/gallery/post-5.png', alt: 'Customer review — roof repair project',              size: 'normal' },
 ]
 
-const EASE_OUT = [0.23, 1, 0.32, 1]
+const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1]
 
 export default function ReviewImages() {
   const [lightbox, setLightbox] = useState<number | null>(null)
