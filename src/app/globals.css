@@ -51,20 +51,19 @@
 
   /* ─── Buttons — Shiny Gold ─── */
 
-  /* PRIMARY: filled gold gradient, dark text (gold coin effect) */
+  /* PRIMARY: gold gradient fill, dark text */
   .btn-gold {
     @apply relative inline-flex items-center justify-center gap-2 px-8 py-4
            font-jakarta font-semibold text-sm rounded-full overflow-hidden
            select-none cursor-pointer whitespace-nowrap;
-    color: #080808;
+    color: #0a0a0a !important;
     background: linear-gradient(325deg, #C9A84C 0%, #F0D070 55%, #C9A84C 90%);
     background-size: 280% auto;
     background-position: left center;
     box-shadow:
-      0px 0px 20px rgba(201,168,76,0.45),
-      0px 5px 8px -2px rgba(0,0,0,0.5),
-      inset 0px 1px 0px rgba(255,255,255,0.25),
-      inset 0px -1px 0px rgba(0,0,0,0.15);
+      0px 0px 22px rgba(201,168,76,0.5),
+      0px 4px 10px -2px rgba(0,0,0,0.55),
+      inset 0px 1px 0px rgba(255,255,255,0.3);
     transition:
       background-position 700ms var(--ease-out-expo),
       box-shadow 250ms var(--ease-out-expo),
@@ -75,53 +74,60 @@
     .btn-gold:hover {
       background-position: right center;
       box-shadow:
-        0px 0px 36px rgba(201,168,76,0.7),
+        0px 0px 38px rgba(201,168,76,0.75),
         0px 8px 20px -4px rgba(0,0,0,0.5),
-        inset 0px 1px 0px rgba(255,255,255,0.3),
-        inset 0px -1px 0px rgba(0,0,0,0.15);
+        inset 0px 1px 0px rgba(255,255,255,0.35);
       transform: translateY(-2px);
     }
   }
-  .btn-gold:active {
-    transform: scale(0.97);
-    transition-duration: 100ms;
-  }
+  .btn-gold:active { transform: scale(0.97); transition-duration: 100ms; }
   .btn-gold:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px #080808, 0 0 0 4px rgba(201,168,76,0.7);
   }
 
-  /* SECONDARY: transparent at rest, gold border + gold text, fills on hover */
+  /* SECONDARY: transparent + gold border at rest; pseudo-element fills on hover */
   .btn-outline-gold {
     @apply relative inline-flex items-center justify-center gap-2 px-8 py-4
-           font-jakarta font-semibold text-sm rounded-full border border-gold/60
+           font-jakarta font-semibold text-sm rounded-full overflow-hidden
            select-none cursor-pointer whitespace-nowrap;
-    color: #C9A84C;
+    color: #C9A84C !important;
     background: transparent;
+    border: 1px solid rgba(201,168,76,0.55);
     transition:
-      background 700ms var(--ease-out-expo),
       color 250ms var(--ease-out-expo),
       border-color 250ms var(--ease-out-expo),
       box-shadow 250ms var(--ease-out-expo),
       transform 150ms var(--ease-out-expo);
     will-change: transform;
   }
+  /* pseudo fill layer — slides up on hover, sits behind text via z-index:-1 */
+  .btn-outline-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(325deg, #C9A84C 0%, #F0D070 55%, #C9A84C 90%);
+    background-size: 280% auto;
+    background-position: left center;
+    transform: translateY(101%);
+    transition: transform 400ms var(--ease-out-expo), background-position 700ms var(--ease-out-expo);
+    z-index: -1;
+  }
   @media (hover: hover) and (pointer: fine) {
     .btn-outline-gold:hover {
-      color: #080808;
+      color: #0a0a0a !important;
       border-color: transparent;
-      background: linear-gradient(325deg, #C9A84C 0%, #F0D070 55%, #C9A84C 90%);
       box-shadow:
-        0px 0px 28px rgba(201,168,76,0.55),
-        0px 6px 16px -4px rgba(0,0,0,0.5),
-        inset 0px 1px 0px rgba(255,255,255,0.25);
+        0px 0px 28px rgba(201,168,76,0.6),
+        0px 6px 16px -4px rgba(0,0,0,0.5);
       transform: translateY(-2px);
     }
+    .btn-outline-gold:hover::before {
+      transform: translateY(0%);
+      background-position: right center;
+    }
   }
-  .btn-outline-gold:active {
-    transform: scale(0.97);
-    transition-duration: 100ms;
-  }
+  .btn-outline-gold:active { transform: scale(0.97); transition-duration: 100ms; }
   .btn-outline-gold:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px #080808, 0 0 0 4px rgba(201,168,76,0.6);
