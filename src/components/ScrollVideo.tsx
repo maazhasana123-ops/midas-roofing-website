@@ -215,21 +215,30 @@ export default function ScrollVideo() {
     offset: ['start start', 'end end'],
   })
 
-  // Scrub video currentTime based on scroll
+  // Scrub video currentTime based on scroll — rAF-throttled to avoid layout thrashing
+  const rafRef = useRef<number | null>(null)
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    const video = videoRef.current
-    if (!video || !video.duration) return
-    const target = latest * video.duration
-    if (Math.abs(video.currentTime - target) > 0.04) {
-      video.currentTime = target
-    }
+    if (rafRef.current !== null) return
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null
+      const video = videoRef.current
+      if (!video || !video.duration) return
+      const target = latest * video.duration
+      if (Math.abs(video.currentTime - target) > 0.03) {
+        video.currentTime = target
+      }
+    })
   })
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
     video.preload = 'auto'
+    // Park on frame 0 as soon as metadata is ready so no black flash
+    const park = () => { video.currentTime = 0 }
+    video.addEventListener('loadedmetadata', park, { once: true })
     video.load()
+    return () => { video.removeEventListener('loadedmetadata', park) }
   }, [])
 
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
@@ -268,6 +277,7 @@ export default function ScrollVideo() {
             <video
               ref={videoRef}
               src="/animated-roof.mp4"
+              poster="/images/house roof1.jpg"
               className="w-full h-full object-cover"
               muted
               playsInline

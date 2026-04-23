@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import Link from 'next/link'
 import {
   useScroll,
@@ -29,6 +29,8 @@ export default function RoofAnimationSection() {
   const mobileVideoRef = useRef<HTMLVideoElement>(null)
   const desktopVideoRef = useRef<HTMLVideoElement>(null)
   const [entered, setEntered] = useState(false)
+  const rafRef = useRef<number | null>(null)
+  const latestProgressRef = useRef(0)
 
   // ── Scroll progress across the full container ──
   const { scrollYProgress } = useScroll({
@@ -36,13 +38,21 @@ export default function RoofAnimationSection() {
     offset: ['start start', 'end end'],
   })
 
-  // ── Scrub both videos with scroll ──
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+  // ── Scrub both videos with scroll — rAF-throttled ──
+  const scrubVideos = useCallback(() => {
+    rafRef.current = null
+    const latest = latestProgressRef.current
     for (const v of [mobileVideoRef.current, desktopVideoRef.current]) {
       if (!v || !v.duration) continue
       const t = latest * v.duration
-      if (Math.abs(v.currentTime - t) > 0.04) v.currentTime = t
+      if (Math.abs(v.currentTime - t) > 0.03) v.currentTime = t
     }
+  }, [])
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    latestProgressRef.current = latest
+    if (rafRef.current !== null) return
+    rafRef.current = requestAnimationFrame(scrubVideos)
   })
 
   // ── Preload both videos + park on first frame ──
@@ -50,9 +60,9 @@ export default function RoofAnimationSection() {
     for (const v of [mobileVideoRef.current, desktopVideoRef.current]) {
       if (!v) continue
       v.preload = 'auto'
-      v.load()
       const park = () => { v.currentTime = 0 }
-      v.addEventListener('loadedmetadata', park)
+      v.addEventListener('loadedmetadata', park, { once: true })
+      v.load()
     }
   }, [])
 
