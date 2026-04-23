@@ -4,230 +4,419 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type Vapi from '@vapi-ai/web'
 
-type CallState = 'idle' | 'loading' | 'active'
+// ─── Types ───────────────────────────────────────────────────────────────────
+type CallState = 'idle' | 'loading' | 'active' | 'error' | 'mic-denied'
 
-function MinimizeIcon() {
+// ─── Env vars (NEXT_PUBLIC_ = safe for client bundle) ─────────────────────
+const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
+const VAPI_ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+function MicIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-3.5 h-3.5">
-      <line x1="5" y1="12" x2="19" y2="12" />
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z" />
     </svg>
   )
 }
 
-function SoundWave({ active }: { active: boolean }) {
-  const bars = [0.3, 0.6, 1, 0.75, 0.45, 0.85, 1, 0.55, 0.35]
+function PhoneOffIcon({ className }: { className?: string }) {
   return (
-    <div className="flex items-center justify-center gap-[3px] h-12">
-      {bars.map((h, i) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A2 2 0 0 1 10.68 13.31z" />
+      <line x1="1" y1="1" x2="23" y2="23" />
+    </svg>
+  )
+}
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  )
+}
+
+// ─── Sound wave — bars animate by actual volume when active ──────────────────
+function SoundWave({ active, volume }: { active: boolean; volume: number }) {
+  const bars = [0.3, 0.55, 0.85, 1, 0.75, 0.95, 0.6, 0.4, 0.7, 0.5, 0.8, 0.35]
+  return (
+    <div className="flex items-center justify-center gap-[3px] h-14" aria-hidden="true">
+      {bars.map((base, i) => {
+        // When active, scale driven by volume (0–1) + base rhythm
+        const liveScale = active ? Math.max(0.12, base * (0.4 + volume * 0.7)) : 0.06
+        return (
+          <motion.div
+            key={i}
+            className="w-[3px] rounded-full"
+            style={{
+              height: 48,
+              transformOrigin: 'center',
+              background: active
+                ? 'linear-gradient(to top, #C9A84C, #e8c66a)'
+                : 'rgba(201,168,76,0.25)',
+            }}
+            animate={{ scaleY: liveScale }}
+            transition={
+              active
+                ? { duration: 0.18, ease: 'easeOut' }
+                : { duration: 0.5, ease: 'easeOut', delay: i * 0.02 }
+            }
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Idle wave — gentle ambient animation when modal open but call not started ─
+function IdleWave() {
+  const bars = [0.15, 0.3, 0.5, 0.7, 0.9, 1, 0.9, 0.7, 0.5, 0.3, 0.2, 0.15]
+  return (
+    <div className="flex items-center justify-center gap-[3px] h-14" aria-hidden="true">
+      {bars.map((base, i) => (
         <motion.div
           key={i}
-          className="w-[3px] rounded-full bg-gold"
-          style={{ height: 48, transformOrigin: 'center' }}
-          animate={
-            active
-              ? { scaleY: [h * 0.35, h, h * 0.25, h * 1.1, h * 0.4, h] }
-              : { scaleY: 0.07 }
-          }
-          transition={
-            active
-              ? { duration: 1.1 + i * 0.06, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }
-              : { duration: 0.4, ease: 'easeOut' }
-          }
+          className="w-[3px] rounded-full"
+          style={{ height: 48, transformOrigin: 'center', background: 'rgba(201,168,76,0.2)' }}
+          animate={{ scaleY: [base * 0.08, base * 0.18, base * 0.08] }}
+          transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.12, ease: 'easeInOut' }}
         />
       ))}
     </div>
   )
 }
 
-// Read credentials at module level — these are NEXT_PUBLIC_ vars, safe for browser use.
-// Vapi's API key is designed for client-side use (same as a publishable Stripe key).
-const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
-const VAPI_ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
-
+// ─── Main widget ─────────────────────────────────────────────────────────────
 export default function VapiWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [volume, setVolume] = useState(0)
   const vapiRef = useRef<Vapi | null>(null)
 
+  // ── Listen for external trigger (TalkToMidasButton, Navbar CTAs, etc.) ────
   useEffect(() => {
-    const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
+    const handleOpen = () => {
+      setIsOpen(true)
+      setIsMinimized(false)
+    }
     window.addEventListener('openVapiModal', handleOpen)
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
+  // ── Lazy-init Vapi SDK once ───────────────────────────────────────────────
   const getVapi = useCallback(async (): Promise<Vapi | null> => {
     if (vapiRef.current) return vapiRef.current
-    if (!VAPI_KEY) return null
+    if (!VAPI_KEY) {
+      console.error('[VapiWidget] NEXT_PUBLIC_VAPI_KEY is not set.')
+      return null
+    }
     const { default: VapiSDK } = await import('@vapi-ai/web')
     const instance = new VapiSDK(VAPI_KEY)
-    instance.on('call-start', () => setCallState('active'))
-    instance.on('call-end', () => setCallState('idle'))
+
+    instance.on('call-start', () => {
+      setCallState('active')
+      setErrorMsg(null)
+    })
+
+    instance.on('call-end', () => {
+      setCallState('idle')
+      setVolume(0)
+    })
+
+    // volume-level fires 0–1 floats while call is live
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    instance.on('error' as any, () => setCallState('idle'))
+    instance.on('volume-level' as any, (v: number) => {
+      setVolume(v)
+    })
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    instance.on('error' as any, (e: any) => {
+      console.error('[Vapi error]', e)
+      const msg: string =
+        typeof e === 'string' ? e
+        : e?.message ?? e?.error?.message ?? 'Connection failed. Please try again.'
+      setCallState('error')
+      setErrorMsg(msg)
+      setVolume(0)
+    })
+
     vapiRef.current = instance
     return instance
   }, [])
 
+  // ── Start call ───────────────────────────────────────────────────────────
   const startCall = useCallback(async () => {
-    if (!VAPI_ASSISTANT_ID) return
+    if (!VAPI_ASSISTANT_ID) {
+      setCallState('error')
+      setErrorMsg('Assistant not configured. Contact support.')
+      return
+    }
     setCallState('loading')
+    setErrorMsg(null)
+    try {
+      // Check mic permission before even touching Vapi
+      await navigator.mediaDevices.getUserMedia({ audio: true })
+    } catch {
+      setCallState('mic-denied')
+      setErrorMsg('Microphone access is required to start the call. Please allow mic access in your browser settings.')
+      return
+    }
     try {
       const vapi = await getVapi()
-      if (!vapi) { setCallState('idle'); return }
+      if (!vapi) {
+        setCallState('error')
+        setErrorMsg('Failed to load voice SDK.')
+        return
+      }
       await vapi.start(VAPI_ASSISTANT_ID)
-    } catch {
-      setCallState('idle')
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : 'Could not connect. Please try again.'
+      setCallState('error')
+      setErrorMsg(msg)
     }
   }, [getVapi])
 
+  // ── End call ─────────────────────────────────────────────────────────────
   const endCall = useCallback(() => {
     vapiRef.current?.stop()
     setCallState('idle')
+    setVolume(0)
   }, [])
 
+  // ── Minimize — keeps call alive, collapses panel to FAB ──────────────────
   const minimizeModal = useCallback(() => {
     setIsMinimized(true)
     setIsOpen(false)
   }, [])
 
+  // ── Close — ends call if active ──────────────────────────────────────────
   const closeModal = useCallback(() => {
     if (callState === 'active') endCall()
     setIsOpen(false)
     setIsMinimized(false)
+    setErrorMsg(null)
   }, [callState, endCall])
 
+  // ── Expand minimized modal ────────────────────────────────────────────────
   const expandModal = useCallback(() => {
     setIsMinimized(false)
     setIsOpen(true)
   }, [])
 
+  // ── Retry after error ─────────────────────────────────────────────────────
+  const retry = useCallback(() => {
+    setCallState('idle')
+    setErrorMsg(null)
+    startCall()
+  }, [startCall])
+
+  // ── Status label shown below waveform ─────────────────────────────────────
+  const statusLabel =
+    callState === 'idle' ? 'No hold times — connect instantly'
+    : callState === 'loading' ? 'Connecting...'
+    : callState === 'active' ? 'Live — speak freely'
+    : ''
+
+  // ── Whether the FAB should show the green live dot ───────────────────────
+  const isLive = isMinimized && callState === 'active'
+
   return (
     <>
-      {/* Floating button — z-[9999] ensures visibility above all page stacking contexts.
-          'relative' is required so the absolute-positioned green dot child renders correctly. */}
+      {/* ─── Floating Action Button ─────────────────────────────────────────
+          z-[9999]: always above every page element and stacking context.
+          Renders from first page load; no scroll needed to find it.
+      ──────────────────────────────────────────────────────────────────── */}
       <motion.button
         onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
-        className="fixed bottom-6 right-6 z-[9999] relative flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
+        className="fixed bottom-6 right-5 sm:right-6 z-[9999] flex items-center gap-2.5 rounded-full px-5 py-3 select-none"
         style={{
           background: 'linear-gradient(135deg, #b8922d 0%, #C9A84C 40%, #e8c66a 70%, #C9A84C 100%)',
-          boxShadow: isMinimized && callState === 'active'
-            ? '0 4px 24px rgba(52,211,153,0.4), 0 4px 20px rgba(201,168,76,0.25)'
-            : '0 4px 20px rgba(201,168,76,0.35)',
+          boxShadow: isLive
+            ? '0 4px 24px rgba(52,211,153,0.45), 0 4px 20px rgba(201,168,76,0.3)'
+            : '0 4px 24px rgba(201,168,76,0.4), 0 2px 12px rgba(0,0,0,0.4)',
         }}
-        whileHover={{ scale: 1.04, boxShadow: '0 6px 28px rgba(201,168,76,0.5)' }}
-        whileTap={{ scale: 0.97 }}
-        initial={{ opacity: 0, y: 20, scale: 0.9 }}
+        whileHover={{ scale: 1.04, boxShadow: '0 6px 32px rgba(201,168,76,0.55), 0 2px 16px rgba(0,0,0,0.4)' }}
+        whileTap={{ scale: 0.96 }}
+        initial={{ opacity: 0, y: 24, scale: 0.88 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        aria-label={isMinimized ? 'Open call' : 'Talk to Midas'}
+        transition={{ delay: 1.2, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        aria-label={isMinimized ? 'Expand call' : 'Talk to Midas'}
       >
-        {isMinimized && callState === 'active' && (
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0a0a] animate-pulse" />
+        {/* Live dot when call is active and widget minimized */}
+        {isLive && (
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#080808] animate-pulse" />
         )}
-        <svg viewBox="0 0 24 24" fill="#0a0a0a" className="w-4 h-4 flex-shrink-0">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z" />
-        </svg>
-        <span className="font-jakarta font-bold text-sm text-[#0a0a0a] tracking-wide whitespace-nowrap">
-          Talk to Midas
+
+        <MicIcon className="w-4 h-4 text-[#080808] flex-shrink-0" />
+        <span className="font-jakarta font-bold text-sm text-[#080808] tracking-wide whitespace-nowrap">
+          {isMinimized && callState === 'active' ? 'Live Call' : 'Talk to Midas'}
         </span>
+
+        {/* Minimize chevron shown when modal is open (not minimized) */}
+        {isOpen && !isMinimized && (
+          <ChevronDownIcon className="w-3.5 h-3.5 text-[#080808]/70" />
+        )}
       </motion.button>
 
-      {/* Modal */}
+      {/* ─── Modal ──────────────────────────────────────────────────────────
+          Backdrop + panel share z-[9998] — just below the FAB so the FAB
+          always remains tappable and visible on top of its own modal.
+      ──────────────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               key="vapi-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="fixed inset-0 z-50 bg-dark/65 backdrop-blur-sm"
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm"
               onClick={callState === 'active' ? minimizeModal : closeModal}
+              aria-hidden="true"
             />
 
+            {/* Panel */}
             <motion.div
               key="vapi-panel"
-              initial={{ opacity: 0, y: 14, scale: 0.95 }}
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 14, scale: 0.95 }}
+              exit={{ opacity: 0, y: 16, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed bottom-24 right-6 z-50 w-[320px] rounded-2xl border border-gold/20 overflow-hidden"
+              // Position: anchored above the FAB.
+              // w-[min(340px,calc(100vw-40px))] prevents overflow on small screens.
+              className="fixed bottom-[72px] right-5 sm:right-6 z-[9998] rounded-2xl overflow-hidden"
               style={{
+                width: 'min(340px, calc(100vw - 40px))',
                 background: 'rgba(8,8,8,0.97)',
-                backdropFilter: 'blur(24px)',
-                boxShadow: '0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08)',
+                backdropFilter: 'blur(28px)',
+                border: '1px solid rgba(201,168,76,0.15)',
+                boxShadow: '0 24px 64px rgba(0,0,0,0.75), 0 0 0 1px rgba(201,168,76,0.06)',
               }}
+              role="dialog"
+              aria-label="Talk to Midas voice assistant"
+              aria-modal="true"
             >
-              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-64 h-32 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.15)_0%,_transparent_70%)]" />
+              {/* Ambient gold glow at top */}
+              <div className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden" aria-hidden="true">
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-36 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.12)_0%,_transparent_70%)]" />
               </div>
 
-              <button
-                onClick={minimizeModal}
-                className="absolute top-4 right-4 z-10 w-7 h-7 rounded-full border border-white/[0.07] flex items-center justify-center text-cream/25 hover:text-cream/65 hover:border-white/[0.15] transition-all duration-200"
-                aria-label="Minimize"
-              >
-                <MinimizeIcon />
-              </button>
-
-              <div className="relative z-10 px-6 pt-6 pb-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/[0.08] border border-gold/25 flex items-center justify-center flex-shrink-0">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold">
-                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                      <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-jakarta font-bold text-cream text-sm leading-tight">Talk to Midas</p>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-                      <span className="text-emerald-400 text-[11px] font-inter">Available 24/7</span>
+              {/* ── Header ── */}
+              <div className="relative z-10 px-5 pt-5 pb-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {/* Avatar */}
+                    <div className="w-10 h-10 rounded-full bg-gold/[0.08] border border-gold/25 flex items-center justify-center flex-shrink-0">
+                      <MicIcon className="w-4 h-4 text-gold" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-jakarta font-bold text-cream text-sm leading-tight truncate">
+                        Talk to Midas
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+                        <span className="text-emerald-400 text-[11px] font-inter">Available 24/7</span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Minimize button */}
+                  <button
+                    onClick={minimizeModal}
+                    className="w-7 h-7 rounded-full border border-white/[0.08] flex items-center justify-center text-cream/30 hover:text-cream/70 hover:border-white/20 transition-all duration-200 flex-shrink-0 mt-0.5"
+                    aria-label="Minimize"
+                  >
+                    <ChevronDownIcon className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <p className="text-cream/60 text-sm font-inter leading-relaxed">
-                  <span className="font-semibold text-cream/90">Got roofing questions? We are</span>{' '}
-                  available 24/7. Ask about pricing, inspections, or book a time with the team. No hold times.
+
+                <p className="text-cream/55 text-sm font-inter leading-relaxed mt-3">
+                  <span className="font-semibold text-cream/85">Got roofing questions?</span>{' '}
+                  Ask about pricing, inspections, or book a time with the team. No hold times.
                 </p>
               </div>
 
-              <div className="mx-6 h-px bg-gold/[0.08]" />
+              {/* Divider */}
+              <div className="mx-5 h-px bg-gold/[0.07]" />
 
-              <div className="relative z-10 px-6 py-6 flex flex-col items-center gap-4">
-                <SoundWave active={callState === 'active'} />
+              {/* ── Body ── */}
+              <div className="relative z-10 px-5 py-5 flex flex-col items-center gap-4">
 
-                <p className="text-cream/30 text-xs font-inter tracking-wide text-center min-h-4">
-                  {callState === 'idle' && 'No hold times — connect instantly'}
-                  {callState === 'loading' && 'Connecting you now...'}
-                  {callState === 'active' && 'Live — speak freely'}
-                </p>
+                {/* Waveform */}
+                {callState === 'active'
+                  ? <SoundWave active volume={volume} />
+                  : <IdleWave />
+                }
 
+                {/* Status / error messages */}
+                {(callState === 'error' || callState === 'mic-denied') ? (
+                  <div className="w-full rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-center">
+                    <p className="text-red-400 text-xs font-inter leading-relaxed">
+                      {errorMsg ?? 'Something went wrong.'}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-cream/30 text-xs font-inter tracking-wide text-center min-h-[16px]">
+                    {statusLabel}
+                  </p>
+                )}
+
+                {/* CTA buttons */}
                 {callState === 'active' ? (
                   <button
                     onClick={endCall}
-                    className="w-full py-3.5 rounded-xl text-sm font-jakarta font-semibold text-red-400 border border-red-500/25 bg-red-500/[0.07] hover:bg-red-500/[0.15] hover:border-red-500/40 transition-all duration-200"
+                    className="w-full py-3.5 rounded-xl text-sm font-jakarta font-semibold text-red-400 border border-red-500/25 bg-red-500/[0.07] hover:bg-red-500/[0.18] hover:border-red-500/45 transition-all duration-200 flex items-center justify-center gap-2"
+                    aria-label="End call"
                   >
+                    <PhoneOffIcon className="w-4 h-4" />
                     End Call
+                  </button>
+                ) : callState === 'error' || callState === 'mic-denied' ? (
+                  <button
+                    onClick={retry}
+                    className="w-full py-3.5 rounded-xl text-sm font-jakarta font-bold text-[#080808] relative overflow-hidden group"
+                    style={{ background: 'linear-gradient(135deg, #C9A84C, #e8c66a)' }}
+                  >
+                    <span className="relative z-10">Try Again</span>
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </button>
                 ) : (
                   <button
                     onClick={startCall}
                     disabled={callState === 'loading'}
-                    className="w-full py-3.5 rounded-xl text-sm font-jakarta font-bold text-[#0a0a0a] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                    className="w-full py-3.5 rounded-xl text-sm font-jakarta font-bold text-[#080808] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
                     style={{ background: 'linear-gradient(135deg, #C9A84C, #e8c66a)' }}
+                    aria-label="Start voice call"
                   >
-                    <span className="relative z-10">
-                      {callState === 'loading' ? 'Connecting...' : 'Start Call'}
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {callState === 'loading' ? (
+                        <>
+                          {/* Spinner */}
+                          <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                          </svg>
+                          Connecting...
+                        </>
+                      ) : (
+                        <>
+                          <MicIcon className="w-4 h-4" />
+                          Start Call
+                        </>
+                      )}
                     </span>
                     <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </button>
                 )}
 
-                <p className="text-cream/20 text-[10px] font-inter text-center">
+                <p className="text-cream/18 text-[10px] font-inter text-center">
                   AI-powered · Midas Roofing &amp; Construction
                 </p>
               </div>
