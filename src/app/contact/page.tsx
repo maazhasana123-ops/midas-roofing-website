@@ -1,15 +1,36 @@
 import type { Metadata } from 'next'
 import AnimatedSection from '@/components/AnimatedSection'
 import ContactForm from '@/components/ContactForm'
+import { BreadcrumbSchema } from '@/components/JsonLd'
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Midas Roofing & Construction',
-  description: 'Get in touch with Midas Roofing & Construction. Located in Tavares, FL. Serving all of Central Florida. License CCC1334831.',
+  title: 'Contact Midas Roofing | Orlando & Central Florida',
+  description:
+    'Contact Midas Roofing & Construction for roofing repairs, replacements, and free estimates. Serving Orlando and all of Central Florida. License CCC1334831. Tavares, FL.',
+  keywords: [
+    'contact roofing contractor Orlando',
+    'roofing company Tavares FL phone',
+    'free roofing estimate Central Florida',
+    'roofing repair Orlando FL',
+  ],
+  alternates: {
+    canonical: 'https://midasroofingfl.com/contact',
+    types: { 'text/markdown': 'https://midasroofingfl.com/contact.md' },
+  },
+  openGraph: {
+    url: 'https://midasroofingfl.com/contact',
+    title: 'Contact Midas Roofing & Construction',
+    description: 'Reach out for roofing repairs, replacements, or a free instant estimate. Tavares, FL. License CCC1334831.',
+  },
 }
 
 export default function ContactPage() {
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://midasroofingfl.com' },
+        { name: 'Contact', url: 'https://midasroofingfl.com/contact' },
+      ]} />
       <section className="relative pt-32 pb-20 bg-dark-card overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,168,76,0.08)_0%,_transparent_60%)]" />
         <div className="max-w-7xl mx-auto px-6 relative">

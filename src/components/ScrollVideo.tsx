@@ -49,7 +49,7 @@ const chapters = [
   {
     number: '04',
     label: 'Final Walkthrough',
-    headline: 'Done in a Day. Guaranteed for Five.',
+    headline: 'Done in a day, no leaks guaranteed.',
     body: 'Final inspection, full cleanup, and our exclusive No-Leak Promise delivered on the spot. If it leaks — we come back, no charge, no questions.',
     stat: '✓',
     statLabel: 'No-Leak Promise',

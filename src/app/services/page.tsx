@@ -4,15 +4,42 @@ import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
 import ServicesGrid from '@/components/ServicesGrid'
 import TalkToMidasButton from '@/components/TalkToMidasButton'
+import { ServicesSchema, BreadcrumbSchema } from '@/components/JsonLd'
 
 export const metadata: Metadata = {
-  title: 'Roofing Services | Midas Roofing & Construction',
-  description: 'Shingle, metal, tile, TPO roofing, roof coatings, residential and commercial roofing in Central Florida. Licensed contractor CCC1334831.',
+  title: 'Roofing Services in Central Florida | Midas Roofing & Construction',
+  description:
+    'Shingle, metal, tile, TPO roofing, roof coatings, and commercial roofing in Orlando and Central Florida. Owens Corning Preferred Contractor. License CCC1334831.',
+  keywords: [
+    'shingle roofing Orlando FL',
+    'metal roofing Central Florida',
+    'tile roofing Orlando',
+    'TPO roofing Florida',
+    'commercial roofing Orlando',
+    'roof coatings Florida',
+    'roof replacement Central Florida',
+  ],
+  alternates: {
+    canonical: 'https://midasroofingfl.com/services',
+    types: {
+      'text/markdown': 'https://midasroofingfl.com/services.md',
+    },
+  },
+  openGraph: {
+    url: 'https://midasroofingfl.com/services',
+    title: 'Roofing Services in Central Florida | Midas Roofing',
+    description: 'Shingle, metal, tile, TPO, coatings, and commercial roofing. Owens Corning Preferred. License CCC1334831.',
+  },
 }
 
 export default function ServicesPage() {
   return (
     <>
+      <ServicesSchema />
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://midasroofingfl.com' },
+        { name: 'Services', url: 'https://midasroofingfl.com/services' },
+      ]} />
       {/* Page Hero */}
       <section className="relative pt-32 pb-20 bg-dark-card overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,168,76,0.08)_0%,_transparent_60%)]" />

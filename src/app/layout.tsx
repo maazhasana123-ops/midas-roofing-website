@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import VapiWidget from '@/components/VapiWidget'
 import PreloaderWrapper from '@/components/PreloaderWrapper'
+import { LocalBusinessSchema } from '@/components/JsonLd'
 import { cn } from "@/lib/utils";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -19,21 +20,86 @@ const inter = Inter({
   display: 'swap',
 })
 
+const BASE_URL = 'https://midasroofingfl.com'
+
 export const metadata: Metadata = {
-  title: 'Midas Roofing & Construction | Central Florida Roofing Experts',
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'Midas Roofing & Construction | Central Florida Roofing Experts',
+    template: '%s | Midas Roofing & Construction',
+  },
   description:
-    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. License CCC1334831.',
-  keywords:
-    'roofing contractor Central Florida, roofing company Tavares FL, metal roofing Florida, tile roof replacement Florida',
+    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Tavares, FL.',
+  keywords: [
+    'roofing contractor Central Florida',
+    'roofing company Tavares FL',
+    'roofing company Orlando FL',
+    'metal roofing Florida',
+    'tile roof replacement Florida',
+    'shingle roofing Orlando',
+    'TPO roofing Central Florida',
+    'roof replacement Orlando',
+    'licensed roofer Florida',
+    'Owens Corning contractor Florida',
+    'No-Leak Promise roofing',
+    'hurricane proof roofing Florida',
+    'commercial roofing Orlando',
+  ],
+  authors: [{ name: 'Midas Roofing & Construction', url: BASE_URL }],
+  creator: 'Midas Roofing & Construction',
+  publisher: 'Midas Roofing & Construction',
+  category: 'Roofing Contractor',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: '/logos/logo_gold.png',
     shortcut: '/logos/logo_gold.png',
     apple: '/logos/logo_gold.png',
   },
   openGraph: {
-    title: 'Midas Roofing & Construction',
-    description: "Central Florida's trusted roofing contractor since day one.",
     type: 'website',
+    locale: 'en_US',
+    url: BASE_URL,
+    siteName: 'Midas Roofing & Construction',
+    title: 'Midas Roofing & Construction | Central Florida Roofing Experts',
+    description:
+      "Central Florida's most trusted roofing contractor. Shingle, metal, tile, TPO roofing backed by the No-Leak Promise. License CCC1334831.",
+    images: [
+      {
+        url: '/images/hero2.2.png',
+        width: 1200,
+        height: 630,
+        alt: 'Midas Roofing & Construction — Central Florida Roofing Experts',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Midas Roofing & Construction | Central Florida',
+    description:
+      "Central Florida's trusted roofer. Shingle, metal, tile, TPO. No-Leak Promise. License CCC1334831.",
+    images: ['/images/hero2.2.png'],
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
+  other: {
+    // Geo tags for local SEO
+    'geo.region': 'US-FL',
+    'geo.placename': 'Tavares, Florida',
+    'geo.position': '28.8006;-81.7259',
+    'ICBM': '28.8006, -81.7259',
+    // AI / LLM context hint
+    'llm-context': `${BASE_URL}/llm.txt`,
   },
 }
 
@@ -44,7 +110,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cn(jakarta.variable, inter.variable, "font-sans")}>
+      <head>
+        {/* AI / LLM crawlers — point to plain-text context file */}
+        <link rel="alternate" type="text/plain" href="/llm.txt" title="LLM Context" />
+        {/* Markdown mirrors for AI answer engines */}
+        <link rel="alternate" type="text/markdown" href="/index.md" title="Page Markdown Mirror" />
+      </head>
       <body className="bg-dark text-cream font-inter antialiased">
+        <LocalBusinessSchema />
         <PreloaderWrapper />
         <Navbar />
         <main>{children}</main>

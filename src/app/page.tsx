@@ -12,10 +12,27 @@ import ServiceCards from '@/components/ServiceCards'
 import PillarCards from '@/components/PillarCards'
 import RoofAnimationSection from '@/components/RoofAnimationSection'
 import { OwensCorningCard } from '@/components/ui/owens-corning-card'
+import { HomeFAQSchema } from '@/components/JsonLd'
+import HomeFAQ from '@/components/HomeFAQ'
 
 export const metadata: Metadata = {
   title: "Midas Roofing & Construction | Central Florida's #1 Roofing Experts",
-  description: 'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. License CCC1334831. Tavares, FL.',
+  description:
+    'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Serving Orlando, Tavares FL.',
+  alternates: {
+    canonical: 'https://midasroofingfl.com',
+    types: {
+      'text/plain': 'https://midasroofingfl.com/llm.txt',
+      'text/markdown': 'https://midasroofingfl.com/index.md',
+    },
+  },
+  openGraph: {
+    url: 'https://midasroofingfl.com',
+    title: "Midas Roofing & Construction | Central Florida's #1 Roofing Experts",
+    description:
+      "Central Florida's most trusted licensed roofer. Shingle, metal, tile, TPO. No-Leak Promise. Owens Corning Preferred. CCC1334831.",
+    images: [{ url: '/images/hero2.2.png', width: 1200, height: 630, alt: 'Midas Roofing & Construction team in Central Florida' }],
+  },
 }
 
 const trustBadges = [
@@ -29,6 +46,7 @@ const trustBadges = [
 export default function HomePage() {
   return (
     <>
+      <HomeFAQSchema />
       <Script src="https://fast.wistia.net/assets/external/E-v1.js" strategy="afterInteractive" />
 
       {/* ───────────────────────────────── HERO ───────────────────────────────── */}
@@ -289,6 +307,9 @@ export default function HomePage() {
           </AnimatedSection>
         </div>
       </section>
+
+      {/* ─────────────────────────── FAQ ─────────────────────────────────────── */}
+      <HomeFAQ />
 
       {/* ─────────────────────────── FINAL CTA ───────────────────────────────── */}
       <section className="relative py-28 overflow-hidden">
