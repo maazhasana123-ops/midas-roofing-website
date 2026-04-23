@@ -44,10 +44,8 @@ export default function VapiWidget() {
   const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
   const vapiRef = useRef<Vapi | null>(null)
-
-  // Public env vars — safe to expose in browser, Vapi public key is read-only
-  const apiKey = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
-  const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
+  // Credentials fetched from server-side route — never hardcoded in bundle
+  const credsRef = useRef<{ apiKey: string; assistantId: string } | null>(null)
 
   useEffect(() => {
     const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
@@ -55,8 +53,21 @@ export default function VapiWidget() {
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
-  const getVapi = useCallback(async (): Promise<Vapi | null> => {
-    if (!apiKey) return null
+  const getCreds = useCallback(async (): Promise<{ apiKey: string; assistantId: string } | null> => {
+    if (credsRef.current) return credsRef.current
+    try {
+      const res = await fetch('/api/vapi-token')
+      if (!res.ok) return null
+      const data = await res.json() as { token?: string; assistantId?: string; error?: string }
+      if (!data.token || !data.assistantId) return null
+      credsRef.current = { apiKey: data.token, assistantId: data.assistantId }
+      return credsRef.current
+    } catch {
+      return null
+    }
+  }, [])
+
+  const getVapi = useCallback(async (apiKey: string): Promise<Vapi | null> => {
     if (vapiRef.current) return vapiRef.current
     const { default: VapiSDK } = await import('@vapi-ai/web')
     const instance = new VapiSDK(apiKey)
@@ -66,19 +77,20 @@ export default function VapiWidget() {
     instance.on('error' as any, () => setCallState('idle'))
     vapiRef.current = instance
     return instance
-  }, [apiKey])
+  }, [])
 
   const startCall = useCallback(async () => {
-    if (!assistantId) return
     setCallState('loading')
     try {
-      const vapi = await getVapi()
+      const creds = await getCreds()
+      if (!creds) { setCallState('idle'); return }
+      const vapi = await getVapi(creds.apiKey)
       if (!vapi) { setCallState('idle'); return }
-      await vapi.start(assistantId)
+      await vapi.start(creds.assistantId)
     } catch {
       setCallState('idle')
     }
-  }, [assistantId, getVapi])
+  }, [getCreds, getVapi])
 
   const endCall = useCallback(() => {
     vapiRef.current?.stop()
@@ -101,15 +113,12 @@ export default function VapiWidget() {
     setIsOpen(true)
   }, [])
 
-  // Don't render if no key configured
-  if (!apiKey || !assistantId) return null
-
   return (
     <>
-      {/* Floating button — relative needed for green dot positioning */}
+      {/* Floating button — z-[9999] ensures visibility above all page stacking contexts */}
       <motion.button
         onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
-        className="fixed bottom-6 right-6 z-40 relative flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
+        className="fixed bottom-6 right-6 z-[9999] relative flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
         style={{
           background: 'linear-gradient(135deg, #b8922d 0%, #C9A84C 40%, #e8c66a 70%, #C9A84C 100%)',
           boxShadow: isMinimized && callState === 'active'
