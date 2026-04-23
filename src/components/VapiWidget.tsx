@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, Component } from 'react'
+import type { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type Vapi from '@vapi-ai/web'
 
@@ -10,6 +11,28 @@ type CallState = 'idle' | 'loading' | 'active' | 'error' | 'mic-denied'
 // ─── Env vars (NEXT_PUBLIC_ = safe for client bundle) ─────────────────────
 const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
 const VAPI_ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
+
+// ─── ErrorBoundary — prevents VAPI / Daily.js crashes from killing the page ──
+class VapiErrorBoundary extends Component<
+  { children: ReactNode },
+  { crashed: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { crashed: false }
+  }
+  static getDerivedStateFromError() {
+    return { crashed: true }
+  }
+  componentDidCatch(err: Error) {
+    console.error('[VapiWidget crash]', err)
+  }
+  render() {
+    // If Daily.js or VAPI crashed the subtree, render nothing — page stays intact
+    if (this.state.crashed) return null
+    return this.props.children
+  }
+}
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 function MicIcon({ className }: { className?: string }) {
@@ -44,7 +67,6 @@ function SoundWave({ active, volume }: { active: boolean; volume: number }) {
   return (
     <div className="flex items-center justify-center gap-[3px] h-14" aria-hidden="true">
       {bars.map((base, i) => {
-        // When active, scale driven by volume (0–1) + base rhythm
         const liveScale = active ? Math.max(0.12, base * (0.4 + volume * 0.7)) : 0.06
         return (
           <motion.div
@@ -70,7 +92,6 @@ function SoundWave({ active, volume }: { active: boolean; volume: number }) {
   )
 }
 
-// ─── Idle wave — gentle ambient animation when modal open but call not started ─
 function IdleWave() {
   const bars = [0.15, 0.3, 0.5, 0.7, 0.9, 1, 0.9, 0.7, 0.5, 0.3, 0.2, 0.15]
   return (
@@ -88,8 +109,8 @@ function IdleWave() {
   )
 }
 
-// ─── Main widget ─────────────────────────────────────────────────────────────
-export default function VapiWidget() {
+// ─── Inner widget (inside ErrorBoundary) ──────────────────────────────────────
+function VapiWidgetInner() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
@@ -97,12 +118,9 @@ export default function VapiWidget() {
   const [volume, setVolume] = useState(0)
   const vapiRef = useRef<Vapi | null>(null)
 
-  // ── Listen for external trigger (TalkToMidasButton, Navbar CTAs, etc.) ────
+  // ── Listen for external trigger ───────────────────────────────────────────
   useEffect(() => {
-    const handleOpen = () => {
-      setIsOpen(true)
-      setIsMinimized(false)
-    }
+    const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
     window.addEventListener('openVapiModal', handleOpen)
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
@@ -114,6 +132,8 @@ export default function VapiWidget() {
       console.error('[VapiWidget] NEXT_PUBLIC_VAPI_KEY is not set.')
       return null
     }
+
+    // Dynamic import keeps Daily.js out of the SSR bundle entirely
     const { default: VapiSDK } = await import('@vapi-ai/web')
     const instance = new VapiSDK(VAPI_KEY)
 
@@ -127,10 +147,20 @@ export default function VapiWidget() {
       setVolume(0)
     })
 
-    // volume-level fires 0–1 floats while call is live
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     instance.on('volume-level' as any, (v: number) => {
       setVolume(v)
+    })
+
+    // call-start-failed: specific event for failed connection attempt
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    instance.on('call-start-failed' as any, (e: any) => {
+      console.error('[Vapi call-start-failed]', e)
+      const msg: string =
+        e?.error?.message ?? e?.message ?? 'Call failed to start. Check your API key.'
+      setCallState('error')
+      setErrorMsg(msg)
+      setVolume(0)
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,7 +168,7 @@ export default function VapiWidget() {
       console.error('[Vapi error]', e)
       const msg: string =
         typeof e === 'string' ? e
-        : e?.message ?? e?.error?.message ?? 'Connection failed. Please try again.'
+        : e?.error?.message ?? e?.message ?? 'Connection failed. Please try again.'
       setCallState('error')
       setErrorMsg(msg)
       setVolume(0)
@@ -157,27 +187,31 @@ export default function VapiWidget() {
     }
     setCallState('loading')
     setErrorMsg(null)
+
+    // Check mic permission before touching Vapi at all
     try {
-      // Check mic permission before even touching Vapi
       await navigator.mediaDevices.getUserMedia({ audio: true })
     } catch {
       setCallState('mic-denied')
-      setErrorMsg('Microphone access is required to start the call. Please allow mic access in your browser settings.')
+      setErrorMsg('Microphone access is required. Please allow mic access in your browser settings and try again.')
       return
     }
+
     try {
       const vapi = await getVapi()
       if (!vapi) {
         setCallState('error')
-        setErrorMsg('Failed to load voice SDK.')
+        setErrorMsg('Failed to load voice SDK. Refresh the page and try again.')
         return
       }
       await vapi.start(VAPI_ASSISTANT_ID)
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : 'Could not connect. Please try again.'
-      setCallState('error')
-      setErrorMsg(msg)
+      // Only set error here if the event handlers haven't already done so
+      // (SDK emits call-start-failed before throwing in most cases)
+      const msg = err instanceof Error ? err.message : 'Could not connect. Please try again.'
+      console.error('[Vapi start threw]', err)
+      setCallState((prev) => prev === 'loading' ? 'error' : prev)
+      setErrorMsg((prev) => prev ?? msg)
     }
   }, [getVapi])
 
@@ -188,13 +222,11 @@ export default function VapiWidget() {
     setVolume(0)
   }, [])
 
-  // ── Minimize — keeps call alive, collapses panel to FAB ──────────────────
   const minimizeModal = useCallback(() => {
     setIsMinimized(true)
     setIsOpen(false)
   }, [])
 
-  // ── Close — ends call if active ──────────────────────────────────────────
   const closeModal = useCallback(() => {
     if (callState === 'active') endCall()
     setIsOpen(false)
@@ -202,35 +234,31 @@ export default function VapiWidget() {
     setErrorMsg(null)
   }, [callState, endCall])
 
-  // ── Expand minimized modal ────────────────────────────────────────────────
   const expandModal = useCallback(() => {
     setIsMinimized(false)
     setIsOpen(true)
   }, [])
 
-  // ── Retry after error ─────────────────────────────────────────────────────
   const retry = useCallback(() => {
     setCallState('idle')
     setErrorMsg(null)
     startCall()
   }, [startCall])
 
-  // ── Status label shown below waveform ─────────────────────────────────────
   const statusLabel =
     callState === 'idle' ? 'No hold times — connect instantly'
     : callState === 'loading' ? 'Connecting...'
     : callState === 'active' ? 'Live — speak freely'
     : ''
 
-  // ── Whether the FAB should show the green live dot ───────────────────────
   const isLive = isMinimized && callState === 'active'
 
   return (
     <>
-      {/* ─── Floating Action Button ─────────────────────────────────────────
-          z-[9999]: always above every page element and stacking context.
-          Renders from first page load; no scroll needed to find it.
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* ─── Floating Action Button ──────────────────────────────────────────
+          fixed bottom-6 right-5 z-[9999] — always visible on every page,
+          no scrolling needed, above all page stacking contexts.
+      ─────────────────────────────────────────────────────────────────── */}
       <motion.button
         onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
         className="fixed bottom-6 right-5 sm:right-6 z-[9999] flex items-center gap-2.5 rounded-full px-5 py-3 select-none"
@@ -247,30 +275,22 @@ export default function VapiWidget() {
         transition={{ delay: 1.2, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         aria-label={isMinimized ? 'Expand call' : 'Talk to Midas'}
       >
-        {/* Live dot when call is active and widget minimized */}
         {isLive && (
           <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#080808] animate-pulse" />
         )}
-
         <MicIcon className="w-4 h-4 text-[#080808] flex-shrink-0" />
         <span className="font-jakarta font-bold text-sm text-[#080808] tracking-wide whitespace-nowrap">
           {isMinimized && callState === 'active' ? 'Live Call' : 'Talk to Midas'}
         </span>
-
-        {/* Minimize chevron shown when modal is open (not minimized) */}
         {isOpen && !isMinimized && (
           <ChevronDownIcon className="w-3.5 h-3.5 text-[#080808]/70" />
         )}
       </motion.button>
 
-      {/* ─── Modal ──────────────────────────────────────────────────────────
-          Backdrop + panel share z-[9998] — just below the FAB so the FAB
-          always remains tappable and visible on top of its own modal.
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* ─── Modal ─────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               key="vapi-backdrop"
               initial={{ opacity: 0 }}
@@ -282,15 +302,12 @@ export default function VapiWidget() {
               aria-hidden="true"
             />
 
-            {/* Panel */}
             <motion.div
               key="vapi-panel"
               initial={{ opacity: 0, y: 16, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              // Position: anchored above the FAB.
-              // w-[min(340px,calc(100vw-40px))] prevents overflow on small screens.
               className="fixed bottom-[72px] right-5 sm:right-6 z-[9998] rounded-2xl overflow-hidden"
               style={{
                 width: 'min(340px, calc(100vw - 40px))',
@@ -303,16 +320,15 @@ export default function VapiWidget() {
               aria-label="Talk to Midas voice assistant"
               aria-modal="true"
             >
-              {/* Ambient gold glow at top */}
+              {/* Ambient glow */}
               <div className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden" aria-hidden="true">
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-36 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.12)_0%,_transparent_70%)]" />
               </div>
 
-              {/* ── Header ── */}
+              {/* Header */}
               <div className="relative z-10 px-5 pt-5 pb-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    {/* Avatar */}
                     <div className="w-10 h-10 rounded-full bg-gold/[0.08] border border-gold/25 flex items-center justify-center flex-shrink-0">
                       <MicIcon className="w-4 h-4 text-gold" />
                     </div>
@@ -326,8 +342,6 @@ export default function VapiWidget() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Minimize button */}
                   <button
                     onClick={minimizeModal}
                     className="w-7 h-7 rounded-full border border-white/[0.08] flex items-center justify-center text-cream/30 hover:text-cream/70 hover:border-white/20 transition-all duration-200 flex-shrink-0 mt-0.5"
@@ -336,26 +350,21 @@ export default function VapiWidget() {
                     <ChevronDownIcon className="w-3.5 h-3.5" />
                   </button>
                 </div>
-
                 <p className="text-cream/55 text-sm font-inter leading-relaxed mt-3">
                   <span className="font-semibold text-cream/85">Got roofing questions?</span>{' '}
                   Ask about pricing, inspections, or book a time with the team. No hold times.
                 </p>
               </div>
 
-              {/* Divider */}
               <div className="mx-5 h-px bg-gold/[0.07]" />
 
-              {/* ── Body ── */}
+              {/* Body */}
               <div className="relative z-10 px-5 py-5 flex flex-col items-center gap-4">
-
-                {/* Waveform */}
                 {callState === 'active'
                   ? <SoundWave active volume={volume} />
                   : <IdleWave />
                 }
 
-                {/* Status / error messages */}
                 {(callState === 'error' || callState === 'mic-denied') ? (
                   <div className="w-full rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-center">
                     <p className="text-red-400 text-xs font-inter leading-relaxed">
@@ -368,7 +377,6 @@ export default function VapiWidget() {
                   </p>
                 )}
 
-                {/* CTA buttons */}
                 {callState === 'active' ? (
                   <button
                     onClick={endCall}
@@ -398,7 +406,6 @@ export default function VapiWidget() {
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       {callState === 'loading' ? (
                         <>
-                          {/* Spinner */}
                           <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
@@ -425,5 +432,14 @@ export default function VapiWidget() {
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+// ─── Default export — wrapped in ErrorBoundary ────────────────────────────────
+export default function VapiWidget() {
+  return (
+    <VapiErrorBoundary>
+      <VapiWidgetInner />
+    </VapiErrorBoundary>
   )
 }
