@@ -109,6 +109,30 @@ function IdleWave() {
   )
 }
 
+// ─── Extract a plain string from any VAPI error payload ──────────────────────
+// The SDK emits objects like {message, error, statusCode} — React cannot render
+// objects as children, so we must always reduce to a string before storing.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractVapiError(e: any): string {
+  if (!e) return 'Connection failed. Please try again.'
+  if (typeof e === 'string') return e
+  // statusCode 401 = wrong/missing API key
+  if (e.statusCode === 401 || e.error?.statusCode === 401) {
+    return 'Authentication failed (401). Please check the VAPI API key in Vercel environment variables.'
+  }
+  // Try every known location a message string could live
+  const candidates = [
+    e.message,
+    e.error?.message,
+    e.error?.error,
+    e.statusCode ? `Error ${e.statusCode}` : null,
+  ]
+  for (const c of candidates) {
+    if (typeof c === 'string' && c.trim()) return c
+  }
+  return 'Connection failed. Please try again.'
+}
+
 // ─── Inner widget (inside ErrorBoundary) ──────────────────────────────────────
 function VapiWidgetInner() {
   const [isOpen, setIsOpen] = useState(false)
@@ -156,21 +180,16 @@ function VapiWidgetInner() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     instance.on('call-start-failed' as any, (e: any) => {
       console.error('[Vapi call-start-failed]', e)
-      const msg: string =
-        e?.error?.message ?? e?.message ?? 'Call failed to start. Check your API key.'
       setCallState('error')
-      setErrorMsg(msg)
+      setErrorMsg(extractVapiError(e))
       setVolume(0)
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     instance.on('error' as any, (e: any) => {
       console.error('[Vapi error]', e)
-      const msg: string =
-        typeof e === 'string' ? e
-        : e?.error?.message ?? e?.message ?? 'Connection failed. Please try again.'
       setCallState('error')
-      setErrorMsg(msg)
+      setErrorMsg(extractVapiError(e))
       setVolume(0)
     })
 
