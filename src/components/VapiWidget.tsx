@@ -39,13 +39,16 @@ function SoundWave({ active }: { active: boolean }) {
   )
 }
 
+// Read credentials at module level — these are NEXT_PUBLIC_ vars, safe for browser use.
+// Vapi's API key is designed for client-side use (same as a publishable Stripe key).
+const VAPI_KEY = process.env.NEXT_PUBLIC_VAPI_KEY ?? ''
+const VAPI_ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID ?? ''
+
 export default function VapiWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
   const vapiRef = useRef<Vapi | null>(null)
-  // Credentials fetched from server-side route — never hardcoded in bundle
-  const credsRef = useRef<{ apiKey: string; assistantId: string } | null>(null)
 
   useEffect(() => {
     const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
@@ -53,24 +56,11 @@ export default function VapiWidget() {
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
-  const getCreds = useCallback(async (): Promise<{ apiKey: string; assistantId: string } | null> => {
-    if (credsRef.current) return credsRef.current
-    try {
-      const res = await fetch('/api/vapi-token')
-      if (!res.ok) return null
-      const data = await res.json() as { token?: string; assistantId?: string; error?: string }
-      if (!data.token || !data.assistantId) return null
-      credsRef.current = { apiKey: data.token, assistantId: data.assistantId }
-      return credsRef.current
-    } catch {
-      return null
-    }
-  }, [])
-
-  const getVapi = useCallback(async (apiKey: string): Promise<Vapi | null> => {
+  const getVapi = useCallback(async (): Promise<Vapi | null> => {
     if (vapiRef.current) return vapiRef.current
+    if (!VAPI_KEY) return null
     const { default: VapiSDK } = await import('@vapi-ai/web')
-    const instance = new VapiSDK(apiKey)
+    const instance = new VapiSDK(VAPI_KEY)
     instance.on('call-start', () => setCallState('active'))
     instance.on('call-end', () => setCallState('idle'))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,17 +70,16 @@ export default function VapiWidget() {
   }, [])
 
   const startCall = useCallback(async () => {
+    if (!VAPI_ASSISTANT_ID) return
     setCallState('loading')
     try {
-      const creds = await getCreds()
-      if (!creds) { setCallState('idle'); return }
-      const vapi = await getVapi(creds.apiKey)
+      const vapi = await getVapi()
       if (!vapi) { setCallState('idle'); return }
-      await vapi.start(creds.assistantId)
+      await vapi.start(VAPI_ASSISTANT_ID)
     } catch {
       setCallState('idle')
     }
-  }, [getCreds, getVapi])
+  }, [getVapi])
 
   const endCall = useCallback(() => {
     vapiRef.current?.stop()
@@ -115,7 +104,8 @@ export default function VapiWidget() {
 
   return (
     <>
-      {/* Floating button — z-[9999] ensures visibility above all page stacking contexts */}
+      {/* Floating button — z-[9999] ensures visibility above all page stacking contexts.
+          'relative' is required so the absolute-positioned green dot child renders correctly. */}
       <motion.button
         onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
         className="fixed bottom-6 right-6 z-[9999] relative flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
