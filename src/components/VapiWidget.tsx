@@ -49,11 +49,17 @@ export default function VapiWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
+  const [btnVisible, setBtnVisible] = useState(false)
   const vapiRef = useRef<Vapi | null>(null)
   // Credentials are fetched from our server-side proxy — never from NEXT_PUBLIC_ vars
   const tokenRef = useRef<string | null>(null)
   const assistantIdRef = useRef<string | null>(null)
   const [credentialsReady, setCredentialsReady] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setBtnVisible(true), 1500)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
@@ -137,24 +143,18 @@ export default function VapiWidget() {
   return (
     <>
       {/* Floating trigger / minimized-call button */}
-      <motion.button
+      <button
         onClick={isMinimized ? expandModal : () => { setIsOpen(true); setIsMinimized(false) }}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full px-5 py-3 shadow-lg active:scale-[0.97] hover:scale-[1.04]"
         style={{
           background: 'linear-gradient(135deg, #b8922d 0%, #C9A84C 40%, #e8c66a 70%, #C9A84C 100%)',
-          backgroundSize: '200% 200%',
           boxShadow: isMinimized && callState === 'active'
             ? '0 4px 24px rgba(52,211,153,0.4), 0 4px 20px rgba(201,168,76,0.25)'
             : '0 4px 20px rgba(201,168,76,0.35)',
+          opacity: btnVisible ? 1 : 0,
+          transform: btnVisible ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.9)',
+          transition: 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)',
         }}
-        whileHover={{
-          scale: 1.04,
-          boxShadow: '0 6px 28px rgba(201,168,76,0.5)',
-        }}
-        whileTap={{ scale: 0.97 }}
-        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         aria-label={isMinimized ? 'Open call' : 'Talk to Midas'}
       >
         {/* Live indicator dot — only shown when minimized with active call */}
@@ -168,7 +168,7 @@ export default function VapiWidget() {
         <span className="font-jakarta font-bold text-sm text-[#0a0a0a] tracking-wide whitespace-nowrap">
           Talk to Midas
         </span>
-      </motion.button>
+      </button>
 
       {/* Modal */}
       <AnimatePresence>
