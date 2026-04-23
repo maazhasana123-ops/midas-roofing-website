@@ -55,6 +55,7 @@ export default function VapiWidget() {
   const tokenRef = useRef<string | null>(null)
   const assistantIdRef = useRef<string | null>(null)
   const [credentialsReady, setCredentialsReady] = useState(false)
+  const [callError, setCallError] = useState<string | null>(null)
 
   useEffect(() => {
     const t = setTimeout(() => setBtnVisible(true), 1500)
@@ -92,10 +93,14 @@ export default function VapiWidget() {
     const { default: VapiSDK } = await import('@vapi-ai/web')
     const instance = new VapiSDK(tokenRef.current)
 
-    instance.on('call-start', () => setCallState('active'))
+    instance.on('call-start', () => { setCallState('active'); setCallError(null) })
     instance.on('call-end', () => setCallState('idle'))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    instance.on('error' as any, () => setCallState('idle'))
+    instance.on('error' as any, (e: any) => {
+      console.error('[Vapi error]', e)
+      setCallError(e?.message || e?.error?.message || 'Connection failed')
+      setCallState('idle')
+    })
 
     vapiRef.current = instance
     return instance
@@ -104,11 +109,15 @@ export default function VapiWidget() {
   const startCall = useCallback(async () => {
     if (!assistantIdRef.current) return
     setCallState('loading')
+    setCallError(null)
     try {
       const vapi = await getVapi()
       if (!vapi) { setCallState('idle'); return }
       await vapi.start(assistantIdRef.current)
-    } catch {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      console.error('[Vapi start error]', e)
+      setCallError(msg)
       setCallState('idle')
     }
   }, [getVapi])
@@ -248,10 +257,14 @@ export default function VapiWidget() {
               <div className="relative z-10 px-6 py-6 flex flex-col items-center gap-4">
                 <SoundWave active={callState === 'active'} />
 
-                <p className="text-cream/30 text-xs font-inter tracking-wide text-center min-h-4">
-                  {callState === 'idle' && 'No hold times — connect instantly'}
-                  {callState === 'loading' && 'Connecting you now...'}
-                  {callState === 'active' && 'Live — speak freely'}
+                <p className="text-xs font-inter tracking-wide text-center min-h-4" style={{ color: callError ? '#f87171' : 'rgba(255,255,255,0.3)' }}>
+                  {callError
+                    ? callError
+                    : callState === 'idle'
+                    ? 'No hold times — connect instantly'
+                    : callState === 'loading'
+                    ? 'Connecting you now...'
+                    : 'Live — speak freely'}
                 </p>
 
                 {callState === 'active' ? (
