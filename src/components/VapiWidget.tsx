@@ -6,6 +6,15 @@ import type Vapi from '@vapi-ai/web'
 
 type CallState = 'idle' | 'loading' | 'active'
 
+// Minimize icon SVG
+function MinimizeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-3.5 h-3.5">
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  )
+}
+
 function SoundWave({ active }: { active: boolean }) {
   const bars = [0.3, 0.6, 1, 0.75, 0.45, 0.85, 1, 0.55, 0.35]
   return (
@@ -38,6 +47,7 @@ function SoundWave({ active }: { active: boolean }) {
 
 export default function VapiWidget() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMinimized, setIsMinimized] = useState(false)
   const [callState, setCallState] = useState<CallState>('idle')
   const vapiRef = useRef<Vapi | null>(null)
   // Credentials are fetched from our server-side proxy — never from NEXT_PUBLIC_ vars
@@ -46,7 +56,7 @@ export default function VapiWidget() {
   const [credentialsReady, setCredentialsReady] = useState(false)
 
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true)
+    const handleOpen = () => { setIsOpen(true); setIsMinimized(false) }
     window.addEventListener('openVapiModal', handleOpen)
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
