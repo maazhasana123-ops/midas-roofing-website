@@ -163,7 +163,6 @@ export default function BeforeAfterVideoSection() {
 
                 <video
                   ref={videoRef}
-                  src="/Midas animation final loop.mp4"
                   className="w-full h-full object-cover"
                   style={{ display: 'block' }}
                   muted
@@ -171,7 +170,9 @@ export default function BeforeAfterVideoSection() {
                   loop
                   autoPlay
                   preload="auto"
-                />
+                >
+                  <source src="/midas-loop.mp4" type="video/mp4" />
+                </video>
 
                 {/* Subtle vignette */}
                 <div
