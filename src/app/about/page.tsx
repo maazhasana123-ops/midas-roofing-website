@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   keywords: [
     'Midas Roofing about',
     'Jenson Perazada roofer',
-    'roofing contractor Tavares FL',
+    'roofing contractor Longwood FL',
     'No-Leak Promise roofing',
     'licensed roofer Central Florida',
   ],

@@ -19,7 +19,7 @@ import HomeFAQ from '@/components/HomeFAQ'
 export const metadata: Metadata = {
   title: "Midas Roofing & Construction | Central Florida's #1 Roofing Experts",
   description:
-    'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Serving Orlando, Tavares FL.',
+    'Licensed roofing contractor serving Central Florida since 2004. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Serving Orlando, Longwood FL.',
   alternates: {
     canonical: 'https://midasroofingfl.com',
     types: {
@@ -335,7 +335,7 @@ export default function HomePage() {
               <Link href="/contact" id="final-cta-secondary" className="btn-outline-gold text-sm px-10 py-4 tracking-wide">Contact Us</Link>
             </div>
             <p className="text-cream/25 text-xs mt-10 font-inter tracking-wide">
-              License CCC1334831 · Tavares, FL · Serving All of Central Florida
+              License CCC1334831 · Longwood, FL · Serving All of Central Florida
             </p>
           </AnimatedSection>
         </div>

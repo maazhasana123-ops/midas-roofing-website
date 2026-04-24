@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: 'What areas does Midas Roofing serve?',
-    a: 'Midas Roofing & Construction serves the greater Orlando metro and all of Central Florida, including Orlando, Windermere, Dr. Phillips, Winter Park, Longwood, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, College Park, and Tavares, FL (our headquarters).',
+    a: 'Midas Roofing & Construction serves the greater Orlando metro and all of Central Florida, including Orlando, Windermere, Dr. Phillips, Winter Park, Longwood, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, College Park, and Longwood, FL (our headquarters).',
   },
 ]
 

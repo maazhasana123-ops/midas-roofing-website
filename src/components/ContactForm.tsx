@@ -9,13 +9,13 @@ const contactItems = [
   {
     icon: '📍',
     title: 'Our Office',
-    lines: ['4051 Bannock Ave', 'Tavares, Florida 32778'],
+    lines: ['346 Freeman St. Suite D', 'Longwood, Florida 32750'],
     link: undefined,
   },
   {
     icon: '🗺️',
     title: 'Service Area',
-    lines: ['All of Central Florida', 'Tavares · Orlando · Mount Dora', 'Leesburg · The Villages'],
+    lines: ['All of Central Florida', 'Longwood · Orlando · Mount Dora', 'Leesburg · The Villages'],
     link: undefined,
   },
   {

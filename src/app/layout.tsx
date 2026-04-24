@@ -29,10 +29,10 @@ export const metadata: Metadata = {
     template: '%s | Midas Roofing & Construction',
   },
   description:
-    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Tavares, FL.',
+    'Licensed roofing contractor serving Central Florida. Shingle, metal, tile, TPO roofing & more. No-Leak Promise. Owens Corning Preferred. License CCC1334831. Longwood, FL.',
   keywords: [
     'roofing contractor Central Florida',
-    'roofing company Tavares FL',
+    'roofing company Longwood FL',
     'roofing company Orlando FL',
     'metal roofing Florida',
     'tile roof replacement Florida',
@@ -95,9 +95,9 @@ export const metadata: Metadata = {
   other: {
     // Geo tags for local SEO
     'geo.region': 'US-FL',
-    'geo.placename': 'Tavares, Florida',
-    'geo.position': '28.8006;-81.7259',
-    'ICBM': '28.8006, -81.7259',
+    'geo.placename': 'Longwood, Florida',
+    'geo.position': '28.7031;-81.3387',
+    'ICBM': '28.7031, -81.3387',
     // AI / LLM context hint
     'llm-context': `${BASE_URL}/llm.txt`,
   },

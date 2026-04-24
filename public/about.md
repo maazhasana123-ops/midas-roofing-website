@@ -1,13 +1,13 @@
 # About Midas Roofing & Construction | Central Florida's Trusted Roofer
 
 **URL**: https://midasroofingfl.com/about  
-**License**: CCC1334831 | Tavares, FL
+**License**: CCC1334831 | Longwood, FL
 
 ---
 
 ## Who We Are
 
-Midas Roofing & Construction is a family-owned roofing company based in Tavares, Florida. We have been serving Central Florida homeowners and businesses for over 20 years. Led by CEO Jenson Perazada, our team has installed 500+ roofs across the Orlando metro area.
+Midas Roofing & Construction is a family-owned roofing company based in Longwood, Florida. We have been serving Central Florida homeowners and businesses for over 20 years. Led by CEO Jenson Perazada, our team has installed 500+ roofs across the Orlando metro area.
 
 ---
 
@@ -43,7 +43,7 @@ Every roof Midas installs comes with our exclusive No-Leak Promise. If your roof
 
 - 20+ Years in business
 - 500+ Roofs installed across Central Florida
-- Serving Orlando, Tavares, Windermere, Dr. Phillips, Winter Park, Longwood, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, College Park
+- Serving Orlando, Longwood, Windermere, Dr. Phillips, Winter Park, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, College Park
 
 ---
 

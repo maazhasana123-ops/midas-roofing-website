@@ -2,7 +2,7 @@
 
 **URL**: https://midasroofingfl.com  
 **License**: CCC1334831  
-**Location**: Tavares, FL — Serving All of Central Florida
+**Location**: Longwood, FL — Serving All of Central Florida
 
 ---
 
@@ -88,7 +88,7 @@ Midas Roofing & Construction serves the greater Orlando metro and all of Central
 - Winter Garden, FL
 - Baldwin Park, FL
 - College Park, FL
-- Tavares, FL (headquarters)
+- Longwood, FL (headquarters)
 
 ---
 
@@ -104,4 +104,4 @@ Your Roof. Our Promise. Get a free, no-obligation instant estimate in minutes us
 
 [Get Instant Estimate](https://midasroofingfl.com/estimate) | [Contact Us](https://midasroofingfl.com/contact)
 
-License CCC1334831 · Tavares, FL · Serving All of Central Florida
+License CCC1334831 · Longwood, FL · Serving All of Central Florida

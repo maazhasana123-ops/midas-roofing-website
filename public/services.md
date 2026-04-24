@@ -1,7 +1,7 @@
 # Roofing Services | Midas Roofing & Construction
 
 **URL**: https://midasroofingfl.com/services  
-**License**: CCC1334831 | Tavares, FL — Serving Central Florida
+**License**: CCC1334831 | Longwood, FL — Serving Central Florida
 
 Every Roof Type. One Team.
 

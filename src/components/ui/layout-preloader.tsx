@@ -265,7 +265,7 @@ export function LayoutPreloader({ onComplete }: LayoutPreloaderProps) {
       {/* ── Bottom license strip ─────────────────────────────────── */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none">
         <span className="font-inter text-[9px] uppercase tracking-[0.22em] text-[rgba(245,240,232,0.18)]">
-          Lic. CCC1334831 · Tavares, FL
+          Lic. CCC1334831 · Longwood, FL
         </span>
       </div>
     </div>

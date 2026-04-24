@@ -26,7 +26,7 @@ const services = [
 const contactDetails = [
   {
     label: 'Address',
-    lines: ['4051 Bannock Ave', 'Tavares, FL 32778'],
+    lines: ['346 Freeman St. Suite D', 'Longwood, FL 32750'],
   },
   {
     label: 'Service Area',
@@ -258,7 +258,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Midas Roofing &amp; Construction. All rights reserved.
           </p>
           <p className="text-cream/15 text-xs font-inter">
-            License CCC1334831 &middot; Tavares, FL
+            License CCC1334831 &middot; Longwood, FL
           </p>
         </motion.div>
       </div>

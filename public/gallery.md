@@ -1,7 +1,7 @@
 # Project Gallery | Midas Roofing & Construction
 
 **URL**: https://midasroofingfl.com/gallery  
-**License**: CCC1334831 | Tavares, FL
+**License**: CCC1334831 | Longwood, FL
 
 Browse our portfolio of completed roofing projects across Central Florida, including aerial drone photography of residential shingle, metal, and tile roofing installations.
 

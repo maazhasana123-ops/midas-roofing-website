@@ -62,7 +62,7 @@ const promiseItems = [
 const credItems = [
   { label: 'Contractor License', value: 'CCC1334831', sub: 'State of Florida' },
   { label: 'Serving Since', value: '2004+', sub: 'Central Florida' },
-  { label: 'Headquarters', value: 'Tavares, FL', sub: '4051 Bannock Ave 32778' },
+  { label: 'Headquarters', value: 'Longwood, FL', sub: '346 Freeman St. Suite D 32750' },
 ]
 
 export default function AboutContent() {
@@ -133,7 +133,7 @@ export default function AboutContent() {
                   &quot;Most contractors are in a hurry to get to the next job. We&apos;re in a hurry to get your job right,&quot; Jenson says. That philosophy is baked into every project Midas takes on, from the initial estimate to the final walkthrough.
                 </p>
                 <p>
-                  From Tavares to Orlando and surrounding counties, every project carries Jenson&apos;s personal commitment to quality and his name on the license.
+                  From Longwood to Orlando and surrounding counties, every project carries Jenson&apos;s personal commitment to quality and his name on the license.
                 </p>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">

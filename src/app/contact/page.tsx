@@ -6,10 +6,10 @@ import { BreadcrumbSchema } from '@/components/JsonLd'
 export const metadata: Metadata = {
   title: 'Contact Midas Roofing | Orlando & Central Florida',
   description:
-    'Contact Midas Roofing & Construction for roofing repairs, replacements, and free estimates. Serving Orlando and all of Central Florida. License CCC1334831. Tavares, FL.',
+    'Contact Midas Roofing & Construction for roofing repairs, replacements, and free estimates. Serving Orlando and all of Central Florida. License CCC1334831. Longwood, FL.',
   keywords: [
     'contact roofing contractor Orlando',
-    'roofing company Tavares FL phone',
+    'roofing company Longwood FL phone',
     'free roofing estimate Central Florida',
     'roofing repair Orlando FL',
   ],
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: 'https://midasroofingfl.com/contact',
     title: 'Contact Midas Roofing & Construction',
-    description: 'Reach out for roofing repairs, replacements, or a free instant estimate. Tavares, FL. License CCC1334831.',
+    description: 'Reach out for roofing repairs, replacements, or a free instant estimate. Longwood, FL. License CCC1334831.',
   },
 }
 

@@ -27,19 +27,20 @@ export function LocalBusinessSchema() {
         email: '',
         address: {
           '@type': 'PostalAddress',
-          addressLocality: 'Tavares',
+          streetAddress: '346 Freeman St. Suite D',
+          addressLocality: 'Longwood',
           addressRegion: 'FL',
-          postalCode: '32778',
+          postalCode: '32750',
           addressCountry: 'US',
         },
         geo: {
           '@type': 'GeoCoordinates',
-          latitude: 28.8006,
-          longitude: -81.7259,
+          latitude: 28.7031,
+          longitude: -81.3387,
         },
         areaServed: [
           { '@type': 'City', name: 'Orlando', containedInPlace: { '@type': 'State', name: 'Florida' } },
-          { '@type': 'City', name: 'Tavares', containedInPlace: { '@type': 'State', name: 'Florida' } },
+          { '@type': 'City', name: 'Altamonte Springs', containedInPlace: { '@type': 'State', name: 'Florida' } },
           { '@type': 'City', name: 'Windermere', containedInPlace: { '@type': 'State', name: 'Florida' } },
           { '@type': 'City', name: 'Winter Park', containedInPlace: { '@type': 'State', name: 'Florida' } },
           { '@type': 'City', name: 'Lake Mary', containedInPlace: { '@type': 'State', name: 'Florida' } },
@@ -52,7 +53,7 @@ export function LocalBusinessSchema() {
             containedInPlace: { '@type': 'State', name: 'Florida' },
           },
         ],
-        hasMap: 'https://maps.google.com/?q=Tavares,FL',
+        hasMap: 'https://maps.google.com/?q=346+Freeman+St+Suite+D+Longwood+FL+32750',
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
@@ -200,7 +201,7 @@ export function HomeFAQSchema() {
         name: 'Does Midas Roofing serve Orlando and Central Florida?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. Midas Roofing & Construction is headquartered in Tavares, FL and serves the entire Central Florida region including Orlando, Windermere, Dr. Phillips, Winter Park, Longwood, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, and College Park.',
+          text: 'Yes. Midas Roofing & Construction is headquartered in Longwood, FL and serves the entire Central Florida region including Orlando, Windermere, Dr. Phillips, Winter Park, Longwood, Lake Mary, Lake Nona, Winter Garden, Baldwin Park, and College Park.',
         },
       },
     ],
