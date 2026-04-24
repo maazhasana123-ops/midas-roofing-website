@@ -152,6 +152,13 @@
   /* ─── Layout ─── */
   .section-pad { @apply py-20 md:py-28; }
 
+  /* ─── Hero viewport height — Android-safe ─── */
+  /* Fallback for browsers that don't support svh (older Android WebView) */
+  .hero-height {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
   /* ─── Grain Overlay (subtle film texture) ─── */
   .grain::after {
     content: '';

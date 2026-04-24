@@ -5,6 +5,7 @@ import Script from 'next/script'
 import AnimatedSection from '@/components/AnimatedSection'
 import GoldDivider from '@/components/GoldDivider'
 import ScrollVideo from '@/components/ScrollVideo'
+import BeforeAfterVideoSection from '@/components/BeforeAfterVideoSection'
 import TestimonialV2 from '@/components/ui/testimonial-v2'
 import { LocationMap } from '@/components/ui/expand-map'
 import HomeStats from '@/components/HomeStats'
@@ -50,7 +51,7 @@ export default function HomePage() {
       <Script src="https://fast.wistia.net/assets/external/E-v1.js" strategy="afterInteractive" />
 
       {/* ───────────────────────────────── HERO ───────────────────────────────── */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+      <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '100svh' }}>
         <div className="absolute inset-0">
           <Image
             src="/images/hero2.2.png"
@@ -65,25 +66,25 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-dark/30 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.1)_0%,_transparent_70%)] blur-3xl" />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-5 text-center py-24 sm:py-0">
           <AnimatedSection delay={0.05}>
-            <div className="inline-flex items-center gap-2.5 bg-gold/10 border border-gold/25 rounded-full px-4 py-2 mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/25 rounded-full px-3 py-1.5 mb-5 sm:mb-8 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-              <span className="text-gold text-xs font-jakarta font-semibold tracking-[0.12em] uppercase">
+              <span className="text-gold text-[10px] sm:text-xs font-jakarta font-semibold tracking-[0.12em] uppercase">
                 Serving Central Florida for 20+ Years
               </span>
             </div>
           </AnimatedSection>
 
           <AnimatedSection delay={0.12}>
-            <h1 className="font-jakarta font-bold text-[clamp(2.8rem,7vw,5.5rem)] leading-[1.05] text-cream mb-5 tracking-tight text-balance">
+            <h1 className="font-jakarta font-bold text-[clamp(2.2rem,8vw,5.5rem)] leading-[1.05] text-cream mb-4 sm:mb-5 tracking-tight text-balance">
               Central Florida&apos;s Most<br />
               Trusted <span className="gold-shimmer">Roofing Experts</span>
             </h1>
           </AnimatedSection>
 
           <AnimatedSection delay={0.2}>
-            <p className="text-cream/65 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-inter leading-relaxed">
+            <p className="text-cream/65 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-7 sm:mb-10 font-inter leading-relaxed">
               From shingles to metal, tile to TPO — Midas Roofing delivers premium
               craftsmanship backed by our exclusive No-Leak Promise.
             </p>
@@ -91,34 +92,37 @@ export default function HomePage() {
 
           <AnimatedSection delay={0.28}>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/estimate" id="hero-primary-cta" className="btn-gold text-sm px-8 py-4 tracking-wide">
+              <Link href="/estimate" id="hero-primary-cta" className="btn-gold text-sm px-8 py-3.5 sm:py-4 tracking-wide">
                 Get Instant Estimate
               </Link>
-              <Link href="/gallery" id="hero-secondary-cta" className="btn-outline-gold text-sm px-8 py-4 tracking-wide">
+              <Link href="/gallery" id="hero-secondary-cta" className="btn-outline-gold text-sm px-8 py-3.5 sm:py-4 tracking-wide">
                 View Our Work
               </Link>
             </div>
           </AnimatedSection>
 
-          <AnimatedSection delay={0.4} className="mt-14">
-            <div className="flex flex-wrap justify-center gap-5 md:gap-8">
+          <AnimatedSection delay={0.4} className="mt-8 sm:mt-14">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-5 md:gap-8">
               {trustBadges.map((badge) => (
-                <div key={badge} className="flex items-center gap-2">
+                <div key={badge} className="flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-gold/70" />
-                  <span className="text-cream/45 text-xs font-jakarta font-medium tracking-wide">{badge}</span>
+                  <span className="text-cream/45 text-[10px] sm:text-xs font-jakarta font-medium tracking-wide">{badge}</span>
                 </div>
               ))}
             </div>
           </AnimatedSection>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-cream/30 text-[9px] tracking-[0.25em] uppercase font-jakarta">Scroll</span>
           <div className="relative w-px h-10 bg-gold/10 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-gold to-gold/0 animate-scroll-line" />
           </div>
         </div>
       </section>
+
+      {/* ──────────────── BEFORE & AFTER VIDEO ─────────────────────────────────── */}
+      <BeforeAfterVideoSection />
 
       {/* ─────────────────── SCROLL VIDEO ──────────────────────────────────────── */}
       <ScrollVideo />
