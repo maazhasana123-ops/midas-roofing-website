@@ -150,6 +150,14 @@ function VapiWidgetInner() {
     return () => window.removeEventListener('openVapiModal', handleOpen)
   }, [])
 
+  // ── Warm the SDK chunk once the page is idle so the first tap connects fast
+  useEffect(() => {
+    const warm = () => { import('@vapi-ai/web').catch(() => {}) }
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number }
+    const t = setTimeout(() => (w.requestIdleCallback ? w.requestIdleCallback(warm) : warm()), 2500)
+    return () => clearTimeout(t)
+  }, [])
+
   // ── Lazy-init Vapi SDK once ───────────────────────────────────────────────
   const getVapi = useCallback(async (): Promise<Vapi | null> => {
     if (vapiRef.current) return vapiRef.current
@@ -210,7 +218,9 @@ function VapiWidgetInner() {
 
     // Check mic permission before touching Vapi at all
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true })
+      // Release the probe stream right away so Daily can take the mic cleanly
+      const probe = await navigator.mediaDevices.getUserMedia({ audio: true })
+      probe.getTracks().forEach((t) => t.stop())
     } catch {
       setCallState('mic-denied')
       setErrorMsg('Microphone access is required. Please allow mic access in your browser settings and try again.')
